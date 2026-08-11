@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Villa | Interactive Models</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-cyan: #38bdf8;
+            --text-light: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #1e293b;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 2px solid #334155;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 1100px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 12px;
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+        }
+
+        .card h3 {
+            color: var(--accent-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #0f172a;
+            color: var(--accent-cyan);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-cyan);
+            color: #0f172a;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #0284c7;
+            color: #ffffff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            border-top: 1px solid #334155;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Science Villa</h1>
+        <p>Interactive STEM Simulations & Engineering Models for Students</p>
+    </header>
+
+    <main>
+        <h2 class="section-title">Featured Science Models</h2>
+        
+        <div class="model-grid">
+            <div class="card">
+                <div>
+                    <span class="tag">Fluid Dynamics</span>
+                    <h3>Vortex Drop Shaft Model</h3>
+                    <p>Simulate how centrifugal swirl chambers reduce flood velocity and separate sediment to protect urban infrastructure.</p>
+                </div>
+                <a href="vortex.html" class="btn">Launch Model</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <span class="tag">Physics</span>
+                    <h3>Solar System Gravity Sandbox</h3>
+                    <p>Adjust planetary mass and orbit velocity to see physics and orbital dynamics in real time.</p>
+                </div>
+                <a href="#" class="btn" style="opacity: 0.5; pointer-events: none;">Coming Soon</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <span class="tag">Environment</span>
+                    <h3>Air Pollution & Dispersion</h3>
+                    <p>Visualize PM2.5 particle flow across urban areas under varying wind speeds and terrain heights.</p>
+                </div>
+                <a href="#" class="btn" style="opacity: 0.5; pointer-events: none;">Coming Soon</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Science Villa — Built for Young Innovators</p>
+    </footer>
+
+</body>
+</html>
