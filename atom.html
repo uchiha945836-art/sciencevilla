@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atomic Structure Visualizer | Science Villa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #05070d;
+      --bg-card: rgba(13, 18, 30, 0.8);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --accent-purple: #c084fc;
+      --accent-cyan: #38bdf8;
+      --accent-amber: #fbbf24;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --proton-color: #ff334b;
+      --neutron-color: #1e60ff;
+      --electron-color: #00ffcc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(192, 132, 252, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 1300px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.25rem;
+      background: rgba(13, 18, 30, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+    }
+
+    .back-btn {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.05);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+
+    .back-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      transform: translateX(-3px);
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1300px;
+      display: grid;
+      grid-template-columns: 410px 1fr 310px;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1150px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      padding: 1.1rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-main);
+    }
+
+    /* Controls & Elements Grid */
+    .search-input {
+      width: 100%;
+      background: rgba(5, 7, 13, 0.6);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 0.55rem 0.8rem;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 0.75rem;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-purple);
+    }
+
+    .element-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.35rem;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .element-grid::-webkit-scrollbar {
+      width: 4px;
+    }
+    .element-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    .elem-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 0.45rem 0.15rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .elem-btn:hover {
+      background: rgba(192, 132, 252, 0.15);
+      border-color: rgba(192, 132, 252, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .elem-btn.active {
+      background: linear-gradient(135deg, rgba(192, 132, 252, 0.3), rgba(56, 189, 248, 0.3));
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 10px rgba(192, 132, 252, 0.3);
+    }
+
+    .elem-symbol {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .elem-num {
+      font-size: 0.6rem;
+      color: var(--text-sub);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .action-btn {
+      width: 100%;
+      margin-top: 0.85rem;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(192, 132, 252, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      font-weight: 600;
+      padding: 0.65rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.82rem;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(192, 132, 252, 0.3));
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Central Canvas Engine */
+    .canvas-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 510px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 450px;
+    }
+
+    .legend-bar {
+      display: flex;
+      gap: 1rem;
+      background: rgba(5, 7, 13, 0.6);
+      padding: 0.45rem 1.1rem;
+      border-radius: 99px;
+      border: 1px solid var(--border-light);
+      font-size: 0.78rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-sub);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot.proton { background: var(--proton-color); box-shadow: 0 0 8px var(--proton-color); }
+    .dot.neutron { background: var(--neutron-color); box-shadow: 0 0 8px var(--neutron-color); }
+    .dot.electron { background: var(--electron-color); box-shadow: 0 0 8px var(--electron-color); }
+
+    /* Right Stats */
+    .metric-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-light);
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-name {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .metric-val {
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-cyan);
+    }
+
+    .shell-visualizer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .shell-box {
+      flex: 1;
+      min-width: 32px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 0.4rem 0.15rem;
+      text-align: center;
+    }
+
+    .shell-name {
+      font-size: 0.6rem;
+      color: var(--text-sub);
+    }
+
+    .shell-count {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent-purple);
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, rgba(192, 132, 252, 0.05), rgba(56, 189, 248, 0.05));
+      border: 1px solid rgba(192, 132, 252, 0.2);
+      border-radius: 10px;
+      padding: 0.8rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--text-sub);
+    }
+
+    .info-box strong {
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">← Science Villa</a>
+    <div class="brand-title">Atomic Structure Visualizer (1 - 118)</div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Element Selector -->
+    <div class="card">
+      <div class="section-title">
+        <span>⚛️ Periodic Elements</span>
+        <span style="font-size: 0.75rem; color: var(--text-sub);" id="elementCount">118 Elements</span>
+      </div>
+      
+      <input type="text" id="searchInput" class="search-input" placeholder="Search element name, symbol, or number...">
+
+      <div class="element-grid" id="elementGrid"></div>
+
+      <button class="action-btn" id="exciteBtn">⚡ Excite Valence Electron (Quantum Jump)</button>
+    </div>
+
+    <!-- Canvas Visualization Area -->
+    <div class="card canvas-card">
+      <canvas id="atomCanvas" width="550" height="450"></canvas>
+      <div class="legend-bar">
+        <div class="legend-item"><span class="dot proton"></span> Proton (+1)</div>
+        <div class="legend-item"><span class="dot neutron"></span> Neutron (0)</div>
+        <div class="legend-item"><span class="dot electron"></span> Electron (-1)</div>
+      </div>
+    </div>
+
+    <!-- Information & Subatomic Breakdown -->
+    <div class="card">
+      <div class="section-title">📊 Element Metrics</div>
+      
+      <div class="metric-badge">
+        <span class="metric-name">Element</span>
+        <span class="metric-val" id="valName" style="color: var(--accent-purple);">Carbon</span>
+      </div>
+      <div class="metric-badge">
+        <span class="metric-name">Atomic Number (Z)</span>
+        <span class="metric-val" id="valZ">6</span>
+      </div>
+      <div class="metric-badge">
+        <span class="metric-name">Atomic Mass</span>
+        <span class="metric-val" id="valMass">12.011 u</span>
+      </div>
+      <div class="metric-badge">
+        <span class="metric-name">Protons / Neutrons</span>
+        <span class="metric-val" id="valParticles">6P / 6N</span>
+      </div>
+
+      <div class="section-title" style="margin-top: 0.8rem;">🐚 Shells (K, L, M, N, O, P, Q)</div>
+      <div class="shell-visualizer" id="shellVisualizer"></div>
+
+      <div class="info-box" id="elementFacts"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // Complete 118 Elements Comprehensive Database
+    const elementsData = [
+      { z: 1, s: 'H', n: 'Hydrogen', m: '1.008 u', p: 1, neutrons: 0, sh: [1] },
+      { z: 2, s: 'He', n: 'Helium', m: '4.0026 u', p: 2, neutrons: 2, sh: [2] },
+      { z: 3, s: 'Li', n: 'Lithium', m: '6.94 u', p: 3, neutrons: 4, sh: [2, 1] },
+      { z: 4, s: 'Be', n: 'Beryllium', m: '9.0122 u', p: 4, neutrons: 5, sh: [2, 2] },
+      { z: 5, s: 'B', n: 'Boron', m: '10.81 u', p: 5, neutrons: 6, sh: [2, 3] },
+      { z: 6, s: 'C', n: 'Carbon', m: '12.011 u', p: 6, neutrons: 6, sh: [2, 4] },
+      { z: 7, s: 'N', n: 'Nitrogen', m: '14.007 u', p: 7, neutrons: 7, sh: [2, 5] },
+      { z: 8, s: 'O', n: 'Oxygen', m: '15.999 u', p: 8, neutrons: 8, sh: [2, 6] },
+      { z: 9, s: 'F', n: 'Fluorine', m: '18.998 u', p: 9, neutrons: 10, sh: [2, 7] },
+      { z: 10, s: 'Ne', n: 'Neon', m: '20.180 u', p: 10, neutrons: 10, sh: [2, 8] },
+      { z: 11, s: 'Na', n: 'Sodium', m: '22.990 u', p: 11, neutrons: 12, sh: [2, 8, 1] },
+      { z: 12, s: 'Mg', n: 'Magnesium', m: '24.305 u', p: 12, neutrons: 12, sh: [2, 8, 2] },
+      { z: 13, s: 'Al', n: 'Aluminium', m: '26.982 u', p: 13, neutrons: 14, sh: [2, 8, 3] },
+      { z: 14, s: 'Si', n: 'Silicon', m: '28.085 u', p: 14, neutrons: 14, sh: [2, 8, 4] },
+      { z: 15, s: 'P', n: 'Phosphorus', m: '30.974 u', p: 15, neutrons: 16, sh: [2, 8, 5] },
+      { z: 16, s: 'S', n: 'Sulfur', m: '32.06 u', p: 16, neutrons: 16, sh: [2, 8, 6] },
+      { z: 17, s: 'Cl', n: 'Chlorine', m: '35.45 u', p: 17, neutrons: 18, sh: [2, 8, 7] },
+      { z: 18, s: 'Ar', n: 'Argon', m: '39.948 u', p: 18, neutrons: 22, sh: [2, 8, 8] },
+      { z: 19, s: 'K', n: 'Potassium', m: '39.098 u', p: 19, neutrons: 20, sh: [2, 8, 8, 1] },
+      { z: 20, s: 'Ca', n: 'Calcium', m: '40.078 u', p: 20, neutrons: 20, sh: [2, 8, 8, 2] },
+      { z: 21, s: 'Sc', n: 'Scandium', m: '44.956 u', p: 21, neutrons: 24, sh: [2, 8, 9, 2] },
+      { z: 22, s: 'Ti', n: 'Titanium', m: '47.867 u', p: 22, neutrons: 26, sh: [2, 8, 10, 2] },
+      { z: 23, s: 'V', n: 'Vanadium', m: '50.942 u', p: 23, neutrons: 28, sh: [2, 8, 11, 2] },
+      { z: 24, s: 'Cr', n: 'Chromium', m: '51.996 u', p: 24, neutrons: 28, sh: [2, 8, 13, 1] },
+      { z: 25, s: 'Mn', n: 'Manganese', m: '54.938 u', p: 25, neutrons: 30, sh: [2, 8, 13, 2] },
+      { z: 26, s: 'Fe', n: 'Iron', m: '55.845 u', p: 26, neutrons: 30, sh: [2, 8, 14, 2] },
+      { z: 27, s: 'Co', n: 'Cobalt', m: '58.933 u', p: 27, neutrons: 32, sh: [2, 8, 15, 2] },
+      { z: 28, s: 'Ni', n: 'Nickel', m: '58.693 u', p: 28, neutrons: 31, sh: [2, 8, 16, 2] },
+      { z: 29, s: 'Cu', n: 'Copper', m: '63.546 u', p: 29, neutrons: 35, sh: [2, 8, 18, 1] },
+      { z: 30, s: 'Zn', n: 'Zinc', m: '65.38 u', p: 30, neutrons: 35, sh: [2, 8, 18, 2] },
+      { z: 31, s: 'Ga', n: 'Gallium', m: '69.723 u', p: 31, neutrons: 39, sh: [2, 8, 18, 3] },
+      { z: 32, s: 'Ge', n: 'Germanium', m: '72.630 u', p: 32, neutrons: 41, sh: [2, 8, 18, 4] },
+      { z: 33, s: 'As', n: 'Arsenic', m: '74.922 u', p: 33, neutrons: 42, sh: [2, 8, 18, 5] },
+      { z: 34, s: 'Se', n: 'Selenium', m: '78.971 u', p: 34, neutrons: 45, sh: [2, 8, 18, 6] },
+      { z: 35, s: 'Br', n: 'Bromine', m: '79.904 u', p: 35, neutrons: 45, sh: [2, 8, 18, 7] },
+      { z: 36, s: 'Kr', n: 'Krypton', m: '83.798 u', p: 36, neutrons: 48, sh: [2, 8, 18, 8] },
+      { z: 37, s: 'Rb', n: 'Rubidium', m: '85.468 u', p: 37, neutrons: 48, sh: [2, 8, 18, 8, 1] },
+      { z: 38, s: 'Sr', n: 'Strontium', m: '87.62 u', p: 38, neutrons: 50, sh: [2, 8, 18, 8, 2] },
+      { z: 39, s: 'Y', n: 'Yttrium', m: '88.906 u', p: 39, neutrons: 50, sh: [2, 8, 18, 9, 2] },
+      { z: 40, s: 'Zr', n: 'Zirconium', m: '91.224 u', p: 40, neutrons: 51, sh: [2, 8, 18, 10, 2] },
+      { z: 41, s: 'Nb', n: 'Niobium', m: '92.906 u', p: 41, neutrons: 52, sh: [2, 8, 18, 12, 1] },
+      { z: 42, s: 'Mo', n: 'Molybdenum', m: '95.95 u', p: 42, neutrons: 54, sh: [2, 8, 18, 13, 1] },
+      { z: 43, s: 'Tc', n: 'Technetium', m: '98 u', p: 43, neutrons: 55, sh: [2, 8, 18, 13, 2] },
+      { z: 44, s: 'Ru', n: 'Ruthenium', m: '101.07 u', p: 44, neutrons: 57, sh: [2, 8, 18, 15, 1] },
+      { z: 45, s: 'Rh', n: 'Rhodium', m: '102.91 u', p: 45, neutrons: 58, sh: [2, 8, 18, 16, 1] },
+      { z: 46, s: 'Pd', n: 'Palladium', m: '106.42 u', p: 46, neutrons: 60, sh: [2, 8, 18, 18] },
+      { z: 47, s: 'Ag', n: 'Silver', m: '107.87 u', p: 47, neutrons: 61, sh: [2, 8, 18, 18, 1] },
+      { z: 48, s: 'Cd', n: 'Cadmium', m: '112.41 u', p: 48, neutrons: 64, sh: [2, 8, 18, 18, 2] },
+      { z: 49, s: 'In', n: 'Indium', m: '114.82 u', p: 49, neutrons: 66, sh: [2, 8, 18, 18, 3] },
+      { z: 50, s: 'Sn', n: 'Tin', m: '118.71 u', p: 50, neutrons: 69, sh: [2, 8, 18, 18, 4] },
+      { z: 51, s: 'Sb', n: 'Antimony', m: '121.76 u', p: 51, neutrons: 71, sh: [2, 8, 18, 18, 5] },
+      { z: 52, s: 'Te', n: 'Tellurium', m: '127.60 u', p: 52, neutrons: 76, sh: [2, 8, 18, 18, 6] },
+      { z: 53, s: 'I', n: 'Iodine', m: '126.90 u', p: 53, neutrons: 74, sh: [2, 8, 18, 18, 7] },
+      { z: 54, s: 'Xe', n: 'Xenon', m: '131.29 u', p: 54, neutrons: 77, sh: [2, 8, 18, 18, 8] },
+      { z: 55, s: 'Cs', n: 'Caesium', m: '132.91 u', p: 55, neutrons: 78, sh: [2, 8, 18, 18, 8, 1] },
+      { z: 56, s: 'Ba', n: 'Barium', m: '137.33 u', p: 56, neutrons: 81, sh: [2, 8, 18, 18, 8, 2] },
+      { z: 57, s: 'La', n: 'Lanthanum', m: '138.91 u', p: 57, neutrons: 82, sh: [2, 8, 18, 18, 9, 2] },
+      { z: 58, s: 'Ce', n: 'Cerium', m: '140.12 u', p: 58, neutrons: 82, sh: [2, 8, 18, 19, 9, 2] },
+      { z: 59, s: 'Pr', n: 'Praseodymium', m: '140.91 u', p: 59, neutrons: 82, sh: [2, 8, 18, 21, 8, 2] },
+      { z: 60, s: 'Nd', n: 'Neodymium', m: '144.24 u', p: 60, neutrons: 84, sh: [2, 8, 18, 22, 8, 2] },
+      { z: 61, s: 'Pm', n: 'Promethium', m: '145 u', p: 61, neutrons: 84, sh: [2, 8, 18, 23, 8, 2] },
+      { z: 62, s: 'Sm', n: 'Samarium', m: '150.36 u', p: 62, neutrons: 88, sh: [2, 8, 18, 24, 8, 2] },
+      { z: 63, s: 'Eu', n: 'Europium', m: '151.96 u', p: 63, neutrons: 89, sh: [2, 8, 18, 25, 8, 2] },
+      { z: 64, s: 'Gd', n: 'Gadolinium', m: '157.25 u', p: 64, neutrons: 93, sh: [2, 8, 18, 25, 9, 2] },
+      { z: 65, s: 'Tb', n: 'Terbium', m: '158.93 u', p: 65, neutrons: 94, sh: [2, 8, 18, 27, 8, 2] },
+      { z: 66, s: 'Dy', n: 'Dysprosium', m: '162.50 u', p: 66, neutrons: 97, sh: [2, 8, 18, 28, 8, 2] },
+      { z: 67, s: 'Ho', n: 'Holmium', m: '164.93 u', p: 67, neutrons: 98, sh: [2, 8, 18, 29, 8, 2] },
+      { z: 68, s: 'Er', n: 'Erbium', m: '167.26 u', p: 68, neutrons: 99, sh: [2, 8, 18, 30, 8, 2] },
+      { z: 69, s: 'Tm', n: 'Thulium', m: '168.93 u', p: 69, neutrons: 100, sh: [2, 8, 18, 31, 8, 2] },
+      { z: 70, s: 'Yb', n: 'Ytterbium', m: '173.05 u', p: 70, neutrons: 103, sh: [2, 8, 18, 32, 8, 2] },
+      { z: 71, s: 'Lu', n: 'Lutetium', m: '174.97 u', p: 71, neutrons: 104, sh: [2, 8, 18, 32, 9, 2] },
+      { z: 72, s: 'Hf', n: 'Hafnium', m: '178.49 u', p: 72, neutrons: 106, sh: [2, 8, 18, 32, 10, 2] },
+      { z: 73, s: 'Ta', n: 'Tantalum', m: '180.95 u', p: 73, neutrons: 108, sh: [2, 8, 18, 32, 11, 2] },
+      { z: 74, s: 'W', n: 'Tungsten', m: '183.84 u', p: 74, neutrons: 110, sh: [2, 8, 18, 32, 12, 2] },
+      { z: 75, s: 'Re', n: 'Rhenium', m: '186.21 u', p: 75, neutrons: 111, sh: [2, 8, 18, 32, 13, 2] },
+      { z: 76, s: 'Os', n: 'Osmium', m: '190.23 u', p: 76, neutrons: 114, sh: [2, 8, 18, 32, 14, 2] },
+      { z: 77, s: 'Ir', n: 'Iridium', m: '192.22 u', p: 77, neutrons: 115, sh: [2, 8, 18, 32, 15, 2] },
+      { z: 78, s: 'Pt', n: 'Platinum', m: '195.08 u', p: 78, neutrons: 117, sh: [2, 8, 18, 32, 17, 1] },
+      { z: 79, s: 'Au', n: 'Gold', m: '196.97 u', p: 79, neutrons: 118, sh: [2, 8, 18, 32, 18, 1] },
+      { z: 80, s: 'Hg', n: 'Mercury', m: '200.59 u', p: 80, neutrons: 121, sh: [2, 8, 18, 32, 18, 2] },
+      { z: 81, s: 'Tl', n: 'Thallium', m: '204.38 u', p: 81, neutrons: 123, sh: [2, 8, 18, 32, 18, 3] },
+      { z: 82, s: 'Pb', n: 'Lead', m: '207.2 u', p: 82, neutrons: 125, sh: [2, 8, 18, 32, 18, 4] },
+      { z: 83, s: 'Bi', n: 'Bismuth', m: '208.98 u', p: 83, neutrons: 126, sh: [2, 8, 18, 32, 18, 5] },
+      { z: 84, s: 'Po', n: 'Polonium', m: '209 u', p: 84, neutrons: 125, sh: [2, 8, 18, 32, 18, 6] },
+      { z: 85, s: 'At', n: 'Astatine', m: '210 u', p: 85, neutrons: 125, sh: [2, 8, 18, 32, 18, 7] },
+      { z: 86, s: 'Rn', n: 'Radon', m: '222 u', p: 86, neutrons: 136, sh: [2, 8, 18, 32, 18, 8] },
+      { z: 87, s: 'Fr', n: 'Francium', m: '223 u', p: 87, neutrons: 136, sh: [2, 8, 18, 32, 18, 8, 1] },
+      { z: 88, s: 'Ra', n: 'Radium', m: '226 u', p: 88, neutrons: 138, sh: [2, 8, 18, 32, 18, 8, 2] },
+      { z: 89, s: 'Ac', n: 'Actinium', m: '227 u', p: 89, neutrons: 138, sh: [2, 8, 18, 32, 18, 9, 2] },
+      { z: 90, s: 'Th', n: 'Thorium', m: '232.04 u', p: 90, neutrons: 142, sh: [2, 8, 18, 32, 18, 10, 2] },
+      { z: 91, s: 'Pa', n: 'Protactinium', m: '231.04 u', p: 91, neutrons: 140, sh: [2, 8, 18, 32, 20, 9, 2] },
+      { z: 92, s: 'U', n: 'Uranium', m: '238.03 u', p: 92, neutrons: 146, sh: [2, 8, 18, 32, 21, 9, 2] },
+      { z: 93, s: 'Np', n: 'Neptunium', m: '237 u', p: 93, neutrons: 144, sh: [2, 8, 18, 32, 22, 9, 2] },
+      { z: 94, s: 'Pu', n: 'Plutonium', m: '244 u', p: 94, neutrons: 150, sh: [2, 8, 18, 32, 24, 8, 2] },
+      { z: 95, s: 'Am', n: 'Americium', m: '243 u', p: 95, neutrons: 148, sh: [2, 8, 18, 32, 25, 8, 2] },
+      { z: 96, s: 'Cm', n: 'Curium', m: '247 u', p: 96, neutrons: 151, sh: [2, 8, 18, 32, 25, 9, 2] },
+      { z: 97, s: 'Bk', n: 'Berkelium', m: '247 u', p: 97, neutrons: 150, sh: [2, 8, 18, 32, 27, 8, 2] },
+      { z: 98, s: 'Cf', n: 'Californium', m: '251 u', p: 98, neutrons: 153, sh: [2, 8, 18, 32, 28, 8, 2] },
+      { z: 99, s: 'Es', n: 'Einsteinium', m: '252 u', p: 99, neutrons: 153, sh: [2, 8, 18, 32, 29, 8, 2] },
+      { z: 100, s: 'Fm', n: 'Fermium', m: '257 u', p: 100, neutrons: 157, sh: [2, 8, 18, 32, 30, 8, 2] },
+      { z: 101, s: 'Md', n: 'Mendelevium', m: '258 u', p: 101, neutrons: 157, sh: [2, 8, 18, 32, 31, 8, 2] },
+      { z: 102, s: 'No', n: 'Nobelium', m: '259 u', p: 102, neutrons: 157, sh: [2, 8, 18, 32, 32, 8, 2] },
+      { z: 103, s: 'Lr', n: 'Lawrencium', m: '266 u', p: 103, neutrons: 163, sh: [2, 8, 18, 32, 32, 8, 3] },
+      { z: 104, s: 'Rf', n: 'Rutherfordium', m: '267 u', p: 104, neutrons: 163, sh: [2, 8, 18, 32, 32, 10, 2] },
+      { z: 105, s: 'Db', n: 'Dubnium', m: '268 u', p: 105, neutrons: 163, sh: [2, 8, 18, 32, 32, 11, 2] },
+      { z: 106, s: 'Sg', n: 'Seaborgium', m: '269 u', p: 106, neutrons: 163, sh: [2, 8, 18, 32, 32, 12, 2] },
+      { z: 107, s: 'Bh', n: 'Bohrium', m: '270 u', p: 107, neutrons: 163, sh: [2, 8, 18, 32, 32, 13, 2] },
+      { z: 108, s: 'Hs', n: 'Hassium', m: '277 u', p: 108, neutrons: 169, sh: [2, 8, 18, 32, 32, 14, 2] },
+      { z: 109, s: 'Mt', n: 'Meitnerium', m: '278 u', p: 109, neutrons: 169, sh: [2, 8, 18, 32, 32, 15, 2] },
+      { z: 110, s: 'Ds', n: 'Darmstadtium', m: '281 u', p: 110, neutrons: 171, sh: [2, 8, 18, 32, 32, 17, 1] },
+      { z: 111, s: 'Rg', n: 'Roentgenium', m: '282 u', p: 111, neutrons: 171, sh: [2, 8, 18, 32, 32, 18, 1] },
+      { z: 112, s: 'Cn', n: 'Copernicium', m: '285 u', p: 112, neutrons: 173, sh: [2, 8, 18, 32, 32, 18, 2] },
+      { z: 113, s: 'Nh', n: 'Nihonium', m: '286 u', p: 113, neutrons: 173, sh: [2, 8, 18, 32, 32, 18, 3] },
+      { z: 114, s: 'Fl', n: 'Flerovium', m: '289 u', p: 114, neutrons: 175, sh: [2, 8, 18, 32, 32, 18, 4] },
+      { z: 115, s: 'Mc', n: 'Moscovium', m: '290 u', p: 115, neutrons: 175, sh: [2, 8, 18, 32, 32, 18, 5] },
+      { z: 116, s: 'Lv', n: 'Livermorium', m: '293 u', p: 116, neutrons: 177, sh: [2, 8, 18, 32, 32, 18, 6] },
+      { z: 117, s: 'Ts', n: 'Tennessine', m: '294 u', p: 117, neutrons: 177, sh: [2, 8, 18, 32, 32, 18, 7] },
+      { z: 118, s: 'Og', n: 'Oganesson', m: '294 u', p: 118, neutrons: 176, sh: [2, 8, 18, 32, 32, 18, 8] }
+    ];
+
+    let currentElem = elementsData[5]; // Default Carbon
+    let angle = 0;
+    let excitedOffset = 0;
+    let photonAnim = { active: false, x: 0, y: 225 };
+    let nucleusParticles = [];
+
+    const grid = document.getElementById('elementGrid');
+    const searchInput = document.getElementById('searchInput');
+    const canvas = document.getElementById('atomCanvas');
+    const ctx = canvas.getContext('2d');
+    const exciteBtn = document.getElementById('exciteBtn');
+
+    // Build Nucleus with Performance Cap for Heavy Transuranic Elements
+    function buildNucleus() {
+      nucleusParticles = [];
+      const totalActual = currentElem.p + currentElem.neutrons;
+      // Cap visual particles to keep smooth frame rates for Z > 50
+      const totalVisual = Math.min(120, totalActual);
+
+      for (let i = 0; i < totalVisual; i++) {
+        const isProton = i % 2 === 0;
+        const phi = Math.acos(1 - 2 * (i + 0.5) / totalVisual);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+
+        const baseDist = Math.cbrt(totalVisual) * 4.8;
+        const radius = Math.random() * 2 + baseDist;
+
+        nucleusParticles.push({
+          x3d: radius * Math.sin(phi) * Math.cos(theta),
+          y3d: radius * Math.sin(phi) * Math.sin(theta),
+          z3d: radius * Math.cos(phi),
+          isProton: isProton,
+          vibeOffset: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    function renderGrid(filter = '') {
+      grid.innerHTML = '';
+      const query = filter.toLowerCase().trim();
+
+      const filtered = elementsData.filter(e => 
+        e.n.toLowerCase().includes(query) || 
+        e.s.toLowerCase().includes(query) || 
+        e.z.toString().includes(query)
+      );
+
+      filtered.forEach(elem => {
+        const btn = document.createElement('div');
+        btn.className = `elem-btn ${elem.z === currentElem.z ? 'active' : ''}`;
+        btn.innerHTML = `
+          <span class="elem-symbol">${elem.s}</span>
+          <span class="elem-num">${elem.z}</span>
+        `;
+        btn.addEventListener('click', () => {
+          currentElem = elem;
+          excitedOffset = 0;
+          document.querySelectorAll('.elem-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          buildNucleus();
+          updateMetrics();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      renderGrid(e.target.value);
+    });
+
+    function updateMetrics() {
+      document.getElementById('valName').textContent = `${currentElem.n} (${currentElem.s})`;
+      document.getElementById('valZ').textContent = currentElem.z;
+      document.getElementById('valMass').textContent = currentElem.m;
+      document.getElementById('valParticles').textContent = `${currentElem.p}P / ${currentElem.neutrons}N`;
+      document.getElementById('elementFacts').innerHTML = `<strong>${currentElem.n} (${currentElem.s}):</strong> Atomic Number ${currentElem.z}. Contains ${currentElem.p} protons, ${currentElem.neutrons} neutrons, and ${currentElem.sh.reduce((a,b)=>a+b,0)} electrons distributed across ${currentElem.sh.length} energetic shells.`;
+
+      const shellVis = document.getElementById('shellVisualizer');
+      shellVis.innerHTML = '';
+      const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'];
+      
+      let shells = [...currentElem.sh];
+      if (excitedOffset > 0) {
+        shells[shells.length - 1]--;
+        shells.push(1);
+      }
+
+      shells.forEach((count, idx) => {
+        const box = document.createElement('div');
+        box.className = 'shell-box';
+        box.innerHTML = `
+          <div class="shell-name">${shellNames[idx] || idx+1}</div>
+          <div class="shell-count">${count}</div>
+        `;
+        shellVis.appendChild(box);
+      });
+    }
+
+    exciteBtn.addEventListener('click', () => {
+      photonAnim = { active: true, x: 0, y: canvas.height / 2 };
+      setTimeout(() => {
+        excitedOffset = 1;
+        updateMetrics();
+      }, 450);
+
+      setTimeout(() => {
+        excitedOffset = 0;
+        updateMetrics();
+      }, 3800);
+    });
+
+    function drawSubatomicSphere(x, y, radius, colorHex, highlightHex) {
+      ctx.save();
+      const grad = ctx.createRadialGradient(
+        x - radius * 0.35, y - radius * 0.35, radius * 0.1,
+        x, y, radius
+      );
+      grad.addColorStop(0, highlightHex);
+      grad.addColorStop(0.5, colorHex);
+      grad.addColorStop(1, '#000000');
+
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = colorHex;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Engine Render Loop with Dynamic Radius Scaling
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      // 1. Photon Wave Packet Animation
+      if (photonAnim.active) {
+        photonAnim.x += 14;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(photonAnim.x, photonAnim.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#fbbf24';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#fbbf24';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(photonAnim.x - 25, photonAnim.y + Math.sin(photonAnim.x * 0.12) * 8);
+        ctx.lineTo(photonAnim.x, photonAnim.y);
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        if (photonAnim.x > cx) photonAnim.active = false;
+      }
+
+      // 2. 3D Dense Nucleus Cluster
+      const rotY = angle * 0.008;
+      const renderedParticles = nucleusParticles.map(p => {
+        const vibe = Math.sin(angle * 0.1 + p.vibeOffset) * 0.5;
+        const rx = (p.x3d + vibe) * Math.cos(rotY) - p.z3d * Math.sin(rotY);
+        const rz = (p.x3d + vibe) * Math.sin(rotY) + p.z3d * Math.cos(rotY);
+        return {
+          x: cx + rx,
+          y: cy + p.y3d + vibe,
+          z: rz,
+          isProton: p.isProton
+        };
+      }).sort((a, b) => a.z - b.z);
+
+      renderedParticles.forEach(p => {
+        const pSize = 5 + (p.z / 45);
+        if (p.isProton) {
+          drawSubatomicSphere(p.x, p.y, Math.max(3.5, pSize), '#ff2244', '#ff8899');
+        } else {
+          drawSubatomicSphere(p.x, p.y, Math.max(3.5, pSize), '#1e60ff', '#80b0ff');
+        }
+      });
+
+      // 3. Dynamic Scale Shell Orbits for elements up to Z=118
+      let shells = [...currentElem.sh];
+      if (excitedOffset > 0) {
+        shells[shells.length - 1]--;
+        shells.push(1);
+      }
+
+      const totalShells = shells.length;
+      // Scale radius down when element has many shells so everything fits inside canvas
+      const stepRadius = Math.max(22, 170 / totalShells); 
+      const orbitAngles = [-35, 35, 80, -80, -20, 20, 60];
+
+      shells.forEach((electronCount, shellIdx) => {
+        const tilt = (orbitAngles[shellIdx % orbitAngles.length] * Math.PI) / 180;
+        const rx = 55 + shellIdx * stepRadius; 
+        const ry = rx * 0.45;          
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(tilt);
+
+        // Orbit Line
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = shellIdx === shells.length - 1 && excitedOffset > 0 
+          ? 'rgba(251, 191, 36, 0.6)' 
+          : 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Orbiting Electrons
+        const speed = (totalShells - shellIdx) * 0.008 + 0.006;
+        for (let i = 0; i < electronCount; i++) {
+          const eAngle = angle * speed + (i * (Math.PI * 2 / electronCount));
+          const ex = rx * Math.cos(eAngle);
+          const ey = ry * Math.sin(eAngle);
+
+          ctx.save();
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = shellIdx === shells.length - 1 && excitedOffset > 0 ? '#fbbf24' : '#00ffcc';
+          
+          ctx.beginPath();
+          ctx.arc(ex, ey, 4.8, 0, Math.PI * 2);
+          ctx.fillStyle = shellIdx === shells.length - 1 && excitedOffset > 0 ? '#fbbf24' : '#00ffcc';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(ex - 1.2, ey - 1.2, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+
+          ctx.restore();
+        }
+
+        ctx.restore();
+      });
+
+      angle += 1;
+      requestAnimationFrame(draw);
+    }
+
+    renderGrid();
+    buildNucleus();
+    updateMetrics();
+    draw();
+  </script>
+</body>
+</html>

@@ -319,6 +319,33 @@
       color: var(--text-light);
     }
 
+    /* Chemistry Info Card */
+    .atom-info-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .atom-info-card {
+      background: rgba(168, 85, 247, 0.05);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .atom-info-card h3 {
+      font-size: 1.05rem;
+      color: #c084fc;
+      margin-bottom: 0.5rem;
+    }
+
+    .atom-info-card p {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
     /* About Us Grid */
     .about-grid {
       display: grid;
@@ -443,6 +470,7 @@
     <div class="logo">Science Villa</div>
     <ul class="nav-links">
       <li><a href="#models">Models</a></li>
+      <li><a href="#chemistry-info">Chemistry</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#feedback">Feedback</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -465,7 +493,7 @@
       <div class="controls-wrapper">
         <div class="search-bar-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Gravity, Vortex, Solar, Chemistry)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Vortex, Solar)...">
         </div>
 
         <div class="category-tabs">
@@ -506,17 +534,17 @@
             <h2>Solar System Explorer</h2>
             <p>Realistic scale & distance model featuring an interactive irregular Asteroid Belt, orbital periods, speeds, and planetary metrics.</p>
           </div>
-          <a href="solar_system.html" class="btn">Launch Model</a>
+          <a href="solar system.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Molecular Structure Model (Chemistry Placeholder) -->
+        <!-- Atomic Structure Model (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
-            <h2>3D Molecular Viewer</h2>
-            <p>Interactive 3D atomic orbital structure visualizer. Explore chemical bonding and molecular geometry.</p>
+            <h2>Atomic Structure Visualizer</h2>
+            <p>Interactive Bohr model simulator. Switch between elements (Hydrogen, Helium, Carbon, Oxygen) to inspect subatomic particles and electron shells.</p>
           </div>
-          <a href="#" class="btn disabled">Coming Soon</a>
+          <a href="atom.html" class="btn">Launch Model</a>
         </div>
 
         <!-- Cell Structure Model (Biology Placeholder) -->
@@ -532,6 +560,36 @@
       </div>
     </section>
 
+    <!-- Chemistry Overview Section -->
+    <section id="chemistry-info" class="section-block">
+      <h2>Chemistry Spotlight: Atomic Structure</h2>
+      <p style="color: var(--text-sub); line-height: 1.6;">
+        An <strong>atom</strong> is the basic building block of matter. It consists of a dense central region called the <strong>nucleus</strong> surrounded by an electron cloud.
+      </p>
+
+      <div class="atom-info-box">
+        <div class="atom-info-card">
+          <h3>Protons (+)</h3>
+          <p>Positively charged particles located in the nucleus. The number of protons defines the atomic number and identifies the element.</p>
+        </div>
+
+        <div class="atom-info-card">
+          <h3>Neutrons (0)</h3>
+          <p>Uncharged (neutral) particles in the nucleus that add mass and stability, holding protons together against electromagnetic repulsion.</p>
+        </div>
+
+        <div class="atom-info-card">
+          <h3>Electrons (-)</h3>
+          <p>Negatively charged particles orbiting the nucleus in energy levels (shells). They govern chemical bonding and reactivity.</p>
+        </div>
+
+        <div class="atom-info-card">
+          <h3>Electron Shells</h3>
+          <p>Electrons fill discrete energy levels: up to 2 in the 1st shell (K-shell), 8 in the 2nd shell (L-shell), and 8 or 18 in higher shells.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- About Us Section -->
     <section id="about" class="section-block">
       <h2>About Science Villa</h2>
@@ -540,8 +598,8 @@
       </p>
       <div class="about-grid">
         <div class="about-item">
-          <h3>Real-Time Physics & Math</h3>
-          <p>Driven by mathematical and astronomical algorithms designed to bring textbook science to life.</p>
+          <h3>Real-Time Physics & Chemistry</h3>
+          <p>Driven by mathematical and atomic algorithms designed to bring textbook science to life.</p>
         </div>
         <div class="about-item">
           <h3>Interactive Learning</h3>
@@ -572,7 +630,7 @@
             <option value="Vortex Drop Shaft">Vortex Drop Shaft (Physics)</option>
             <option value="Solar System Sandbox">Solar System Sandbox (Physics)</option>
             <option value="Solar System Explorer">Solar System Explorer (Physics)</option>
-            <option value="Chemistry Section">Chemistry Section Suggestion</option>
+            <option value="Atomic Structure Visualizer">Atomic Structure Visualizer (Chemistry)</option>
             <option value="Biology Section">Biology Section Suggestion</option>
           </select>
         </div>
