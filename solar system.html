@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solar System Explorer | Science Villa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #020208;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+    }
+
+    #canvas-container {
+      flex: 1;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    canvas:active { cursor: grabbing; }
+
+    /* Sidebar Panel */
+    .sidebar {
+      width: 340px;
+      background: rgba(8, 12, 24, 0.92);
+      backdrop-filter: blur(16px);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      z-index: 10;
+      overflow-y: auto;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.25rem;
+      color: #00f0ff;
+    }
+
+    .back-btn {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .back-btn:hover { color: #00f0ff; }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #00f0ff;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    button {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #334155;
+      border-color: #00f0ff;
+    }
+
+    /* Planet Info Card */
+    .info-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .info-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: #ffcc00;
+      font-size: 1.15rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .info-item {
+      font-size: 0.82rem;
+      margin-bottom: 0.4rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255,255,255,0.05);
+      padding-bottom: 3px;
+    }
+
+    .info-item strong {
+      color: #f0f4f8;
+      text-align: right;
+    }
+
+    #tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(5, 10, 20, 0.95);
+      border: 1px solid #00f0ff;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      color: #fff;
+      display: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="canvas-container">
+    <canvas id="simCanvas"></canvas>
+    <div id="tooltip"></div>
+  </div>
+
+  <div class="sidebar">
+    <div>
+      <a href="index.html" class="back-btn">&larr; Back to Villa</a>
+      <h1>Solar System Scale</h1>
+    </div>
+
+    <div class="info-card" id="planet-info">
+      <h3 id="p-name">Hover/Click Planet</h3>
+      <div class="info-item">Avg Distance: <strong id="p-dist">-</strong></div>
+      <div class="info-item">Distance AU: <strong id="p-au">-</strong></div>
+      <div class="info-item">Time to Orbit Sun: <strong id="p-period">-</strong></div>
+      <div class="info-item">Day Length: <strong id="p-day">-</strong></div>
+      <div class="info-item">Orbital Speed: <strong id="p-speed">-</strong></div>
+      <div class="info-item">Moons: <strong id="p-moons">-</strong></div>
+      <div class="info-item">Avg Temp: <strong id="p-temp">-</strong></div>
+      <div class="info-item">Real Diameter: <strong id="p-size">-</strong></div>
+    </div>
+
+    <div class="control-group">
+      <label>Orbit Speed: <span id="speed-val">1.0x</span></label>
+      <input type="range" id="speed-slider" min="0" max="5" step="0.1" value="1">
+    </div>
+
+    <div class="btn-grid">
+      <button id="pause-btn">Pause / Play</button>
+      <button id="reset-cam">Reset View</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+
+    function resize() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let cameraOffset = { x: -80, y: 0 };
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let timeScale = 1.0;
+    let isPaused = false;
+
+    // Detailed Astronomical Dataset
+    const planets = [
+      { name: "Mercury", kmDist: "57.9M km", au: "0.39 AU", period: "88 Earth Days", day: "59 Earth Days", realSpeed: "47.4 km/s", moons: "0", temp: "167°C", sizeKm: "4,879 km", color: "#b5b5b5", darkColor: "#525252", distFactor: 110, orbitSpeed: 0.035, radius: 10 },
+      { name: "Venus", kmDist: "108.2M km", au: "0.72 AU", period: "225 Earth Days", day: "243 Earth Days", realSpeed: "35.0 km/s", moons: "0", temp: "464°C", sizeKm: "12,104 km", color: "#e3c16f", darkColor: "#7a5d1b", distFactor: 170, orbitSpeed: 0.024, radius: 16 },
+      { name: "Earth", kmDist: "149.6M km", au: "1.00 AU", period: "365.25 Days (1 Year)", day: "24 Hours", realSpeed: "29.8 km/s", moons: "1", temp: "15°C", sizeKm: "12,742 km", color: "#3a88e9", darkColor: "#0d3b75", distFactor: 240, orbitSpeed: 0.018, radius: 18, hasMoon: true },
+      { name: "Mars", kmDist: "227.9M km", au: "1.52 AU", period: "687 Earth Days (1.9 Yrs)", day: "24.6 Hours", realSpeed: "24.1 km/s", moons: "2", temp: "-65°C", sizeKm: "6,779 km", color: "#e55934", darkColor: "#78220c", distFactor: 310, orbitSpeed: 0.013, radius: 13 },
+      { name: "Jupiter", kmDist: "778.5M km", au: "5.20 AU", period: "11.86 Earth Years", day: "9.9 Hours", realSpeed: "13.1 km/s", moons: "95", temp: "-110°C", sizeKm: "139,820 km", color: "#d2a072", darkColor: "#6e4726", distFactor: 470, orbitSpeed: 0.008, radius: 36, isStriped: true },
+      { name: "Saturn", kmDist: "1.43B km", au: "9.58 AU", period: "29.45 Earth Years", day: "10.7 Hours", realSpeed: "9.7 km/s", moons: "146", temp: "-140°C", sizeKm: "116,460 km", color: "#e2c974", darkColor: "#736122", distFactor: 580, orbitSpeed: 0.005, radius: 30, hasRings: true },
+      { name: "Uranus", kmDist: "2.87B km", au: "19.2 AU", period: "84 Earth Years", day: "17.2 Hours", realSpeed: "6.8 km/s", moons: "28", temp: "-195°C", sizeKm: "50,724 km", color: "#60dfff", darkColor: "#1a697c", distFactor: 680, orbitSpeed: 0.003, radius: 24 },
+      { name: "Neptune", kmDist: "4.50B km", au: "30.1 AU", period: "164.8 Earth Years", day: "16.1 Hours", realSpeed: "5.4 km/s", moons: "16", temp: "-200°C", sizeKm: "49,244 km", color: "#2d57e8", darkColor: "#0d1f6b", distFactor: 770, orbitSpeed: 0.002, radius: 22 }
+    ];
+
+    planets.forEach(p => p.angle = Math.random() * Math.PI * 2);
+
+    // Realistic Multi-Shape Asteroid Generator (500 Asteroids)
+    const asteroids = Array.from({ length: 500 }, () => {
+      const dist = 350 + Math.random() * 85;
+      const points = [];
+      const numVertices = 5 + Math.floor(Math.random() * 4);
+      const baseRadius = Math.random() * 2.5 + 1.2;
+
+      for (let i = 0; i < numVertices; i++) {
+        const radOffset = (Math.random() - 0.5) * 1.2;
+        points.push(baseRadius + radOffset);
+      }
+
+      return {
+        distFactor: dist,
+        angle: Math.random() * Math.PI * 2,
+        speed: (0.008 + Math.random() * 0.004),
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.05,
+        points: points,
+        color: Math.random() > 0.4 ? '#8a8885' : '#595755'
+      };
+    });
+
+    // Starfield Background
+    const stars = Array.from({ length: 450 }, () => ({
+      x: (Math.random() - 0.5) * 3200,
+      y: (Math.random() - 0.5) * 3200,
+      size: Math.random() * 2 + 0.5,
+      alpha: Math.random() * 0.9 + 0.1
+    }));
+
+    function drawSpaceBackground(cx, cy) {
+      stars.forEach(s => {
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = s.alpha;
+        ctx.beginPath();
+        ctx.arc(cx + s.x, cy + s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1.0;
+    }
+
+    function animate() {
+      ctx.fillStyle = '#020208';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const cx = canvas.width / 2 + cameraOffset.x;
+      const cy = canvas.height / 2 + cameraOffset.y;
+
+      drawSpaceBackground(cx, cy);
+
+      // Sun
+      const sunGlow = ctx.createRadialGradient(cx, cy, 10, cx, cy, 80);
+      sunGlow.addColorStop(0, '#ffffff');
+      sunGlow.addColorStop(0.2, '#ffcc00');
+      sunGlow.addColorStop(0.6, 'rgba(255, 100, 0, 0.4)');
+      sunGlow.addColorStop(1, 'rgba(255, 100, 0, 0)');
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 80, 0, Math.PI * 2);
+      ctx.fillStyle = sunGlow;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 32, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffea55';
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = '#ff8800';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.font = '600 12px "Orbitron", sans-serif';
+      ctx.fillStyle = '#ffea55';
+      ctx.textAlign = 'center';
+      ctx.fillText("SUN", cx, cy + 48);
+
+      // Asteroid Belt Overlay & Label
+      ctx.beginPath();
+      ctx.arc(cx, cy, 390, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(160, 160, 160, 0.06)';
+      ctx.lineWidth = 85;
+      ctx.stroke();
+
+      ctx.font = 'bold 10px "Orbitron", sans-serif';
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.6)';
+      ctx.fillText("MAIN ASTEROID BELT (2.2 - 3.2 AU)", cx, cy - 395);
+
+      // Render Irregular Asteroids
+      asteroids.forEach(ast => {
+        if (!isPaused) {
+          ast.angle += ast.speed * timeScale * 0.4;
+          ast.rotation += ast.rotSpeed;
+        }
+        const ax = cx + Math.cos(ast.angle) * ast.distFactor;
+        const ay = cy + Math.sin(ast.angle) * ast.distFactor;
+
+        ctx.save();
+        ctx.translate(ax, ay);
+        ctx.rotate(ast.rotation);
+
+        ctx.beginPath();
+        const step = (Math.PI * 2) / ast.points.length;
+        for (let i = 0; i < ast.points.length; i++) {
+          const r = ast.points[i];
+          const x = Math.cos(i * step) * r;
+          const y = Math.sin(i * step) * r;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = ast.color;
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Render Planets
+      planets.forEach(p => {
+        // Orbit Circle
+        ctx.beginPath();
+        ctx.arc(cx, cy, p.distFactor, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        if (!isPaused) {
+          p.angle += p.orbitSpeed * timeScale * 0.4;
+        }
+
+        const px = cx + Math.cos(p.angle) * p.distFactor;
+        const py = cy + Math.sin(p.angle) * p.distFactor;
+        p.currentX = px;
+        p.currentY = py;
+
+        // Saturn Rings
+        if (p.hasRings) {
+          ctx.beginPath();
+          ctx.ellipse(px, py, p.radius * 2.1, p.radius * 0.7, Math.PI / 6, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(226, 201, 116, 0.6)';
+          ctx.lineWidth = 6;
+          ctx.stroke();
+        }
+
+        // 3D Planet Shader
+        const planetGrad = ctx.createRadialGradient(
+          px - p.radius * 0.3, py - p.radius * 0.3, p.radius * 0.1,
+          px, py, p.radius
+        );
+        planetGrad.addColorStop(0, p.color);
+        planetGrad.addColorStop(1, p.darkColor);
+
+        ctx.beginPath();
+        ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = planetGrad;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Jupiter Striping
+        if (p.isStriped) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.fillStyle = 'rgba(110, 71, 38, 0.5)';
+          ctx.fillRect(px - p.radius, py - 6, p.radius * 2, 4);
+          ctx.fillRect(px - p.radius, py + 4, p.radius * 2, 5);
+          ctx.restore();
+        }
+
+        // Earth Moon
+        if (p.hasMoon) {
+          const mx = px + Math.cos(p.angle * 5) * (p.radius + 10);
+          const my = py + Math.sin(p.angle * 5) * (p.radius + 10);
+          ctx.beginPath();
+          ctx.arc(mx, my, 4, 0, Math.PI * 2);
+          ctx.fillStyle = '#dddddd';
+          ctx.fill();
+        }
+
+        // Planet Labels
+        ctx.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.name, px, py + p.radius + 16);
+
+        ctx.font = '10px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillText(`${p.au} (${p.period})`, px, py + p.radius + 29);
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    // Mouse Interaction
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      dragStart = { x: e.clientX - cameraOffset.x, y: e.clientY - cameraOffset.y };
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        cameraOffset.x = e.clientX - dragStart.x;
+        cameraOffset.y = e.clientY - dragStart.y;
+      }
+
+      let hovered = null;
+      planets.forEach(p => {
+        const dx = e.clientX - p.currentX;
+        const dy = e.clientY - p.currentY;
+        if (Math.sqrt(dx * dx + dy * dy) < p.radius + 8) {
+          hovered = p;
+        }
+      });
+
+      if (hovered) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = `${e.clientX + 14}px`;
+        tooltip.style.top = `${e.clientY + 14}px`;
+        tooltip.innerHTML = `<strong>${hovered.name}</strong><br>Orbit Time: ${hovered.period}`;
+        updateInfoPanel(hovered);
+      } else {
+        tooltip.style.display = 'none';
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => isDragging = false);
+
+    function updateInfoPanel(p) {
+      document.getElementById('p-name').textContent = p.name;
+      document.getElementById('p-dist').textContent = p.kmDist;
+      document.getElementById('p-au').textContent = p.au;
+      document.getElementById('p-period').textContent = p.period;
+      document.getElementById('p-day').textContent = p.day;
+      document.getElementById('p-speed').textContent = p.realSpeed;
+      document.getElementById('p-moons').textContent = p.moons;
+      document.getElementById('p-temp').textContent = p.temp;
+      document.getElementById('p-size').textContent = p.sizeKm;
+    }
+
+    document.getElementById('speed-slider').addEventListener('input', (e) => {
+      timeScale = parseFloat(e.target.value);
+      document.getElementById('speed-val').textContent = `${timeScale.toFixed(1)}x`;
+    });
+
+    document.getElementById('pause-btn').addEventListener('click', () => isPaused = !isPaused);
+    document.getElementById('reset-cam').addEventListener('click', () => cameraOffset = { x: -80, y: 0 });
+
+    animate();
+  </script>
+</body>
+</html>

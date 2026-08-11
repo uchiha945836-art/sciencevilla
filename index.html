@@ -1,155 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Science Villa | Interactive STEM Simulations</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Villa | Interactive Models</title>
   <style>
     :root {
-      --bg: #070913;
-      --card-bg: rgba(22, 27, 46, 0.75);
-      --accent-blue: #00f0ff;
-      --accent-purple: #7000ff;
-      --text-main: #f0f4f8;
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --accent-cyan: #38bdf8;
+      --text-light: #f8fafc;
       --text-sub: #94a3b8;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(112, 0, 255, 0.12) 0%, transparent 45%);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
     }
 
     header {
-      padding: 2rem 1rem;
       text-align: center;
-      position: relative;
+      margin-bottom: 3rem;
     }
 
-    header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
+    h1 {
+      font-size: 2.5rem;
       margin-bottom: 0.5rem;
+      color: var(--text-light);
     }
 
-    header p {
+    p.subtitle {
       color: var(--text-sub);
       font-size: 1.1rem;
     }
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-      flex: 1;
+      width: 100%;
+      max-width: 1100px;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
     }
 
     .card {
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 1.8rem;
-      backdrop-filter: blur(12px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.75rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-      opacity: 0;
-      transition: opacity 0.3s;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(0, 240, 255, 0.4);
-      box-shadow: 0 12px 30px rgba(0, 240, 255, 0.15);
-    }
-
-    .card:hover::before {
-      opacity: 1;
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
     }
 
     .card h2 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.4rem;
-      color: #fff;
-      margin-bottom: 0.8rem;
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-light);
     }
 
     .card p {
       color: var(--text-sub);
       font-size: 0.95rem;
-      line-height: 1.6;
+      line-height: 1.5;
       margin-bottom: 1.5rem;
     }
 
     .btn {
       display: inline-block;
       text-align: center;
-      padding: 0.8rem 1.4rem;
-      background: linear-gradient(135deg, var(--accent-blue), #00a8ff);
-      color: #000;
-      font-weight: 700;
-      text-decoration: none;
+      background-color: var(--accent-cyan);
+      color: #0f172a;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
       border-radius: 8px;
-      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
     }
 
     .btn:hover {
-      opacity: 0.9;
-      transform: scale(1.02);
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-sub);
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      background-color: #7dd3fc;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>SCIENCE VILLA</h1>
-    <p>Interactive Physics & Engineering Simulations</p>
+    <h1>Science Villa</h1>
+    <p class="subtitle">Interactive Physics & Science Models</p>
   </header>
 
   <div class="container">
@@ -164,7 +122,7 @@
         <a href="vortex.html" class="btn">Launch Model</a>
       </div>
 
-      <!-- Solar System Model -->
+      <!-- Solar System Gravity Model -->
       <div class="card">
         <div>
           <h2>Solar System Sandbox</h2>
@@ -173,12 +131,17 @@
         <a href="gravity.html" class="btn">Launch Model</a>
       </div>
 
+      <!-- Solar System Scale & Distance Explorer -->
+      <div class="card">
+        <div>
+          <h2>Solar System </h2>
+          <p>Realistic scale & distance model. View real physical astronomical units (AU), orbital speeds, and interactive planet details.</p>
+        </div>
+        <a href="solar system.html" class="btn">Launch Model</a>
+      </div>
+
     </div>
   </div>
-
-  <footer>
-    &copy; 2026 Science Villa. Built with HTML5 Canvas & Physics Engine.
-  </footer>
 
 </body>
 </html>
