@@ -510,7 +510,7 @@
       <div class="controls-wrapper">
         <div class="search-bar-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, VSEPR)...">
         </div>
 
         <div class="category-tabs">
@@ -521,7 +521,7 @@
         </div>
       </div>
 
-      <!-- Models Grid (Strictly 5 in a row setup) -->
+      <!-- Models Grid -->
       <div class="grid" id="modelsGrid">
         
         <!-- Newton's Cradle Model (Physics) -->
@@ -532,6 +532,16 @@
             <p>Interactive 3D momentum conservation model. Drag and release spheres, adjust gravity, damping, and inspect live energy telemetry.</p>
           </div>
           <a href="newtoncradle.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- Archimedes' Principle Model (Physics) -->
+        <div class="card" data-category="physics">
+          <div>
+            <span class="card-tag">Physics</span>
+            <h2>Archimedes' Principle Lab</h2>
+            <p>Interactive fluid mechanics simulation. Test buoyancy force, displaced water volume, density adjustments, and apparent weight in real-time[cite: 4].</p>
+          </div>
+          <a href="archimedesprinciple.html" class="btn">Launch Model</a>
         </div>
 
         <!-- Vortex Model (Physics) -->
@@ -592,6 +602,16 @@
             <p>Expanded 3D Bohr model simulator featuring all 118 periodic table elements, subatomic clusters, and speeds.</p>
           </div>
           <a href="bohrmodel.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- VSEPR & Molecular Geometry Studio (Chemistry) -->
+        <div class="card" data-category="chemistry">
+          <div>
+            <span class="card-tag chemistry">Chemistry</span>
+            <h2>VSEPR & Molecular Geometry Studio</h2>
+            <p>Comprehensive JEE/NEET masterclass exploring standard, ionic, and anomalous molecular geometries from steric numbers 2 to 7.</p>
+          </div>
+          <a href="vsepr.html" class="btn">Launch Model</a>
         </div>
 
         <!-- Cell Structure Model (Biology Placeholder) -->
@@ -675,12 +695,14 @@
           <select id="modelSelect">
             <option value="General Suggestion">General / Entire Site</option>
             <option value="Newton's Cradle Physics Lab">Newton's Cradle Physics Lab (Physics)</option>
+            <option value="Archimedes' Principle Lab">Archimedes' Principle Lab (Physics)</option>
             <option value="Vortex Drop Shaft">Vortex Drop Shaft (Physics)</option>
             <option value="Solar System Sandbox">Solar System Sandbox (Physics)</option>
             <option value="Solar System Explorer">Solar System Explorer (Physics)</option>
             <option value="Nuclear Reactor System Overview">Nuclear Reactor System Overview (Physics)</option>
             <option value="Rutherford's Model">Rutherford's Model (Chemistry)</option>
             <option value="Bohr's Model">Bohr's Model (Chemistry)</option>
+            <option value="VSEPR & Molecular Geometry Studio">VSEPR & Molecular Geometry Studio (Chemistry)</option>
             <option value="Biology Section">Biology Section Suggestion</option>
           </select>
         </div>
