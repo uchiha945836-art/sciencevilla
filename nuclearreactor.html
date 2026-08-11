@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuclear Reactor Simulation | Science Villa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(18, 26, 43, 0.75);
+      --accent-cyan: #38bdf8;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --text-light: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-glow: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(239, 68, 68, 0.05) 0%, transparent 40%);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-glow);
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .back-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent-cyan);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      padding: 0.35rem 0.9rem;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      color: var(--accent-danger);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-sub);
+      font-size: 1rem;
+    }
+
+    /* Simulation Layout */
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .sim-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-container {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 420px;
+      background: #030407;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Control Panel */
+    .control-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.2rem;
+    }
+
+    .panel-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      font-size: 0.92rem;
+    }
+
+    .metric-value {
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .metric-value.warning {
+      color: var(--accent-warning);
+    }
+
+    .metric-value.danger {
+      color: var(--accent-danger);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .control-group label {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .btn-scram {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: white;
+      border: none;
+      padding: 0.8rem;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-scram:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+    }
+
+    /* Educational Section */
+    .info-section {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glow);
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+
+    .info-card h4 {
+      color: var(--accent-cyan);
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .info-card p {
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-glow);
+      width: 100%;
+      max-width: 1200px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Science Villa</a>
+    <a href="index.html" class="back-link">&larr; Back to Models</a>
+  </nav>
+
+  <header>
+    <div class="badge">Advanced PWR Thermal Loop Simulator</div>
+    <h1>Nuclear Reactor System Overview</h1>
+    <p class="subtitle">Interactive simulation mapping the reactor core, multi-loop heat exchange, adjustable coolant pump speeds, turbine generation, and cooling water dynamics.</p>
+  </header>
+
+  <div class="container">
+    
+    <!-- Simulation Box -->
+    <div class="sim-grid">
+      <div class="canvas-container">
+        <canvas id="reactorCanvas"></canvas>
+      </div>
+
+      <div class="control-panel">
+        <div class="panel-section">
+          <h3>System Telemetry</h3>
+          <div class="metric-row">
+            <span>Core Temperature:</span>
+            <span id="tempVal" class="metric-value">315 °C</span>
+          </div>
+          <div class="metric-row">
+            <span>Control Rods:</span>
+            <span id="rodValText" class="metric-value">50%</span>
+          </div>
+          <div class="metric-row">
+            <span>Primary Pump Flow:</span>
+            <span id="pumpValText" class="metric-value">50%</span>
+          </div>
+          <div class="metric-row">
+            <span>Turbine Speed:</span>
+            <span id="turbineVal" class="metric-value">3,000 RPM</span>
+          </div>
+          <div class="metric-row">
+            <span>Power Generation:</span>
+            <span id="powerVal" class="metric-value">1,000 MW</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Operator Controls</h3>
+          <div class="control-group">
+            <label for="controlRods">Control Rod Insertion (<span id="rodVal">50</span>%)</label>
+            <input type="range" id="controlRods" min="0" max="100" value="50">
+          </div>
+          <div class="control-group">
+            <label for="coolantPump">Primary Coolant Pump Speed (<span id="pumpVal">50</span>%)</label>
+            <input type="range" id="coolantPump" min="10" max="100" value="50">
+          </div>
+        </div>
+
+        <button class="btn-scram" id="scramBtn">EMERGENCY SCRAM (Drop Rods & Max Pumps)</button>
+      </div>
+    </div>
+
+    <!-- Educational Breakdown matching diagram components -->
+    <section class="info-section">
+      <h2>Comprehensive Nuclear Plant Components</h2>
+      <p style="color: var(--text-sub); line-height: 1.6; margin-bottom: 1rem;">
+        Detailed structural analysis of the pressurized water reactor (PWR) loop contained within the reinforced <strong>confinement shell</strong>.
+      </p>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h4>1. Reactor Core & Control Rods</h4>
+          <p>Houses enriched nuclear fuel assemblies. Neutron-absorbing control rods are lowered or raised dynamically to control fission rates and core reactivity.</p>
+        </div>
+        <div class="info-card">
+          <h4>2. Primary Loop & Circulation Pump</h4>
+          <p>High-pressure water absorbs intense thermal energy from the core and is forced through the steam generator via heavy-duty coolant pumps.</p>
+        </div>
+        <div class="info-card">
+          <h4>3. Steam Generator (Heat Exchanger)</h4>
+          <p>Isolates radioactive primary water from secondary loops while transferring thermal energy to vaporize secondary water into clean high-pressure steam.</p>
+        </div>
+        <div class="info-card">
+          <h4>4. Turbine, Generator & Condenser</h4>
+          <p>Expansion of steam drives the turbine rotor linked to the electric generator. Exhaust steam is cooled back into liquid via external water sources.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>&copy; Science Villa | Advanced Nuclear Plant Engineering Module</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('reactorCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth - 48;
+      canvas.height = 420;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Simulation State parameters
+    let controlRodInsertion = 50; 
+    let pumpSpeed = 50;
+    let coreTemp = 315; 
+    let turbineSpeed = 3000;
+    let powerGen = 1000;
+    let flowOffset = 0;
+
+    const rodSlider = document.getElementById('controlRods');
+    const pumpSlider = document.getElementById('coolantPump');
+    const rodValDisplay = document.getElementById('rodVal');
+    const pumpValDisplay = document.getElementById('pumpVal');
+    const rodValText = document.getElementById('rodValText');
+    const pumpValText = document.getElementById('pumpValText');
+    const tempDisplay = document.getElementById('tempVal');
+    const turbineDisplay = document.getElementById('turbineVal');
+    const powerDisplay = document.getElementById('powerVal');
+    const scramBtn = document.getElementById('scramBtn');
+
+    rodSlider.addEventListener('input', (e) => {
+      controlRodInsertion = parseInt(e.target.value);
+      rodValDisplay.textContent = controlRodInsertion;
+    });
+
+    pumpSlider.addEventListener('input', (e) => {
+      pumpSpeed = parseInt(e.target.value);
+      pumpValDisplay.textContent = pumpSpeed;
+    });
+
+    scramBtn.addEventListener('click', () => {
+      controlRodInsertion = 100;
+      rodSlider.value = 100;
+      rodValDisplay.textContent = 100;
+      pumpSpeed = 100;
+      pumpSlider.value = 100;
+      pumpValDisplay.textContent = 100;
+    });
+
+    function updatePhysics() {
+      // Core temperature calculation based on fission heat minus cooling efficiency
+      let fissionPower = (1 - controlRodInsertion / 100);
+      let coolingEfficiency = pumpSpeed / 50;
+      let targetTemp = 160 + (fissionPower * 280) / Math.max(coolingEfficiency, 0.4);
+      
+      coreTemp += (targetTemp - coreTemp) * 0.05;
+
+      // Turbine & Power Generation linked to steam pressure and flow
+      let steamFlowFactor = fissionPower * (pumpSpeed / 100);
+      turbineSpeed = Math.round(steamFlowFactor * 4000);
+      if (controlRodInsertion >= 95) turbineSpeed = 0;
+
+      powerGen = Math.round((coreTemp / 400) * 1250 * steamFlowFactor);
+      if (powerGen < 0) powerGen = 0;
+
+      // Update UI Telemetry
+      tempDisplay.textContent = Math.round(coreTemp) + ' °C';
+      rodValText.textContent = controlRodInsertion + '%';
+      pumpValText.textContent = pumpSpeed + '%';
+      turbineDisplay.textContent = turbineSpeed.toLocaleString() + ' RPM';
+      powerDisplay.textContent = powerGen.toLocaleString() + ' MW';
+
+      tempDisplay.className = "metric-value";
+      if (coreTemp > 420) tempDisplay.className = "metric-value danger";
+      else if (coreTemp > 350) tempDisplay.className = "metric-value warning";
+
+      flowOffset += (pumpSpeed * 0.08) + 0.5;
+    }
+
+    function drawSystemDiagram() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let scaleX = canvas.width / 850;
+      let scaleY = canvas.height / 420;
+      ctx.save();
+      ctx.scale(scaleX, scaleY);
+
+      // --- 1. CONFINEMENT SHELL (Dome) ---
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(160, 200, 130, Math.PI, 0, false);
+      ctx.lineTo(290, 360);
+      ctx.lineTo(30, 360);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.3)';
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.fillText('Confinement shell', 45, 90);
+
+      // --- 2. REACTOR VESSEL & CORE ---
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(80, 180, 90, 150, [15, 15, 10, 10]);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText('Reactor core', 88, 260);
+
+      // Control Rods inside core (Moving up/down based on slider)
+      let maxRodH = 60;
+      let currentRodH = maxRodH * (controlRodInsertion / 100);
+      ctx.fillStyle = '#ef4444';
+      for(let i=0; i<4; i++) {
+        let rx = 100 + i * 18;
+        ctx.fillRect(rx, 150 + (maxRodH - currentRodH), 4, currentRodH);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(rx + 2, 150);
+        ctx.lineTo(rx + 2, 120);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(95, 115, 60, 8);
+      ctx.fillText('Control rods', 162, 140);
+
+      // --- 3. STEAM GENERATOR (Heat Exchanger) ---
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(330, 150, 90, 190, [20, 20, 15, 15]);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillText('Steam', 360, 142);
+
+      // Boiling water liquid level inside steam generator
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+      ctx.fillRect(332, 230, 86, 108);
+      
+      // Animated Steam bubbles inside generator
+      ctx.fillStyle = '#38bdf8';
+      for(let i=0; i<6; i++) {
+        let bx = 345 + (i * 12);
+        let by = 240 + ((Math.sin(flowOffset * 0.15 + i) + 1) * 40);
+        ctx.beginPath();
+        ctx.arc(bx, by, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Heat exchanger internal coiled pipe
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(375, 320);
+      ctx.bezierCurveTo(350, 300, 400, 260, 375, 240);
+      ctx.bezierCurveTo(350, 220, 400, 190, 375, 170);
+      ctx.stroke();
+
+      // --- 4. PRIMARY PIPING & PUMP ---
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(170, 210);
+      ctx.lineTo(260, 210);
+      ctx.lineTo(260, 170);
+      ctx.lineTo(335, 170);
+      ctx.moveTo(375, 320);
+      ctx.lineTo(375, 350);
+      ctx.lineTo(200, 350);
+      ctx.lineTo(200, 320);
+      ctx.stroke();
+
+      // Animated Flow Dashes on Primary Pipe
+      ctx.strokeStyle = '#f8fafc';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 12]);
+      ctx.lineDashOffset = -flowOffset * 2;
+      ctx.beginPath();
+      ctx.moveTo(170, 210);
+      ctx.lineTo(260, 210);
+      ctx.lineTo(260, 170);
+      ctx.lineTo(335, 170);
+      ctx.stroke();
+      ctx.setLineDash([]); // reset
+
+      // Primary Pump Graphic
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.arc(200, 350, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '9px sans-serif';
+      ctx.fillText('Pump', 185, 378);
+
+      // --- 5. STEAM TURBINE & GENERATOR ---
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(420, 170);
+      ctx.lineTo(580, 170);
+      ctx.lineTo(580, 215);
+      ctx.stroke();
+
+      // Turbine Housing
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.ellipse(580, 230, 35, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('Steam turbine', 532, 270);
+
+      // Electric Generator Box connected to turbine shaft
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(630, 215, 60, 30);
+      ctx.strokeRect(630, 215, 60, 30);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText('Electric', 640, 230);
+      ctx.fillText('generator', 635, 241);
+
+      // Power output transmission lines
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(690, 230);
+      ctx.lineTo(760, 230);
+      ctx.stroke();
+
+      // --- 6. CONDENSER & COOLING WATER LOOP ---
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(530, 300, 100, 90, [10, 10, 15, 15]);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillText('Condenser', 550, 348);
+
+      // Condenser cooling water zigzag coil inside
+      ctx.strokeStyle = '#3b82f6';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(545, 360);
+      ctx.lineTo(560, 340);
+      ctx.lineTo(575, 360);
+      ctx.lineTo(590, 340);
+      ctx.lineTo(605, 360);
+      ctx.lineTo(615, 340);
+      ctx.stroke();
+
+      // Cooling Water source (River/Ocean basin on the right)
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+      ctx.beginPath();
+      ctx.moveTo(710, 330);
+      ctx.quadraticCurveTo(770, 320, 830, 350);
+      ctx.lineTo(830, 400);
+      ctx.lineTo(710, 400);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#93c5fd';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('River, lake', 732, 370);
+      ctx.fillText('or ocean', 738, 383);
+
+      // Cooling water piping from river to condenser and back
+      ctx.strokeStyle = '#3b82f6';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(750, 390);
+      ctx.lineTo(650, 390);
+      ctx.lineTo(650, 360);
+      ctx.lineTo(615, 360);
+      moveToPoint(ctx, 545, 360);
+      ctx.lineTo(500, 360);
+      ctx.lineTo(500, 330);
+      ctx.lineTo(770, 330);
+      ctx.stroke();
+
+      // Secondary Pumps along cooling water line
+      ctx.fillStyle = '#64748b';
+      ctx.beginPath();
+      ctx.arc(580, 390, 8, 0, Math.PI * 2);
+      ctx.arc(680, 390, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '9px sans-serif';
+      ctx.fillText('Pump', 665, 410);
+
+      ctx.fillStyle = '#fca5a5';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('Warm water', 670, 323);
+
+      ctx.restore();
+    }
+
+    function moveToPoint(ctx, x, y) {
+      ctx.moveTo(x, y);
+    }
+
+    function loop() {
+      updatePhysics();
+      drawSystemDiagram();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>
