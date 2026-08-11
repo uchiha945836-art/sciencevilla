@@ -1,496 +1,781 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Interactive Physics-Engine Newton's Cradle</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newton's Cradle – Interactive Physics Demo</title>
   <style>
     :root {
-      --bg-dark: #03050a;
-      --card-bg: rgba(13, 22, 38, 0.95);
-      --border-color: rgba(255, 255, 255, 0.15);
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
-      --accent: #38bdf8;
+      --bg-deep: #0a1628;
+      --bg-mid: #0f2744;
+      --bg-card: #132f4c;
+      --accent: #3b9eff;
+      --accent-bright: #64b5ff;
+      --accent-glow: rgba(59, 158, 255, 0.35);
+      --text: #e8f1ff;
+      --text-muted: #8ba3c7;
+      --ball: #c0d8f0;
+      --ball-shine: #eef6ff;
+      --string: #5a8fc4;
+      --frame: #2a5a8a;
+      --success: #4ade80;
+      --border: #1e4a7a;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, sans-serif;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      position: relative;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, var(--bg-deep) 0%, #0d1f38 40%, var(--bg-mid) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.55;
     }
 
-    #canvas-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .ui-overlay {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
+    header {
       text-align: center;
-      pointer-events: none;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      z-index: 10;
-      width: 90%;
-      max-width: 400px;
+      padding: 1.5rem 1rem 0.75rem;
+      background: linear-gradient(180deg, rgba(15, 39, 68, 0.9), transparent);
     }
 
-    h1 {
-      font-size: 0.85rem;
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
       font-weight: 700;
-      background: linear-gradient(135deg, #ffffff, var(--accent));
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, var(--accent-bright), #a0d0ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 0.1rem;
+      background-clip: text;
+      margin-bottom: 0.35rem;
     }
 
-    p {
-      font-size: 0.65rem;
-      color: var(--text-sub);
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
-    /* Collapsible or compact mobile info panel */
-    .info-panel {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      width: calc(100% - 20px);
-      max-width: 320px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 0.8rem;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      z-index: 10;
-      pointer-events: auto;
-      max-height: 40vh;
-      overflow-y: auto;
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.25rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem 2rem;
     }
 
-    @media (min-width: 768px) {
-      .info-panel {
-        left: auto;
-        right: 20px;
-        top: 20px;
-        bottom: auto;
-        max-width: 300px;
-        max-height: none;
-      }
-      .ui-overlay {
-        top: 20px;
-        max-width: 500px;
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
       }
     }
 
-    .info-panel h2 {
+    .sim-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .canvas-wrap {
+      position: relative;
+      background: radial-gradient(ellipse at 50% 20%, #1a3a5c 0%, #0c1c30 70%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 380px;
+    }
+
+    canvas {
+      display: block;
+      max-width: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    .controls {
+      padding: 1rem 1.25rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 22, 40, 0.5);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button {
+      background: linear-gradient(180deg, #1e4a7a, #15355c);
+      color: var(--text);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.45rem 0.9rem;
       font-size: 0.85rem;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     }
 
-    .control-group {
-      margin-bottom: 0.5rem;
+    button:hover {
+      background: linear-gradient(180deg, #2563a8, #1a4a7a);
+      box-shadow: 0 0 12px var(--accent-glow);
+      transform: translateY(-1px);
     }
 
-    .control-group label {
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.primary {
+      background: linear-gradient(180deg, var(--accent), #1a6fd4);
+      border-color: var(--accent-bright);
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: linear-gradient(180deg, #5aadff, var(--accent));
+    }
+
+    .sliders {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .sliders {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .slider-group label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
-      font-size: 0.7rem;
-      color: var(--text-sub);
-      margin-bottom: 0.2rem;
     }
 
-    .control-group label span {
-      color: var(--text-main);
+    .slider-group label span {
+      color: var(--accent-bright);
       font-weight: 600;
     }
 
     input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
       width: 100%;
-      accent-color: var(--accent);
+      height: 6px;
+      border-radius: 3px;
+      background: #1a3a5c;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
       cursor: pointer;
+      box-shadow: 0 0 8px var(--accent-glow);
+      border: 2px solid #fff;
     }
 
-    .stats-box {
-      margin-top: 0.6rem;
-      border-top: 1px solid var(--border-color);
-      padding-top: 0.5rem;
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 2px solid #fff;
     }
 
-    .stats-box ul {
-      list-style: none;
-      font-size: 0.7rem;
-      color: var(--text-sub);
-      line-height: 1.4;
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding-top: 0.25rem;
     }
 
-    .stats-box span {
-      color: var(--text-main);
-      font-weight: 600;
-      float: right;
+    .info-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 0.25rem;
     }
 
-    .control-hint {
-      display: none;
+    .info-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .info-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .info-panel::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      color: var(--accent-bright);
+      margin-bottom: 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card h2::before {
+      content: '';
+      width: 4px;
+      height: 1.1em;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .card p, .card li {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .card ul {
+      margin: 0.4rem 0 0 1.1rem;
+    }
+
+    .card li {
+      margin-bottom: 0.3rem;
+    }
+
+    .card strong {
+      color: var(--text);
+    }
+
+    .physics-box {
+      background: rgba(59, 158, 255, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.8rem;
+      margin: 0.6rem 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 0.5rem;
+    }
+
+    .status {
+      font-size: 0.8rem;
+      color: var(--accent-bright);
+      text-align: center;
+      min-height: 1.2em;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Newton's Cradle</h1>
+    <p>Interactive demonstration of conservation of momentum &amp; energy</p>
+  </header>
 
-  <div class="ui-overlay">
-    <h1>Newton's Cradle Physics Lab</h1>
-    <p>Drag any ball to pull & release • Adjust metrics below</p>
+  <div class="layout">
+    <div class="sim-panel">
+      <div class="canvas-wrap">
+        <canvas id="cradle" width="700" height="420"></canvas>
+      </div>
+      <div class="controls">
+        <div class="btn-row">
+          <button class="primary" id="btn1">Swing 1 Ball</button>
+          <button class="primary" id="btn2">Swing 2 Balls</button>
+          <button id="btn3">Swing 3 Balls</button>
+          <button id="btnReset">Reset</button>
+          <button id="btnPause">Pause</button>
+        </div>
+
+        <div class="sliders">
+          <div class="slider-group">
+            <label>Balls <span id="valBalls">5</span></label>
+            <input type="range" id="numBalls" min="3" max="7" value="5" step="1" />
+          </div>
+          <div class="slider-group">
+            <label>Gravity <span id="valG">0.22</span></label>
+            <input type="range" id="gravity" min="0.05" max="0.6" value="0.22" step="0.01" />
+          </div>
+          <div class="slider-group">
+            <label>Damping <span id="valDamp">0.999</span></label>
+            <input type="range" id="damping" min="0.98" max="1" value="0.999" step="0.001" />
+          </div>
+          <div class="slider-group">
+            <label>String Length <span id="valLen">180</span></label>
+            <input type="range" id="stringLen" min="120" max="220" value="180" step="5" />
+          </div>
+        </div>
+
+        <p class="hint">Drag any ball to lift it · Release to swing · Click buttons for preset swings</p>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+
+    <aside class="info-panel">
+      <div class="card">
+        <h2>What is Newton's Cradle?</h2>
+        <p>
+          Newton's Cradle is a classic desk toy and physics demonstrator consisting of identical metal spheres suspended in a straight line from a rigid frame. When one or more balls on one end are lifted and released, they collide with the stationary balls and transfer their motion so that the same number of balls swing out on the opposite end.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>History</h2>
+        <p>
+          Although named after Sir Isaac Newton, the device was <strong>not invented by him</strong>. The underlying principles of elastic collisions were studied in the 17th century by Christiaan Huygens, John Wallis, Christopher Wren, and especially the French physicist <strong>Edme Mariotte</strong> (around 1670), who performed experiments with suspended spheres.
+        </p>
+        <p style="margin-top:0.5rem">
+          The modern name “Newton’s Cradle” was coined in <strong>1967</strong> by English actor Simon Prebble for a commercial wooden version sold through Harrods. It quickly became a popular executive desk toy.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>How It Works</h2>
+        <ul>
+          <li><strong>Lift &amp; release</strong> – One (or more) end balls are raised, gaining gravitational potential energy.</li>
+          <li><strong>Swing down</strong> – Potential energy converts to kinetic energy; the ball gains speed.</li>
+          <li><strong>Collision</strong> – The moving ball strikes the next stationary ball.</li>
+          <li><strong>Momentum transfer</strong> – A near-instantaneous compression wave travels through the line of balls.</li>
+          <li><strong>Opposite end swings</strong> – The last ball (or same number of balls) flies outward with almost the same speed.</li>
+          <li>The process reverses when the opposite ball returns, producing the characteristic continuous clicking.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Physics Principles</h2>
+        <div class="physics-box">
+          <strong>Conservation of Momentum</strong><br>
+          Total momentum before a collision equals total momentum after.<br>
+          For equal masses: if one ball hits with velocity <em>v</em>, one ball leaves with ≈ <em>v</em>.
+        </div>
+        <div class="physics-box">
+          <strong>Conservation of Energy</strong><br>
+          In an ideal elastic collision, kinetic energy is also conserved. Energy continually converts between potential (height) and kinetic (motion).
+        </div>
+        <div class="physics-box">
+          <strong>Newton’s Third Law</strong><br>
+          Action–reaction pairs: when ball A pushes ball B, ball B pushes back on A with equal force.
+        </div>
+        <p style="margin-top:0.5rem">
+          Real cradles slowly lose energy to air resistance, sound, heat, and imperfect elasticity, so the motion eventually dies out. The damping slider lets you control that loss.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Interesting Facts</h2>
+        <ul>
+          <li>Lifting <strong>two</strong> balls causes two balls to swing out on the other side — a striking visual proof of momentum conservation.</li>
+          <li>If the balls were glued together, they would all start moving slowly as a single mass (momentum conserved, but kinetic energy reduced).</li>
+          <li>The “click” you hear is the brief elastic deformation of the metal spheres.</li>
+          <li>Large museum versions can use bowling balls or even wrecking balls!</li>
+          <li>The effect works best with hard, elastic materials (steel, glass, ivory historically).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Try These Experiments</h2>
+        <ul>
+          <li>Swing 1 ball → only 1 leaves the other side.</li>
+          <li>Swing 2 balls → 2 leave the other side.</li>
+          <li>Change gravity &amp; watch the period change.</li>
+          <li>Set damping to 1.0 for near-perpetual motion (ideal case).</li>
+          <li>Drag balls by hand for custom starting positions.</li>
+        </ul>
+      </div>
+    </aside>
   </div>
 
-  <div class="info-panel">
-    <h2>Physics Adjustments</h2>
-    
-    <div class="control-group">
-      <label>Gravity ($g$): <span id="valGravity">9.81</span> m/s²</label>
-      <input type="range" id="rangeGravity" min="1" max="25" step="0.5" value="9.81">
-    </div>
+  <footer>
+    Pure HTML · CSS · JavaScript · No external libraries · Educational physics simulation
+  </footer>
 
-    <div class="control-group">
-      <label>Damping: <span id="valDamping">0.9998</span></label>
-      <input type="range" id="rangeDamping" min="0.990" max="1.000" step="0.0001" value="0.9998">
-    </div>
-
-    <div class="control-group">
-      <label>Mass ($m$): <span id="valMass">1.0</span> kg</label>
-      <input type="range" id="rangeMass" min="0.2" max="5.0" step="0.1" value="1.0">
-    </div>
-
-    <div class="stats-box">
-      <h2>Live Telemetry</h2>
-      <ul>
-        <li>State: <span id="sysState">Running</span></li>
-        <li>Active: <span id="activeCount">1 Ball</span></li>
-        <li>KE: <span id="calcKE">0.00 J</span></li>
-        <li>PE: <span id="calcPE">0.00 J</span></li>
-      </ul>
-    </div>
-  </div>
-
-  <div id="canvas-container"></div>
-
-  <!-- Three.js Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
   <script>
-    const container = document.getElementById('canvas-container');
-    const sysState = document.getElementById('sysState');
-    const activeCount = document.getElementById('activeCount');
-    const calcKE = document.getElementById('calcKE');
-    const calcPE = document.getElementById('calcPE');
+    (() => {
+      const canvas = document.getElementById('cradle');
+      const ctx = canvas.getContext('2d');
 
-    const rangeGravity = document.getElementById('rangeGravity');
-    const valGravity = document.getElementById('valGravity');
-    const rangeDamping = document.getElementById('rangeDamping');
-    const valDamping = document.getElementById('valDamping');
-    const rangeMass = document.getElementById('rangeMass');
-    const valMass = document.getElementById('valMass');
+      // --- Configurable parameters (Default gravity lowered for gentle, average speed) ---
+      let numBalls = 5;
+      let ballRadius = 22;
+      let stringLength = 180;
+      let gravity = 0.22;
+      let damping = 0.999;
+      const frameY = 55;
+      const spacing = () => ballRadius * 2 + 0.8;
 
-    let userGravity = 9.81;
-    let userDamping = 0.9998;
-    let userMass = 1.0;
+      let balls = [];
+      let dragging = null;
+      let paused = false;
+      let lastTime = 0;
 
-    rangeGravity.addEventListener('input', (e) => {
-      userGravity = parseFloat(e.target.value);
-      valGravity.innerText = userGravity.toFixed(1);
-    });
+      class Ball {
+        constructor(index) {
+          this.index = index;
+          this.angle = 0;
+          this.velocity = 0;
+          this.updateAnchor();
+        }
 
-    rangeDamping.addEventListener('input', (e) => {
-      userDamping = parseFloat(e.target.value);
-      valDamping.innerText = userDamping.toFixed(4);
-    });
+        updateAnchor() {
+          const totalWidth = (numBalls - 1) * spacing();
+          const startX = canvas.width / 2 - totalWidth / 2;
+          this.anchorX = startX + this.index * spacing();
+          this.anchorY = frameY;
+        }
 
-    rangeMass.addEventListener('input', (e) => {
-      userMass = parseFloat(e.target.value);
-      valMass.innerText = userMass.toFixed(1);
-    });
+        get x() {
+          return this.anchorX + Math.sin(this.angle) * stringLength;
+        }
 
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x03050a, 0.02);
+        get y() {
+          return this.anchorY + Math.cos(this.angle) * stringLength;
+        }
 
-    // Dynamic camera positioning optimized for mobile viewports
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-    function updateCameraPosition() {
-      if (window.innerWidth < 768) {
-        camera.position.set(0, 0.2, 10.5); // Pull back further on mobile screens
-      } else {
-        camera.position.set(0, 0.4, 8.5);
+        get tangentialSpeed() {
+          return this.velocity * stringLength;
+        }
+
+        update(dt) {
+          if (dragging === this) return;
+          const acc = (-gravity / stringLength) * Math.sin(this.angle);
+          this.velocity += acc * dt;
+          this.velocity *= damping;
+          this.angle += this.velocity * dt;
+        }
       }
-    }
-    updateCameraPosition();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: window.innerWidth > 768 }); // Disable heavy antialiasing on low-end mobiles to prevent lag
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Capped pixel ratio for performance
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap; // Lighter shadow mapping
-    container.appendChild(renderer.domElement);
-
-    // Studio Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    dirLight.position.set(6, 12, 8);
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 1024; // Reduced shadow map size for performance
-    dirLight.shadow.mapSize.height = 1024;
-    scene.add(dirLight);
-
-    const blueLight = new THREE.DirectionalLight(0x38bdf8, 0.8);
-    blueLight.position.set(-6, 4, -4);
-    scene.add(blueLight);
-
-    // Floor & Base
-    const floorGeo = new THREE.PlaneGeometry(30, 30);
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0x010204, roughness: 0.2, metalness: 0.8 });
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -2.5;
-    floor.receiveShadow = true;
-    scene.add(floor);
-
-    const baseGeo = new THREE.BoxGeometry(4.6, 0.25, 2.2);
-    const baseMat = new THREE.MeshStandardMaterial({ color: 0x140c08, roughness: 0.4, metalness: 0.1 });
-    const base = new THREE.Mesh(baseGeo, baseMat);
-    base.position.y = -2.0;
-    base.castShadow = true;
-    base.receiveShadow = true;
-    scene.add(base);
-
-    // Frame Pillars & Top Bars
-    const postGeo = new THREE.CylinderGeometry(0.05, 0.05, 3.4, 16); // Lower geometry detail for performance
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95, roughness: 0.05 });
-
-    [-1.9, 1.9].forEach(x => {
-      [-0.8, 0.8].forEach(z => {
-        const post = new THREE.Mesh(postGeo, frameMat);
-        post.position.set(x, -0.2, z);
-        post.castShadow = true;
-        scene.add(post);
-      });
-    });
-
-    const topBarGeo = new THREE.CylinderGeometry(0.04, 0.04, 3.8, 16);
-    [-0.8, 0.8].forEach(z => {
-      const topBar = new THREE.Mesh(topBarGeo, frameMat);
-      topBar.rotation.z = Math.PI / 2;
-      topBar.position.set(0, 1.5, z);
-      topBar.castShadow = true;
-      scene.add(topBar);
-    });
-
-    // Balls Setup (Optimized segment count from 64 to 32 for mobile performance)
-    const numBalls = 5;
-    const radius = 0.35;
-    const stringLength = 2.7;
-    const spacing = radius * 2;
-    const startX = -((numBalls - 1) * spacing) / 2;
-
-    const balls = [];
-    const ballGeo = new THREE.SphereGeometry(radius, 32, 32);
-    const ballMat = new THREE.MeshStandardMaterial({ 
-      color: 0xffffff, 
-      metalness: 1.0, 
-      roughness: 0.02
-    });
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.5 });
-
-    for (let i = 0; i < numBalls; i++) {
-      const ballX = startX + i * spacing;
-      
-      const pivot = new THREE.Group();
-      pivot.position.set(ballX, 1.5, 0);
-      scene.add(pivot);
-
-      const ball = new THREE.Mesh(ballGeo, ballMat);
-      ball.position.set(0, -stringLength, 0);
-      ball.castShadow = true;
-      ball.receiveShadow = true;
-      pivot.add(ball);
-
-      const geomFront = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, -0.8),
-        new THREE.Vector3(0, -stringLength, 0)
-      ]);
-      const geomBack = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0.8),
-        new THREE.Vector3(0, -stringLength, 0)
-      ]);
-
-      pivot.add(new THREE.Line(geomFront, lineMat));
-      pivot.add(new THREE.Line(geomBack, lineMat));
-
-      balls.push({
-        id: i,
-        pivot: pivot,
-        mesh: ball,
-        angle: 0,
-        v: 0,
-        originalX: ballX,
-        radius: radius
-      });
-    }
-
-    balls[0].angle = Math.PI / 3;
-
-    // Mouse & Touch Interaction Logic
-    let raycaster = new THREE.Raycaster();
-    let mouse = new THREE.Vector2();
-    let isDragging = false;
-    let selectedBall = null;
-
-    function handlePointerDown(clientX, clientY) {
-      if (clientY > window.innerHeight - 200 && clientX < 350) return;
-
-      mouse.x = (clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects(balls.map(b => b.mesh));
-
-      if (intersects.length > 0) {
-        const clickedMesh = intersects[0].object;
-        selectedBall = balls.find(b => b.mesh === clickedMesh);
-        isDragging = true;
-        sysState.innerText = "Dragging";
+      function initBalls() {
+        balls = [];
+        for (let i = 0; i < numBalls; i++) {
+          balls.push(new Ball(i));
+        }
+        setStatus(`${numBalls} balls ready – drag or use buttons`);
       }
-    }
 
-    function handlePointerMove(clientX, clientY) {
-      if (!isDragging || !selectedBall) return;
+      function handleCollisions() {
+        const minDist = ballRadius * 2;
+        const passes = 6;
 
-      mouse.x = (clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        for (let pass = 0; pass < passes; pass++) {
+          for (let i = 0; i < balls.length - 1; i++) {
+            const A = balls[i];
+            const B = balls[i + 1];
 
-      raycaster.setFromCamera(mouse, camera);
-      
-      const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-      const targetPos = new THREE.Vector3();
-      raycaster.ray.intersectPlane(plane, targetPos);
+            const dx = B.x - A.x;
+            const dy = B.y - A.y;
+            const dist = Math.hypot(dx, dy);
 
-      const dx = targetPos.x - selectedBall.originalX;
-      let newAngle = Math.asin(Math.max(-1, Math.min(1, dx / stringLength)));
-      
-      selectedBall.angle = Math.max(-1.4, Math.min(1.4, newAngle));
-      selectedBall.v = 0;
-    }
+            if (dist >= minDist || dist < 0.001) continue;
 
-    window.addEventListener('pointerdown', (e) => handlePointerDown(e.clientX, e.clientY));
-    window.addEventListener('pointermove', (e) => handlePointerMove(e.clientX, e.clientY));
-    window.addEventListener('pointerup', () => {
-      if (isDragging) {
-        isDragging = false;
-        selectedBall = null;
-        sysState.innerText = "Running";
-      }
-    });
+            const nx = dx / dist;
+            const ny = dy / dist;
 
-    // Physics Engine Loop
-    const L = stringLength;
+            const vAx = A.velocity * stringLength * Math.cos(A.angle);
+            const vAy = -A.velocity * stringLength * Math.sin(A.angle);
+            const vBx = B.velocity * stringLength * Math.cos(B.angle);
+            const vBy = -B.velocity * stringLength * Math.sin(B.angle);
 
-    function animate() {
-      requestAnimationFrame(animate);
+            const relVx = vAx - vBx;
+            const relVy = vAy - vBy;
+            const relNormal = relVx * nx + relVy * ny;
 
-      const subSteps = 20; // Optimized sub-steps for mobile performance
-      const subDt = 0.016 / subSteps;
+            if (relNormal > 0) {
+              const temp = A.velocity;
+              A.velocity = B.velocity;
+              B.velocity = temp;
+            }
 
-      if (!isDragging) {
-        for (let step = 0; step < subSteps; step++) {
-          for (let i = 0; i < numBalls; i++) {
-            let b = balls[i];
-            let a = -(userGravity / L) * Math.sin(b.angle);
-            b.v += a * subDt;
-            b.v *= userDamping;
-            b.angle += b.v * subDt;
-          }
+            const overlap = minDist - dist;
+            const corr = overlap * 0.55;
+            const angleCorr = corr / stringLength;
 
-          for (let i = 0; i < numBalls - 1; i++) {
-            let b1 = balls[i];
-            let b2 = balls[i+1];
-
-            let x1 = b1.originalX + L * Math.sin(b1.angle);
-            let x2 = b2.originalX + L * Math.sin(b2.angle);
-            let distance = x2 - x1;
-            let minDist = spacing;
-
-            if (distance < minDist) {
-               let tempV = b1.v;
-               b1.v = b2.v;
-               b2.v = tempV;
-
-               let overlap = (minDist - distance) * 0.5;
-               b1.angle -= overlap / L;
-               b2.angle += overlap / L;
+            if (A.anchorX < B.anchorX) {
+              A.angle -= angleCorr;
+              B.angle += angleCorr;
+            } else {
+              A.angle += angleCorr;
+              B.angle -= angleCorr;
             }
           }
         }
       }
 
-      for (let i = 0; i < numBalls; i++) {
-        balls[i].pivot.rotation.z = balls[i].angle;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const totalWidth = (numBalls - 1) * spacing();
+        const startX = canvas.width / 2 - totalWidth / 2;
+        const endX = startX + totalWidth;
+
+        // Top frame bar
+        ctx.strokeStyle = '#2a6aaa';
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(startX - 30, frameY);
+        ctx.lineTo(endX + 30, frameY);
+        ctx.stroke();
+
+        // Side supports
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(startX - 30, frameY);
+        ctx.lineTo(startX - 50, canvas.height - 30);
+        ctx.moveTo(endX + 30, frameY);
+        ctx.lineTo(endX + 50, canvas.height - 30);
+        ctx.stroke();
+
+        // Base
+        ctx.fillStyle = '#1a4060';
+        ctx.fillRect(startX - 70, canvas.height - 35, totalWidth + 140, 18);
+        ctx.fillStyle = '#0f2a40';
+        ctx.fillRect(startX - 80, canvas.height - 20, totalWidth + 160, 12);
+
+        // Strings & balls
+        balls.forEach((ball) => {
+          ctx.beginPath();
+          ctx.strokeStyle = '#5a9fd4';
+          ctx.lineWidth = 1.8;
+          ctx.moveTo(ball.anchorX, ball.anchorY);
+          ctx.lineTo(ball.x, ball.y);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(0,0,0,0.28)';
+          ctx.ellipse(ball.x + 3, ball.y + 5, ballRadius * 0.95, ballRadius * 0.65, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          const grd = ctx.createRadialGradient(
+            ball.x - ballRadius * 0.35,
+            ball.y - ballRadius * 0.4,
+            ballRadius * 0.08,
+            ball.x,
+            ball.y,
+            ballRadius
+          );
+          grd.addColorStop(0, '#f4f9ff');
+          grd.addColorStop(0.3, '#b8d4f0');
+          grd.addColorStop(0.7, '#6a9ec8');
+          grd.addColorStop(1, '#3a6a98');
+
+          ctx.beginPath();
+          ctx.fillStyle = grd;
+          ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          ctx.arc(ball.x - ballRadius * 0.3, ball.y - ballRadius * 0.35, ballRadius * 0.26, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,0.18)';
+          ctx.arc(ball.x + ballRadius * 0.28, ball.y + ballRadius * 0.22, ballRadius * 0.11, 0, Math.PI * 2);
+          ctx.fill();
+        });
       }
 
-      let totalKE = 0;
-      let totalPE = 0;
-      let movingCount = 0;
+      function update(dt) {
+        if (paused) return;
+        dt = Math.min(dt, 28);
 
-      for (let i = 0; i < numBalls; i++) {
-        let b = balls[i];
-        let h = L * (1 - Math.cos(b.angle));
-        let linearVel = b.v * L;
-
-        totalKE += 0.5 * userMass * (linearVel * linearVel);
-        totalPE += userMass * userGravity * h;
-
-        if (Math.abs(b.angle) > 0.02 || Math.abs(b.v) > 0.05) {
-          movingCount++;
+        const steps = 3;
+        const subDt = dt / steps;
+        for (let s = 0; s < steps; s++) {
+          balls.forEach(b => b.update(subDt));
+          handleCollisions();
         }
       }
 
-      calcKE.innerText = totalKE.toFixed(2) + " J";
-      calcPE.innerText = totalPE.toFixed(2) + " J";
-      activeCount.innerText = movingCount > 0 ? `${movingCount} Ball${movingCount > 1 ? 's' : ''}` : "At Rest";
+      function loop(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const dt = timestamp - lastTime;
+        lastTime = timestamp;
 
-      renderer.render(scene, camera);
-    }
+        update(dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
 
-    animate();
+      function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * scaleX,
+          y: (clientY - rect.top) * scaleY
+        };
+      }
 
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      updateCameraPosition();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+      function findBall(pos) {
+        for (let i = balls.length - 1; i >= 0; i--) {
+          const b = balls[i];
+          const dx = pos.x - b.x;
+          const dy = pos.y - b.y;
+          if (dx * dx + dy * dy < (ballRadius + 10) ** 2) return b;
+        }
+        return null;
+      }
+
+      function onPointerDown(e) {
+        e.preventDefault();
+        const pos = getMousePos(e);
+        dragging = findBall(pos);
+        if (dragging) {
+          dragging.velocity = 0;
+          setStatus(`Dragging ball ${dragging.index + 1}`);
+        }
+      }
+
+      function onPointerMove(e) {
+        if (!dragging) return;
+        e.preventDefault();
+        const pos = getMousePos(e);
+        const dx = pos.x - dragging.anchorX;
+        const dy = pos.y - dragging.anchorY;
+        let angle = Math.atan2(dx, dy);
+        angle = Math.max(-1.4, Math.min(1.4, angle));
+        dragging.angle = angle;
+        dragging.velocity = 0;
+      }
+
+      function onPointerUp() {
+        if (dragging) {
+          setStatus(`Released ball ${dragging.index + 1}`);
+          dragging = null;
+        }
+      }
+
+      canvas.addEventListener('mousedown', onPointerDown);
+      canvas.addEventListener('mousemove', onPointerMove);
+      canvas.addEventListener('mouseup', onPointerUp);
+      canvas.addEventListener('mouseleave', onPointerUp);
+      canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+      canvas.addEventListener('touchmove', onPointerMove, { passive: false });
+      canvas.addEventListener('touchend', onPointerUp);
+
+      function setStatus(msg) {
+        document.getElementById('status').textContent = msg;
+      }
+
+      function swingBalls(count) {
+        resetPositions();
+        const maxAngle = 1.05;
+        for (let i = 0; i < count && i < numBalls; i++) {
+          balls[i].angle = -maxAngle;
+          balls[i].velocity = 0;
+        }
+        setStatus(`Swinging ${count} ball${count > 1 ? 's' : ''}`);
+        paused = false;
+        document.getElementById('btnPause').textContent = 'Pause';
+      }
+
+      function resetPositions() {
+        balls.forEach(b => {
+          b.angle = 0;
+          b.velocity = 0;
+        });
+      }
+
+      document.getElementById('btn1').addEventListener('click', () => swingBalls(1));
+      document.getElementById('btn2').addEventListener('click', () => swingBalls(2));
+      document.getElementById('btn3').addEventListener('click', () => swingBalls(3));
+
+      document.getElementById('btnReset').addEventListener('click', () => {
+        resetPositions();
+        setStatus('Reset – all balls at rest');
+      });
+
+      document.getElementById('btnPause').addEventListener('click', () => {
+        paused = !paused;
+        document.getElementById('btnPause').textContent = paused ? 'Resume' : 'Pause';
+        setStatus(paused ? 'Paused' : 'Running');
+      });
+
+      document.getElementById('numBalls').addEventListener('input', (e) => {
+        numBalls = parseInt(e.target.value, 10);
+        document.getElementById('valBalls').textContent = numBalls;
+        ballRadius = numBalls <= 5 ? 22 : numBalls === 6 ? 19 : 17;
+        initBalls();
+      });
+
+      document.getElementById('gravity').addEventListener('input', (e) => {
+        gravity = parseFloat(e.target.value);
+        document.getElementById('valG').textContent = gravity.toFixed(2);
+      });
+
+      document.getElementById('damping').addEventListener('input', (e) => {
+        damping = parseFloat(e.target.value);
+        document.getElementById('valDamp').textContent = damping.toFixed(3);
+      });
+
+      document.getElementById('stringLen').addEventListener('input', (e) => {
+        stringLength = parseInt(e.target.value, 10);
+        document.getElementById('valLen').textContent = stringLength;
+        balls.forEach(b => b.updateAnchor());
+      });
+
+      function resize() {
+        const wrap = canvas.parentElement;
+        const maxW = Math.min(700, wrap.clientWidth - 10);
+        canvas.style.width = maxW + 'px';
+        canvas.style.height = (maxW * 420 / 700) + 'px';
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      initBalls();
+      requestAnimationFrame(loop);
+
+      setTimeout(() => {
+        if (balls.every(b => Math.abs(b.angle) < 0.01 && Math.abs(b.velocity) < 0.01)) {
+          swingBalls(1);
+        }
+      }, 900);
+    })();
   </script>
 </body>
 </html>
