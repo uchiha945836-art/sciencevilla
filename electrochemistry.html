@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Villa | Ultra-Clear 3D Electrochemical Cell Model</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-card: rgba(15, 23, 42, 0.95);
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --text-light: #ffffff;
+      --text-sub: #cbd5e1;
+      --border-glow: rgba(255, 255, 255, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+      max-width: 950px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      color: var(--text-sub);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .lab-stage {
+      background: var(--bg-card);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 1.25rem;
+      width: 100%;
+      max-width: 1650px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      display: grid;
+      grid-template-columns: 3.4fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1100px) {
+      .lab-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 860px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid var(--border-glow);
+      overflow: hidden;
+      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.95);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      justify-content: space-between;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glow);
+      padding: 0.65rem 0.8rem;
+      border-radius: 10px;
+    }
+
+    .control-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group label span {
+      color: #38bdf8;
+      font-weight: 800;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-glow);
+      border-radius: 6px;
+      padding: 0.45rem;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .telemetry-box {
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      border-radius: 10px;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .telemetry-row span:last-child {
+      font-weight: 800;
+      color: var(--accent-amber);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+      color: #030712;
+      font-weight: 800;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Ultra-Clear 3D Electrochemical Cell</h1>
+    <p class="subtitle">Enlarged components, high-contrast typography, and fully visible interactive elements.</p>
+  </header>
+
+  <div class="lab-stage">
+    <div class="canvas-container">
+      <canvas id="simCanvas"></canvas>
+    </div>
+
+    <div class="controls-panel">
+      <div>
+        <h2 style="font-size: 1.05rem; margin-bottom: 0.15rem; color: #fff; font-weight: 800;">Cell Controls</h2>
+        <p style="font-size: 0.78rem; color: var(--text-sub);">Drag mouse across canvas to rotate the model.</p>
+      </div>
+
+      <div class="control-group">
+        <label>Anode Half-Cell:</label>
+        <select id="anodeSelect">
+          <option value="Zn" selected>Zinc (Zn / Zn²⁺) [ -0.76 V ]</option>
+          <option value="Fe">Iron (Fe / Fe²⁺) [ -0.44 V ]</option>
+          <option value="Mg">Magnesium (Mg / Mg²⁺) [ -2.37 V ]</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Cathode Half-Cell:</label>
+        <select id="cathodeSelect">
+          <option value="Cu" selected>Copper (Cu²⁺ / Cu) [ +0.34 V ]</option>
+          <option value="Ag">Silver (Ag⁺ / Ag) [ +0.80 V ]</option>
+          <option value="Au">Gold (Au³⁺ / Au) [ +1.50 V ]</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Anode Concentration: <span id="concAnodeVal">1.00 M</span></label>
+        <input type="range" id="concAnodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
+      </div>
+
+      <div class="control-group">
+        <label>Cathode Concentration: <span id="concCathodeVal">1.00 M</span></label>
+        <input type="range" id="concCathodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
+      </div>
+
+      <div class="control-group">
+        <label>Temperature: <span id="tempVal">298 K</span></label>
+        <input type="range" id="tempRange" min="273" max="373" value="298" step="1">
+      </div>
+
+      <div class="telemetry-box">
+        <div class="telemetry-row">
+          <span>Standard Potential (E°cell):</span>
+          <span id="eStdVal">1.10 V</span>
+        </div>
+        <div class="telemetry-row">
+          <span>Actual Potential (Ecell):</span>
+          <span id="eActualVal">1.10 V</span>
+        </div>
+        <div class="telemetry-row">
+          <span>Gibbs Energy (ΔG):</span>
+          <span id="gibbsVal">-212.3 kJ</span>
+        </div>
+      </div>
+
+      <button class="btn" id="resetBtn">Reset Default</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Science Villa | Ultra-Clear Electrochemical Model</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const standardPotentials = {
+      Zn: -0.76, Fe: -0.44, Mg: -2.37,
+      Cu: 0.34, Ag: 0.80, Au: 1.50
+    };
+
+    let anodeType = 'Zn';
+    let cathodeType = 'Cu';
+    let concAnode = 1.0;
+    let concCathode = 1.0;
+    let temperature = 298;
+
+    const anodeSelect = document.getElementById('anodeSelect');
+    const cathodeSelect = document.getElementById('cathodeSelect');
+    const concAnodeRange = document.getElementById('concAnodeRange');
+    const concCathodeRange = document.getElementById('concCathodeRange');
+    const tempRange = document.getElementById('tempRange');
+    
+    const concAnodeVal = document.getElementById('concAnodeVal');
+    const concCathodeVal = document.getElementById('concCathodeVal');
+    const tempVal = document.getElementById('tempVal');
+    const eStdVal = document.getElementById('eStdVal');
+    const eActualVal = document.getElementById('eActualVal');
+    const gibbsVal = document.getElementById('gibbsVal');
+    const resetBtn = document.getElementById('resetBtn');
+
+    anodeSelect.addEventListener('change', (e) => { anodeType = e.target.value; updateCalculations(); });
+    cathodeSelect.addEventListener('change', (e) => { cathodeType = e.target.value; updateCalculations(); });
+    
+    concAnodeRange.addEventListener('input', (e) => {
+      concAnode = parseFloat(e.target.value);
+      concAnodeVal.textContent = concAnode.toFixed(2) + ' M';
+      updateCalculations();
+    });
+
+    concCathodeRange.addEventListener('input', (e) => {
+      concCathode = parseFloat(e.target.value);
+      concCathodeVal.textContent = concCathode.toFixed(2) + ' M';
+      updateCalculations();
+    });
+
+    tempRange.addEventListener('input', (e) => {
+      temperature = parseInt(e.target.value);
+      tempVal.textContent = temperature + ' K';
+      updateCalculations();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      anodeType = 'Zn'; cathodeType = 'Cu';
+      concAnode = 1.0; concCathode = 1.0; temperature = 298;
+      anodeSelect.value = 'Zn'; cathodeSelect.value = 'Cu';
+      concAnodeRange.value = 1.0; concCathodeRange.value = 1.0; tempRange.value = 298;
+      concAnodeVal.textContent = '1.00 M'; concCathodeVal.textContent = '1.00 M'; tempVal.textContent = '298 K';
+      updateCalculations();
+    });
+
+    let eStdCell = 0;
+    let eActualCell = 0;
+
+    function updateCalculations() {
+      let eAnodeStd = standardPotentials[anodeType];
+      let eCathodeStd = standardPotentials[cathodeType];
+      eStdCell = eCathodeStd - eAnodeStd;
+
+      let n = (cathodeType === 'Ag' || cathodeType === 'Au') ? 1 : 2;
+      let R = 8.314;
+      let F = 96485;
+      
+      let Q = concAnode / concCathode;
+      let factor = (R * temperature) / (n * F);
+      eActualCell = eStdCell - factor * Math.log(Q);
+      let deltaG = -n * F * eActualCell;
+
+      eStdVal.textContent = eStdCell.toFixed(2) + ' V';
+      eActualVal.textContent = eActualCell.toFixed(2) + ' V';
+      gibbsVal.textContent = (deltaG / 1000).toFixed(1) + ' kJ';
+    }
+
+    updateCalculations();
+
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let rotX = 0.05, rotY = 0;
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let dx = e.clientX - startX;
+      let dy = e.clientY - startY;
+      rotY += dx * 0.004;
+      rotX -= dy * 0.004;
+      rotX = Math.max(-0.2, Math.min(0.25, rotX));
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    let electrons = [];
+    for(let i=0; i<24; i++) electrons.push({progress: i / 24});
+    
+    let anodeIonsList = [];
+    for(let i=0; i<20; i++) anodeIonsList.push({x: (Math.random()-0.5)*240, y: (Math.random()-0.5)*150, z: (Math.random()-0.5)*130, vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35});
+
+    let cathodeIonsList = [];
+    for(let i=0; i<20; i++) cathodeIonsList.push({x: (Math.random()-0.5)*240, y: (Math.random()-0.5)*150, z: (Math.random()-0.5)*130, vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35});
+
+    let saltIons = [];
+    for(let i=0; i<20; i++) saltIons.push({progress: Math.random(), type: i%2 === 0 ? 'K+' : 'Cl-'});
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let w = canvas.width;
+      let h = canvas.height;
+      let cx = w / 2;
+      let cy = h / 2 + 15;
+
+      function project(x, y, z) {
+        let cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        let x1 = x * cosY + z * sinY;
+        let z1 = -x * sinY + z * cosY;
+        
+        let cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+        let y2 = y * cosX - z1 * sinX;
+        let z2 = y * sinX + z1 * cosX;
+
+        let fov = 1100;
+        let scale = fov / (fov + z2 + 450);
+        return {
+          x: cx + x1 * scale,
+          y: cy + y2 * scale,
+          scale: scale
+        };
+      }
+
+      let separation = 380;
+      let beakerW = 290;
+      let beakerH = 240;
+
+      // Anode Beaker Box
+      let abTopL = project(-separation - beakerW/2, -beakerH/2, -90);
+      let abTopR = project(-separation + beakerW/2, -beakerH/2, -90);
+      let abBotL = project(-separation - beakerW/2, beakerH/2, -90);
+      let abBotR = project(-separation + beakerW/2, beakerH/2, -90);
+
+      ctx.beginPath();
+      ctx.moveTo(abTopL.x, abTopL.y);
+      ctx.lineTo(abBotL.x, abBotL.y);
+      ctx.lineTo(abBotR.x, abBotR.y);
+      ctx.lineTo(abTopR.x, abTopR.y);
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
+      ctx.fill();
+
+      // Cathode Beaker Box
+      let cbTopL = project(separation - beakerW/2, -beakerH/2, -90);
+      let cbTopR = project(separation + beakerW/2, -beakerH/2, -90);
+      let cbBotL = project(separation - beakerW/2, beakerH/2, -90);
+      let cbBotR = project(separation + beakerW/2, beakerH/2, -90);
+
+      ctx.beginPath();
+      ctx.moveTo(cbTopL.x, cbTopL.y);
+      ctx.lineTo(cbBotL.x, cbBotL.y);
+      ctx.lineTo(cbBotR.x, cbBotR.y);
+      ctx.lineTo(cbTopR.x, cbTopR.y);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.05)';
+      ctx.fill();
+
+      // Salt Bridge U-tube
+      let sbStart = project(-separation + 60, -120, 0);
+      let sbMid1 = project(-separation + 60, -290, 0);
+      let sbMid2 = project(separation - 60, -290, 0);
+      let sbEnd = project(separation - 60, -120, 0);
+
+      ctx.beginPath();
+      ctx.moveTo(sbStart.x, sbStart.y);
+      ctx.lineTo(sbMid1.x, sbMid1.y);
+      ctx.lineTo(sbMid2.x, sbMid2.y);
+      ctx.lineTo(sbEnd.x, sbEnd.y);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 38 * sbStart.scale;
+      ctx.stroke();
+
+      // Salt bridge ionic particles with large, clear high-contrast labels
+      saltIons.forEach(ion => {
+        ion.progress += 0.0035;
+        if(ion.progress > 1) ion.progress = 0;
+        let curX = -separation + 60 + ion.progress * (2 * separation - 120);
+        let curY = -290;
+        let p = project(curX, curY, 0);
+        
+        ctx.fillStyle = ion.type === 'K+' ? '#ff3366' : '#00d2ff';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(ion.type, p.x + 6, p.y + 3);
+      });
+
+      // Anode Electrode Plate
+      let anP1 = project(-separation, -110, 0);
+      let anP2 = project(-separation, 100, 0);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 54;
+      ctx.beginPath();
+      ctx.moveTo(anP1.x, anP1.y);
+      ctx.lineTo(anP2.x, anP2.y);
+      ctx.stroke();
+
+      // Anode Solution Ion Particles & High-Contrast Labels
+      anodeIonsList.forEach(ion => {
+        ion.x += ion.vx; ion.y += ion.vy;
+        if(ion.x < -120 || ion.x > 120) ion.vx *= -1;
+        if(ion.y < -70 || ion.y > 100) ion.vy *= -1;
+        let p = project(-separation + ion.x, ion.y, ion.z);
+        
+        ctx.fillStyle = '#00d2ff';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(anodeType + '²⁺', p.x + 6, p.y + 3);
+      });
+
+      // Cathode Electrode Plate
+      let catP1 = project(separation, -110, 0);
+      let catP2 = project(separation, 100, 0);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 54;
+      ctx.beginPath();
+      ctx.moveTo(catP1.x, catP1.y);
+      ctx.lineTo(catP2.x, catP2.y);
+      ctx.stroke();
+
+      // Cathode Solution Ion Particles & High-Contrast Labels
+      cathodeIonsList.forEach(ion => {
+        ion.x += ion.vx; ion.y += ion.vy;
+        if(ion.x < -120 || ion.x > 120) ion.vx *= -1;
+        if(ion.y < -70 || ion.y > 100) ion.vy *= -1;
+        let p = project(separation + ion.x, ion.y, ion.z);
+        
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5.5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
+        ctx.fillText(cathodeType + '²⁺', p.x + 6, p.y + 3);
+      });
+
+      // External Circuit Wire & Voltmeter Box
+      let wStart = project(-separation, -110, 0);
+      let wMid1 = project(-separation, -330, 0);
+      let wMid2 = project(separation, -330, 0);
+      let wEnd = project(separation, -110, 0);
+
+      ctx.beginPath();
+      ctx.moveTo(wStart.x, wStart.y);
+      ctx.lineTo(wMid1.x, wMid1.y);
+      ctx.lineTo(wMid2.x, wMid2.y);
+      ctx.lineTo(wEnd.x, wEnd.y);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      let vmPos = project(0, -330, 0);
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.5;
+      ctx.fillRect(vmPos.x - 70, vmPos.y - 32, 140, 64);
+      ctx.strokeRect(vmPos.x - 70, vmPos.y - 32, 140, 64);
+      
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 18px monospace';
+      ctx.fillText(eActualVal.textContent, vmPos.x - 44, vmPos.y + 7);
+
+      // Traveling Electrons with clear visible tags
+      electrons.forEach(el => {
+        el.progress += 0.007;
+        if(el.progress > 1) el.progress = 0;
+        
+        let curX = -separation + el.progress * (2 * separation);
+        let curY = -330;
+        let p = project(curX, curY, 0);
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px monospace';
+        ctx.fillText('e⁻', p.x + 5, p.y - 4);
+      });
+
+      // Chamber Base Labels
+      let lblAnode = project(-separation, 155, 0);
+      let lblCathode = project(separation, 155, 0);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText('ANODE (-) Oxidation', lblAnode.x - 78, lblAnode.y);
+      ctx.fillText('CATHODE (+) Reduction', lblCathode.x - 88, lblCathode.y);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+
+</body>
+</html>

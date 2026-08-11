@@ -3,17 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Science Villa | Interactive Models</title>
+  <title>Science Villa | Interactive Models & Quantum Laboratory</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #07090e;
-      --bg-card: rgba(18, 26, 43, 0.75);
-      --accent-cyan: #38bdf8;
-      --accent-glow: rgba(56, 189, 248, 0.35);
+      --bg-dark: #030712;
+      --bg-card: rgba(15, 23, 42, 0.7);
+      --bg-glass: rgba(30, 41, 59, 0.4);
+      --accent-cyan: #06b6d4;
+      --accent-indigo: #6366f1;
+      --accent-violet: #8b5cf6;
+      --accent-glow: rgba(6, 182, 212, 0.4);
       --text-light: #f8fafc;
       --text-sub: #94a3b8;
-      --border-glow: rgba(255, 255, 255, 0.1);
+      --border-glow: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(6, 182, 212, 0.4);
     }
 
     * {
@@ -27,96 +31,131 @@
     body {
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
+        radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%);
       color: var(--text-light);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 1.5rem;
+      overflow-x: hidden;
     }
 
-    /* Navigation Bar */
+    /* Enhanced Navigation Bar with Glassmorphism & Glow */
     nav {
       width: 100%;
       max-width: 1400px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 0;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border-glow);
+      padding: 1rem 2rem;
+      margin-bottom: 2.5rem;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 1rem;
+      z-index: 1000;
     }
 
     .logo {
       font-weight: 800;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
+      background: linear-gradient(135deg, #fff 20%, var(--accent-cyan) 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent-cyan);
     }
 
     .nav-links {
       display: flex;
-      gap: 1.5rem;
+      gap: 2rem;
       list-style: none;
     }
 
     .nav-links a {
       color: var(--text-sub);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.95rem;
-      transition: color 0.2s ease;
+      transition: all 0.3s ease;
+      position: relative;
     }
 
     .nav-links a:hover {
       color: var(--accent-cyan);
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
     }
 
-    /* Header & Hero */
+    /* Hero Header */
     header {
       text-align: center;
-      margin-bottom: 2.5rem;
-      max-width: 700px;
+      margin-bottom: 3rem;
+      max-width: 800px;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      padding: 0.35rem 0.9rem;
+      gap: 0.6rem;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 0.4rem 1rem;
       border-radius: 99px;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       color: var(--accent-cyan);
-      margin-bottom: 1rem;
-      font-weight: 600;
+      margin-bottom: 1.25rem;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
     }
 
     .badge-dot {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       background-color: var(--accent-cyan);
       border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(6, 182, 212, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
     }
 
     h1 {
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: 800;
       line-height: 1.15;
-      margin-bottom: 1rem;
-      letter-spacing: -1px;
+      margin-bottom: 1.25rem;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     p.subtitle {
       color: var(--text-sub);
-      font-size: 1.1rem;
-      line-height: 1.6;
+      font-size: 1.15rem;
+      line-height: 1.7;
     }
 
     .container {
@@ -128,8 +167,8 @@
     .controls-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
-      margin-bottom: 2.5rem;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .search-bar-container {
@@ -141,68 +180,79 @@
       width: 100%;
       background: var(--bg-card);
       border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 1rem 1.2rem 1rem 3rem;
+      border-radius: 16px;
+      padding: 1.1rem 1.2rem 1.1rem 3.5rem;
       color: var(--text-light);
-      font-size: 1rem;
+      font-size: 1.05rem;
       outline: none;
-      backdrop-filter: blur(16px);
-      transition: all 0.2s ease;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     .search-input:focus {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25), inset 0 0 10px rgba(6, 182, 212, 0.1);
     }
 
     .search-icon {
       position: absolute;
-      left: 1.2rem;
+      left: 1.4rem;
       top: 50%;
       transform: translateY(-50%);
-      color: var(--text-sub);
-      font-size: 1.1rem;
+      color: var(--accent-cyan);
+      font-size: 1.2rem;
       pointer-events: none;
     }
 
     .category-tabs {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.85rem;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--bg-card);
       border: 1px solid var(--border-glow);
       color: var(--text-sub);
-      padding: 0.6rem 1.2rem;
+      padding: 0.7rem 1.4rem;
       border-radius: 99px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .tab-btn:hover, .tab-btn.active {
-      background: rgba(56, 189, 248, 0.15);
+      background: rgba(6, 182, 212, 0.15);
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+      transform: translateY(-2px);
     }
 
-    /* Model Cards Grid - Forced 5 columns layout with responsive fallback */
+    /* Model Cards Grid - 5 columns layout */
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 1rem;
+      gap: 1.25rem;
+      margin-bottom: 3rem;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1400px) {
       .grid {
         grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
       .grid {
         grid-template-columns: repeat(1, 1fr);
       }
@@ -211,15 +261,15 @@
     .card {
       position: relative;
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid var(--border-glow);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow: hidden;
     }
 
@@ -229,16 +279,16 @@
 
     .card-tag {
       align-self: flex-start;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 0.25rem 0.60rem;
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
-      background: rgba(56, 189, 248, 0.12);
+      letter-spacing: 0.8px;
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      background: rgba(6, 182, 212, 0.12);
       color: var(--accent-cyan);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border: 1px solid rgba(6, 182, 212, 0.3);
     }
 
     .card-tag.chemistry {
@@ -255,7 +305,7 @@
 
     .card-tag.energy {
       background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
+      color: #f87171;
       border-color: rgba(239, 68, 68, 0.3);
     }
 
@@ -266,8 +316,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-      transition: left 0.5s ease;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      transition: left 0.6s ease;
     }
 
     .card:hover::before {
@@ -275,208 +325,270 @@
     }
 
     .card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: 0 12px 30px -5px var(--accent-glow);
+      transform: translateY(-8px);
+      border-color: var(--border-hover);
+      box-shadow: 0 20px 50px rgba(6, 182, 212, 0.25);
     }
 
     .card h2 {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       margin-bottom: 0.75rem;
       color: var(--text-light);
+      letter-spacing: -0.3px;
     }
 
     .card p {
       color: var(--text-sub);
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.88rem;
+      line-height: 1.6;
       margin-bottom: 1.5rem;
     }
 
     .btn {
       display: inline-block;
       text-align: center;
-      background: linear-gradient(135deg, #38bdf8, #0284c7);
-      color: #07090e;
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+      color: #030712;
       font-weight: 700;
-      padding: 0.7rem 1.2rem;
-      border-radius: 10px;
+      padding: 0.75rem 1.2rem;
+      border-radius: 12px;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
-      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
+      transition: all 0.3s ease;
     }
 
     .btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+      transform: scale(1.03);
+      box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
+      filter: brightness(1.1);
     }
 
     .btn.disabled {
-      background: #334155;
-      color: #94a3b8;
+      background: #1e293b;
+      color: #64748b;
       box-shadow: none;
       cursor: not-allowed;
       pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     /* Section Component Styling */
     .section-block {
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(25px);
       border: 1px solid var(--border-glow);
-      border-radius: 16px;
-      padding: 2.5rem;
-      margin-bottom: 2.5rem;
+      border-radius: 24px;
+      padding: 3rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
     }
 
     .section-block h2 {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
       color: var(--text-light);
+      letter-spacing: -0.5px;
     }
 
     /* Chemistry Info Card */
     .atom-info-box {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
     }
 
     .atom-info-card {
-      background: rgba(168, 85, 247, 0.05);
-      border: 1px solid rgba(168, 85, 247, 0.25);
-      border-radius: 12px;
-      padding: 1.25rem;
+      background: rgba(168, 85, 247, 0.04);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .atom-info-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.08);
     }
 
     .atom-info-card h3 {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       color: #c084fc;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
 
     .atom-info-card p {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--text-sub);
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     /* About Us Grid */
     .about-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .about-item {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-glow);
+      padding: 1.5rem;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .about-item:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.03);
+    }
+
+    .about-item h3 {
+      font-size: 1.15rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.6rem;
+    }
+
+    .about-item p {
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* Feedback & Formalities Form */
+    .feedback-form {
+      display: flex;
+      flex-direction: column;
       gap: 1.5rem;
       margin-top: 1.5rem;
     }
 
-    .about-item {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-glow);
-      padding: 1.25rem;
-      border-radius: 12px;
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
     }
 
-    .about-item h3 {
-      font-size: 1.1rem;
-      color: var(--accent-cyan);
-      margin-bottom: 0.5rem;
-    }
-
-    .about-item p {
-      font-size: 0.9rem;
-      color: var(--text-sub);
-      line-height: 1.5;
-    }
-
-    /* Feedback Form */
-    .feedback-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      margin-top: 1rem;
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .form-group label {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-sub);
     }
 
     .form-group input, .form-group textarea, .form-group select {
-      background: rgba(7, 9, 14, 0.6);
+      background: rgba(3, 7, 18, 0.7);
       border: 1px solid var(--border-glow);
-      border-radius: 8px;
-      padding: 0.8rem;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
       color: var(--text-light);
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
       border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      cursor: pointer;
     }
 
     .submit-btn {
       align-self: flex-start;
       border: none;
       cursor: pointer;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
     }
 
     #form-status {
       display: none;
-      padding: 0.8rem;
-      border-radius: 8px;
+      padding: 1rem;
+      border-radius: 12px;
       background: rgba(34, 197, 94, 0.15);
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      border: 1px solid rgba(34, 197, 94, 0.4);
       color: #4ade80;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      text-align: center;
+      font-weight: 600;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Contact Details */
-    .contact-links {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
+    .contact-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
     }
 
     .contact-card {
-      width: 100%;
-      max-width: 400px;
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.015);
       border: 1px solid var(--border-glow);
-      padding: 1.2rem;
-      border-radius: 12px;
+      padding: 1.5rem;
+      border-radius: 16px;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.25rem;
       text-decoration: none;
       color: var(--text-light);
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .contact-card:hover {
       border-color: var(--accent-cyan);
-      background: rgba(56, 189, 248, 0.05);
-      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
+      background: rgba(6, 182, 212, 0.05);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.15);
+      transform: translateY(-3px);
     }
 
     footer {
       text-align: center;
-      padding: 2rem 0;
+      padding: 2.5rem 0;
       color: var(--text-sub);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       border-top: 1px solid var(--border-glow);
       width: 100%;
       max-width: 1400px;
+      margin-top: auto;
     }
   </style>
 </head>
@@ -484,12 +596,12 @@
 
   <!-- Navigation -->
   <nav>
-    <div class="logo">Science Villa</div>
+    <div class="logo"><span></span>Science Villa</div>
     <ul class="nav-links">
       <li><a href="#models">Models</a></li>
       <li><a href="#chemistry-info">Chemistry</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#feedback">Feedback</a></li>
+      <li><a href="#formalities">Formalities</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -497,10 +609,10 @@
   <!-- Hero Header -->
   <header>
     <div class="badge">
-      <span class="badge-dot"></span> Interactive Web Science
+      <span class="badge-dot"></span> Next-Gen Interactive Science Laboratory
     </div>
     <h1>Explore the Universe through Simulations</h1>
-    <p class="subtitle">Experience interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.</p>
+    <p class="subtitle">Experience cutting-edge interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.</p>
   </header>
 
   <div class="container">
@@ -510,7 +622,7 @@
       <div class="controls-wrapper">
         <div class="search-bar-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, VSEPR)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, VSEPR, Kinetics, Thermodynamics, Electrochemistry)...">
         </div>
 
         <div class="category-tabs">
@@ -539,7 +651,7 @@
           <div>
             <span class="card-tag">Physics</span>
             <h2>Archimedes' Principle Lab</h2>
-            <p>Interactive fluid mechanics simulation. Test buoyancy force, displaced water volume, density adjustments, and apparent weight in real-time[cite: 4].</p>
+            <p>Interactive fluid mechanics simulation. Test buoyancy force, displaced water volume, density adjustments, and apparent weight in real-time.</p>
           </div>
           <a href="archimedesprinciple.html" class="btn">Launch Model</a>
         </div>
@@ -614,6 +726,36 @@
           <a href="vsepr.html" class="btn">Launch Model</a>
         </div>
 
+        <!-- Chemical Kinetics & Collision Theory (Chemistry) -->
+        <div class="card" data-category="chemistry">
+          <div>
+            <span class="card-tag chemistry">Chemistry</span>
+            <h2>Chemical Kinetics & Collision Theory</h2>
+            <p>Master reaction rates, activation energy barriers, effective molecular collisions, and Arrhenius temperature dependency with real-time interactive simulations.</p>
+          </div>
+          <a href="chemicalkinetics.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- Thermodynamics & Entropy-Enthalpy Sandbox (Chemistry) -->
+        <div class="card" data-category="chemistry">
+          <div>
+            <span class="card-tag chemistry">Chemistry</span>
+            <h2>Thermodynamics & Entropy-Enthalpy Sandbox</h2>
+            <p>JEE/NEET Masterclass analyzing spontaneity criteria, Enthalpy, Entropy, and Gibbs Free Energy behavior across changing temperatures in real-time.</p>
+          </div>
+          <a href="thermodynamics.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- Electrochemistry 3D Cell Model (Chemistry) -->
+        <div class="card" data-category="chemistry">
+          <div>
+            <span class="card-tag chemistry">Chemistry</span>
+            <h2>3D Electrochemical Cell Lab</h2>
+            <p>Explore galvanic and voltaic cells in high-contrast 3D. Control half-cell types, electrolyte concentrations, temperature, and analyze real-time Nernst cell potentials and Gibbs free energy.</p>
+          </div>
+          <a href="electrochemistry.html" class="btn">Launch Model</a>
+        </div>
+
         <!-- Cell Structure Model (Biology Placeholder) -->
         <div class="card" data-category="biology">
           <div>
@@ -630,29 +772,29 @@
     <!-- Chemistry Overview Section -->
     <section id="chemistry-info" class="section-block">
       <h2>Chemistry Spotlight: Atomic Structure</h2>
-      <p style="color: var(--text-sub); line-height: 1.6;">
-        An <strong>atom</strong> is the basic building block of matter. It consists of a dense central region called the <strong>nucleus</strong> surrounded by an electron cloud.
+      <p style="color: var(--text-sub); line-height: 1.7;">
+        An <strong>atom</strong> is the foundational building block of matter. It consists of a dense central region called the <strong>nucleus</strong> surrounded by a dynamic electron cloud.
       </p>
 
       <div class="atom-info-box">
         <div class="atom-info-card">
           <h3>Protons (+)</h3>
-          <p>Positively charged particles located in the nucleus. The number of protons defines the atomic number and identifies the element.</p>
+          <p>Positively charged particles located in the nucleus. The proton count dictates the atomic number and chemical identity of each element.</p>
         </div>
 
         <div class="atom-info-card">
           <h3>Neutrons (0)</h3>
-          <p>Uncharged (neutral) particles in the nucleus that add mass and stability, holding protons together against electromagnetic repulsion.</p>
+          <p>Neutral subatomic particles residing in the nucleus that add atomic mass and nuclear stability against electromagnetic repulsion.</p>
         </div>
 
         <div class="atom-info-card">
           <h3>Electrons (-)</h3>
-          <p>Negatively charged particles orbiting the nucleus in energy levels (shells). They govern chemical bonding and reactivity.</p>
+          <p>Lightweight, negatively charged particles traveling in quantum orbital shells. They dictate bonding behavior and molecular interactions.</p>
         </div>
 
         <div class="atom-info-card">
           <h3>Electron Shells</h3>
-          <p>Electrons fill discrete energy levels: up to 2 in the 1st shell (K-shell), 8 in the 2nd shell (L-shell), and 8 or 18 in higher shells.</p>
+          <p>Discrete energy levels organizing electron orbitals: up to 2 in the inner K-shell, followed by structured outer shells for valence bonding.</p>
         </div>
       </div>
     </section>
@@ -660,83 +802,103 @@
     <!-- About Us Section -->
     <section id="about" class="section-block">
       <h2>About Science Villa</h2>
-      <p style="color: var(--text-sub); line-height: 1.6;">
-        Science Villa is an open platform built to make complex physical, chemical, and biological phenomena intuitive through interactive web-based simulations.
+      <p style="color: var(--text-sub); line-height: 1.7;">
+        Science Villa is an open-access platform built to transform abstract textbook concepts into immersive, interactive simulations for students, researchers, and educators worldwide.
       </p>
       <div class="about-grid">
         <div class="about-item">
-          <h3>Real-Time Physics & Chemistry</h3>
-          <p>Driven by mathematical and atomic algorithms designed to bring textbook science to life.</p>
+          <h3>Real-Time Simulation Engines</h3>
+          <p>Driven by rigorous mathematical, physical, and chemical algorithms ensuring scientific accuracy.</p>
         </div>
         <div class="about-item">
-          <h3>Interactive Learning</h3>
-          <p>Tweak parameters, alter speed, and observe real-time dynamic environmental feedback.</p>
+          <h3>Interactive Parametric Control</h3>
+          <p>Manipulate live variables, test hypotheses, and analyze graphical telemetry feeds instantly.</p>
         </div>
         <div class="about-item">
-          <h3>100% Web-Based</h3>
-          <p>Built with lightweight HTML5 Canvas technologies for seamless cross-device performance.</p>
+          <h3>Universal Web Compatibility</h3>
+          <p>Optimized for lightning-fast performance across desktops, tablets, and modern mobile devices.</p>
         </div>
       </div>
     </section>
 
-    <!-- Feedback & Improve Section -->
-    <section id="feedback" class="section-block">
-      <h2>Tell Us What to Improve</h2>
-      <p style="color: var(--text-sub); font-size: 0.95rem;">Have ideas for a new physics, chemistry, or biology module, feature request, or visual bug to report? Let us know!</p>
+    <!-- Formalities, Terms, & Institutional Compliance Section -->
+    <section id="formalities" class="section-block">
+      <h2>Institutional Access & Formalities</h2>
+      <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+        Please complete the administrative formalities below for institutional registration, API sandbox testing credentials, or educational license inquiries.
+      </p>
 
-      <form class="feedback-form" id="reviewForm">
-        <div class="form-group">
-          <label for="name">Your Name</label>
-          <input type="text" id="name" placeholder="Enter your name" required>
+      <form class="feedback-form" id="formalityForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">Full Legal Name / Representative</label>
+            <input type="text" id="fname" placeholder="Enter your full name" required>
+          </div>
+          <div class="form-group">
+            <label for="institution">Institution / Organization</label>
+            <input type="text" id="institution" placeholder="University, School, or Lab name" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="femail">Official Contact Email</label>
+            <input type="email" id="femail" placeholder="name@institution.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="purposeSelect">Purpose of Formal Access</label>
+            <select id="purposeSelect">
+              <option value="Educational Classroom Use">Educational Classroom Licensing</option>
+              <option value="Research & Simulation Testing">Research & Simulation Testing</option>
+              <option value="API Integration Inquiry">API Integration Inquiry</option>
+              <option value="General Collaboration">General Academic Collaboration</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="modelSelect">Which subject/model are you reviewing?</label>
-          <select id="modelSelect">
-            <option value="General Suggestion">General / Entire Site</option>
-            <option value="Newton's Cradle Physics Lab">Newton's Cradle Physics Lab (Physics)</option>
-            <option value="Archimedes' Principle Lab">Archimedes' Principle Lab (Physics)</option>
-            <option value="Vortex Drop Shaft">Vortex Drop Shaft (Physics)</option>
-            <option value="Solar System Sandbox">Solar System Sandbox (Physics)</option>
-            <option value="Solar System Explorer">Solar System Explorer (Physics)</option>
-            <option value="Nuclear Reactor System Overview">Nuclear Reactor System Overview (Physics)</option>
-            <option value="Rutherford's Model">Rutherford's Model (Chemistry)</option>
-            <option value="Bohr's Model">Bohr's Model (Chemistry)</option>
-            <option value="VSEPR & Molecular Geometry Studio">VSEPR & Molecular Geometry Studio (Chemistry)</option>
-            <option value="Biology Section">Biology Section Suggestion</option>
-          </select>
+          <label for="fnotes">Specific Requirements / Message</label>
+          <textarea id="fnotes" rows="3" placeholder="Provide details concerning your curriculum or technical scope..." required></textarea>
         </div>
 
-        <div class="form-group">
-          <label for="feedbackMsg">Your Feedback / Suggestions</label>
-          <textarea id="feedbackMsg" rows="4" placeholder="What features or visual improvements would you like to see?" required></textarea>
+        <div class="checkbox-group">
+          <input type="checkbox" id="termsCheck" required>
+          <label for="termsCheck">I agree to the terms of service, acceptable use policy, and academic compliance guidelines.</label>
         </div>
 
-        <button type="submit" class="btn submit-btn">Submit Feedback</button>
-        <div id="form-status">Thank you! Your feedback has been recorded.</div>
+        <button type="submit" class="btn submit-btn">Submit Formalities</button>
+        <div id="form-status">Formalities submitted successfully! Our compliance desk will reach out within 24 hours.</div>
       </form>
     </section>
 
     <!-- Contact Us Section -->
     <section id="contact" class="section-block">
-      <h2>Get In Touch</h2>
-      <p style="color: var(--text-sub); font-size: 0.95rem;">Connect with the developers or send your inquiries.</p>
+      <h2>Direct Communications</h2>
+      <p style="color: var(--text-sub); font-size: 0.95rem;">Reach out directly to our scientific development team and administrative desk.</p>
 
-      <div class="contact-links">
+      <div class="contact-container">
         <a href="mailto:sciencevilla171@gmail.com" class="contact-card">
-          <span style="font-size: 1.4rem;">✉️</span>
+          <span style="font-size: 1.6rem;">✉️</span>
           <div>
-            <strong style="display: block; font-size: 0.95rem;">Email Us</strong>
+            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Email Support</strong>
             <span style="font-size: 0.85rem; color: var(--accent-cyan);">sciencevilla171@gmail.com</span>
           </div>
         </a>
+
+        <div class="contact-card" style="cursor: default;">
+          <span style="font-size: 1.6rem;">🌐</span>
+          <div>
+            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Global Operations</strong>
+            <span style="font-size: 0.85rem; color: var(--text-sub);">Open Science Cloud Infrastructure</span>
+          </div>
+        </div>
       </div>
     </section>
 
   </div>
 
   <footer>
-    <p>&copy; Science Villa | Built for Interactive Science & Physics Education</p>
+    <p>&copy; 2026 Science Villa | Built for Advanced Interactive Science & Physics Education</p>
   </footer>
 
   <script>
@@ -777,15 +939,15 @@
       });
     });
 
-    // Client-side feedback form handler
-    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+    // Formalities form handler
+    document.getElementById('formalityForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const status = document.getElementById('form-status');
       status.style.display = 'block';
       this.reset();
       setTimeout(() => {
         status.style.display = 'none';
-      }, 4000);
+      }, 5000);
     });
   </script>
 

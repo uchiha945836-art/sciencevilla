@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Science Villa | Thermodynamics & Entropy-Enthalpy Sandbox (JEE/NEET Masterclass)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-light: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-glow: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(6, 182, 212, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(244, 63, 94, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 1rem;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-rose));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo span {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-rose);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-rose);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-rose);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 800px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      color: #fb7185;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.15);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #fb7185;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #fb7185;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(251, 113, 133, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(251, 113, 133, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(251, 113, 133, 0); }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #ffffff 40%, #fb7185 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      color: var(--text-sub);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    /* Simulation Lab Stage */
+    .lab-stage {
+      background: var(--bg-card);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1000px) {
+      .lab-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 440px;
+      background: #020408;
+      border-radius: 16px;
+      border: 1px solid var(--border-glow);
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      justify-content: space-between;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-glow);
+      padding: 0.8rem 1rem;
+      border-radius: 14px;
+    }
+
+    .control-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group label span {
+      color: var(--accent-rose);
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-rose);
+      cursor: pointer;
+    }
+
+    .telemetry-box {
+      background: rgba(244, 63, 94, 0.03);
+      border: 1px solid rgba(244, 63, 94, 0.2);
+      border-radius: 14px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+    }
+
+    .telemetry-row span:last-child {
+      font-weight: 700;
+      color: var(--accent-amber);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent-rose), #e11d48);
+      color: #030712;
+      font-weight: 700;
+      padding: 0.8rem 1.2rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(244, 63, 94, 0.35);
+    }
+
+    .btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(244, 63, 94, 0.6);
+    }
+
+    /* Theory Sections Grid */
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .theory-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .theory-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .theory-card h3 {
+      font-size: 1.25rem;
+      color: var(--accent-rose);
+      margin-bottom: 1rem;
+      letter-spacing: -0.3px;
+    }
+
+    .theory-card p, .theory-card li {
+      font-size: 0.92rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    .theory-card ul {
+      padding-left: 1.2rem;
+      margin-top: 0.75rem;
+    }
+
+    .formula-box {
+      background: rgba(244, 63, 94, 0.05);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      margin: 1.25rem 0;
+      font-family: monospace;
+      color: #fda4af;
+      font-size: 1.05rem;
+      text-align: center;
+      box-shadow: inset 0 0 10px rgba(244, 63, 94, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-glow);
+      width: 100%;
+      max-width: 1400px;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo"><span></span>Science Villa</a>
+    <ul class="nav-links">
+      <li><a href="#sandbox">Sandbox Sim</a></li>
+      <li><a href="#laws">Thermodynamic Laws</a></li>
+      <li><a href="#gibbs">Gibbs Free Energy</a></li>
+      <li><a href="#entropy">Entropy & Enthalpy</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <div class="badge">
+      <span class="badge-dot"></span> JEE & NEET Advanced Masterclass
+    </div>
+    <h1>Thermodynamics & Entropy-Enthalpy Sandbox</h1>
+    <p class="subtitle">Analyze spontaneity criteria, Enthalpy ($\Delta H$), Entropy ($\Delta S$), and Gibbs Free Energy ($\Delta G$) behavior across changing temperatures in real-time.</p>
+  </header>
+
+  <div class="container">
+    
+    <!-- Interactive Thermodynamics Sandbox Simulation -->
+    <section id="sandbox" class="lab-stage">
+      <div class="canvas-container">
+        <canvas id="simCanvas"></canvas>
+      </div>
+
+      <div class="controls-panel">
+        <div>
+          <h2 style="font-size: 1.15rem; margin-bottom: 0.3rem; color: #fff;">Reaction Thermodynamic Chamber</h2>
+          <p style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.4;">Particle dispersion visualizes System Entropy ($S$), while kinetic energy variations map Enthalpy ($\Delta H$).</p>
+        </div>
+
+        <div class="control-group">
+          <label>Temperature ($T$): <span id="tempVal">298 K</span></label>
+          <input type="range" id="tempRange" min="100" max="1000" value="298" step="10">
+        </div>
+
+        <div class="control-group">
+          <label>Enthalpy Change ($\Delta H$): <span id="enthalpyVal">-50 kJ/mol</span></label>
+          <input type="range" id="enthalpyRange" min="-150" max="150" value="-50" step="10">
+        </div>
+
+        <div class="control-group">
+          <label>Entropy Change ($\Delta S$): <span id="entropyVal">+120 J/K·mol</span></label>
+          <input type="range" id="entropyRange" min="-200" max="200" value="120" step="10">
+        </div>
+
+        <div class="telemetry-box">
+          <div class="telemetry-row">
+            <span>Gibbs Energy ($\Delta G$):</span>
+            <span id="gibbsVal">0 kJ/mol</span>
+          </div>
+          <div class="telemetry-row">
+            <span>Spontaneity Status:</span>
+            <span id="spontVal" style="color: #4ade80;">Spontaneous</span>
+          </div>
+        </div>
+
+        <button class="btn" id="resetBtn">Reset Chamber</button>
+      </div>
+    </section>
+
+    <!-- Detailed Theory & JEE/NEET Core Concepts -->
+    <div class="theory-grid">
+      
+      <!-- Card 1: Laws of Thermodynamics -->
+      <div id="laws" class="theory-card">
+        <h3>1. Fundamental Laws of Thermodynamics</h3>
+        <p>Essential framework for evaluating system energy transformations and state functions:</p>
+        <ul>
+          <li><strong>First Law ($\Delta U = q + w$):</strong> Law of conservation of energy. Internal energy is a state function; work and heat are path functions.</li>
+          <li><strong>Second Law ($\Delta S_{\text{univ}} > 0$):</strong> For any spontaneous process, total entropy of the universe must continuously increase.</li>
+          <li><strong>Third Law:</strong> The entropy of a perfectly crystalline pure substance approaches zero at absolute zero ($0\text{ K}$).</li>
+        </ul>
+        <div class="formula-box">
+          $\Delta S_{\text{univ}} = \Delta S_{\text{sys}} + \Delta S_{\text{surr}} > 0$
+        </div>
+      </div>
+
+      <!-- Card 2: Gibbs Free Energy & Spontaneity -->
+      <div id="gibbs" class="theory-card">
+        <h3>2. Gibbs Free Energy ($\Delta G$) Criteria</h3>
+        <p>The master criterion for predicting chemical reaction spontaneity at constant temperature and pressure:</p>
+        <div class="formula-box">
+          $\Delta G = \Delta H - T\Delta S$
+        </div>
+        <p><strong>High-Yield JEE/NEET Matrix:</strong></p>
+        <ul>
+          <li><strong>$\Delta H < 0, \Delta S > 0$:</strong> Spontaneous at all temperatures.</li>
+          <li><strong>$\Delta H > 0, \Delta S < 0$:</strong> Non-spontaneous at all temperatures.</li>
+          <li><strong>$\Delta H < 0, \Delta S < 0$:</strong> Spontaneous at low temperatures ($T < \Delta H/\Delta S$).</li>
+          <li><strong>$\Delta H > 0, \Delta S > 0$:</strong> Spontaneous at high temperatures ($T > \Delta H/\Delta S$).</li>
+        </ul>
+      </div>
+
+      <!-- Card 3: Enthalpy & Entropy Relationships -->
+      <div id="entropy" class="theory-card">
+        <h3>3. Enthalpy, Entropy & Equilibrium Link</h3>
+        <p>Connects thermodynamics directly to chemical equilibrium constants and non-expansion work:</p>
+        <ul>
+          <li><strong>Standard Free Energy:</strong> $\Delta G^\circ = -RT \ln K_{eq}$</li>
+          <li><strong>Temperature Dependence:</strong> van 't Hoff equation links enthalpy change to equilibrium constants at different temperatures.</li>
+          <li><strong>Enthalpy ($\Delta H$):</strong> Heat absorbed or released at constant pressure ($\Delta H = \Delta U + P\Delta V$).</li>
+        </ul>
+        <div class="formula-box">
+          $\Delta G = \Delta G^\circ + RT \ln Q$
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Science Villa | Thermodynamics & Entropy-Enthalpy Masterclass for JEE & NEET</p>
+  </footer>
+
+  <script>
+    // Thermodynamics Particle & Entropy Simulation Engine
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let temp = 298;
+    let enthalpy = -50;
+    let entropy = 120;
+
+    const tempSlider = document.getElementById('tempRange');
+    const enthalpySlider = document.getElementById('enthalpyRange');
+    const entropySlider = document.getElementById('entropyRange');
+
+    const tempVal = document.getElementById('tempVal');
+    const enthalpyVal = document.getElementById('enthalpyVal');
+    const entropyVal = document.getElementById('entropyVal');
+    const gibbsVal = document.getElementById('gibbsVal');
+    const spontVal = document.getElementById('spontVal');
+    const resetBtn = document.getElementById('resetBtn');
+
+    tempSlider.addEventListener('input', (e) => {
+      temp = parseInt(e.target.value);
+      tempVal.textContent = temp + ' K';
+      updateParameters();
+    });
+
+    enthalpySlider.addEventListener('input', (e) => {
+      enthalpy = parseInt(e.target.value);
+      enthalpyVal.textContent = enthalpy + ' kJ/mol';
+      updateParameters();
+    });
+
+    entropySlider.addEventListener('input', (e) => {
+      entropy = parseInt(e.target.value);
+      entropyVal.textContent = (entropy > 0 ? '+' : '') + entropy + ' J/K·mol';
+      updateParameters();
+    });
+
+    let particles = [];
+    const numParticles = 60;
+
+    class ThermodynamicParticle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * (canvas.width - 40) + 20;
+        this.y = Math.random() * (canvas.height - 40) + 20;
+        this.radius = 7;
+        this.updateVelocity();
+      }
+
+      updateVelocity() {
+        // Higher temp or higher entropy increases thermal motion spread
+        const speed = (Math.sqrt(temp) * 0.12) * (1 + Math.abs(entropy) * 0.002);
+        const angle = Math.random() * Math.PI * 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x - this.radius < 0) { this.x = this.radius; this.vx *= -1; }
+        if (this.x + this.radius > canvas.width) { this.x = canvas.width - this.radius; this.vx *= -1; }
+        if (this.y - this.radius < 0) { this.y = this.radius; this.vy *= -1; }
+        if (this.y + this.radius > canvas.height) { this.y = canvas.height - this.radius; this.vy *= -1; }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        // Color shifts based on enthalpy (heat content)
+        ctx.fillStyle = enthalpy < 0 ? '#06b6d4' : '#f43f5e';
+        ctx.shadowColor = enthalpy < 0 ? '#06b6d4' : '#f43f5e';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.closePath();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new ThermodynamicParticle());
+      }
+    }
+
+    function updateParameters() {
+      // Delta G calculation: Delta G (kJ) = Delta H (kJ) - [ T (K) * Delta S (J/K) / 1000 ]
+      let deltaG = enthalpy - (temp * (entropy / 1000));
+      gibbsVal.textContent = deltaG.toFixed(1) + ' kJ/mol';
+
+      if (deltaG < 0) {
+        spontVal.textContent = 'Spontaneous (Feasible)';
+        spontVal.style.color = '#4ade80';
+      } else if (deltaG > 0) {
+        spontVal.textContent = 'Non-Spontaneous';
+        spontVal.style.color = '#f87171';
+      } else {
+        spontVal.textContent = 'At Equilibrium';
+        spontVal.style.color = '#fbbf24';
+      }
+
+      particles.forEach(p => p.updateVelocity());
+    }
+
+    resetBtn.addEventListener('click', () => {
+      temp = 298; enthalpy = -50; entropy = 120;
+      tempSlider.value = temp; enthalpySlider.value = enthalpy; entropySlider.value = entropy;
+      tempVal.textContent = temp + ' K';
+      enthalpyVal.textContent = enthalpy + ' kJ/mol';
+      entropyVal.textContent = '+' + entropy + ' J/K·mol';
+      updateParameters();
+      initParticles();
+    });
+
+    initParticles();
+    updateParameters();
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+
+</body>
+</html>
