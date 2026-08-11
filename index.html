@@ -4,14 +4,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3847019130544332"
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Science Villa | Interactive Models & Quantum Laboratory</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #030712;
-      --bg-card: rgba(15, 23, 42, 0.7);
+      --bg-card: rgba(15, 23, 42, 0.9);
       --bg-glass: rgba(30, 41, 59, 0.4);
       --accent-cyan: #06b6d4;
       --accent-indigo: #6366f1;
@@ -29,6 +28,7 @@
       box-sizing: border-box;
       font-family: 'Plus Jakarta Sans', sans-serif;
       scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -42,33 +42,43 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.5rem;
+      padding: 0.75rem;
       overflow-x: hidden;
     }
 
-    /* Enhanced Navigation Bar with Glassmorphism & Glow */
+    /* Mobile-Optimized Navigation Bar */
     nav {
       width: 100%;
       max-width: 1400px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 0.75rem;
       align-items: center;
-      padding: 1rem 2rem;
-      margin-bottom: 2.5rem;
-      background: rgba(15, 23, 42, 0.6);
+      padding: 0.85rem 1rem;
+      margin-bottom: 1.5rem;
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-glow);
-      border-radius: 20px;
+      border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       position: sticky;
-      top: 1rem;
+      top: 0.5rem;
       z-index: 1000;
+    }
+
+    @media (min-width: 768px) {
+      nav {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        border-radius: 20px;
+      }
     }
 
     .logo {
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #fff 20%, var(--accent-cyan) 80%);
       -webkit-background-clip: text;
@@ -80,8 +90,8 @@
 
     .logo span {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background: var(--accent-cyan);
       border-radius: 50%;
       box-shadow: 0 0 12px var(--accent-cyan);
@@ -89,17 +99,23 @@
 
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
       list-style: none;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .nav-links a {
       color: var(--text-sub);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.8rem;
       transition: all 0.3s ease;
-      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links { gap: 1.5rem; }
+      .nav-links a { font-size: 0.9rem; }
     }
 
     .nav-links a:hover {
@@ -110,28 +126,29 @@
     /* Hero Header */
     header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
       max-width: 800px;
+      padding: 0 0.5rem;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       background: rgba(6, 182, 212, 0.1);
       border: 1px solid rgba(6, 182, 212, 0.3);
-      padding: 0.4rem 1rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 99px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--accent-cyan);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
       font-weight: 700;
       box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
     }
 
     .badge-dot {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       background-color: var(--accent-cyan);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--accent-cyan);
@@ -145,20 +162,24 @@
     }
 
     h1 {
-      font-size: 3.5rem;
+      font-size: 2.1rem;
       font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1.25rem;
-      letter-spacing: -1.5px;
+      line-height: 1.2;
+      margin-bottom: 0.85rem;
+      letter-spacing: -1px;
       background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
+    @media (min-width: 768px) {
+      h1 { font-size: 3.2rem; }
+    }
+
     p.subtitle {
       color: var(--text-sub);
-      font-size: 1.15rem;
-      line-height: 1.7;
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
 
     .container {
@@ -170,8 +191,8 @@
     .controls-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      margin-bottom: 3rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
     .search-bar-container {
@@ -183,81 +204,86 @@
       width: 100%;
       background: var(--bg-card);
       border: 1px solid var(--border-glow);
-      border-radius: 16px;
-      padding: 1.1rem 1.2rem 1.1rem 3.5rem;
+      border-radius: 14px;
+      padding: 0.9rem 1rem 0.9rem 3rem;
       color: var(--text-light);
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       outline: none;
       backdrop-filter: blur(20px);
-      transition: all 0.3s ease;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     .search-input:focus {
       border-color: var(--accent-cyan);
-      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25), inset 0 0 10px rgba(6, 182, 212, 0.1);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
     }
 
     .search-icon {
       position: absolute;
-      left: 1.4rem;
+      left: 1.1rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--accent-cyan);
-      font-size: 1.2rem;
+      font-size: 1rem;
       pointer-events: none;
     }
 
     .category-tabs {
       display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
     }
 
     .tab-btn {
       background: var(--bg-card);
       border: 1px solid var(--border-glow);
       color: var(--text-sub);
-      padding: 0.7rem 1.4rem;
+      padding: 0.5rem 1rem;
       border-radius: 99px;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
+      white-space: nowrap;
       backdrop-filter: blur(10px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
     }
 
     .tab-btn:hover, .tab-btn.active {
       background: rgba(6, 182, 212, 0.15);
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
-      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
     }
 
-    /* Model Cards Grid - 5 columns layout */
+    /* Model Cards Grid - Mobile First Single/Double Column */
     .grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1.25rem;
-      margin-bottom: 3rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
 
-    @media (max-width: 1400px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 900px) {
+    @media (min-width: 640px) {
       .grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 600px) {
+    @media (min-width: 1024px) {
       .grid {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 1400px) {
+      .grid {
+        grid-template-columns: repeat(5, 1fr);
       }
     }
 
@@ -265,15 +291,13 @@
       position: relative;
       background: var(--bg-card);
       backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 1.5rem;
+      border-radius: 16px;
+      padding: 1.25rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid var(--border-glow);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     .card.hidden {
@@ -282,13 +306,13 @@
 
     .card-tag {
       align-self: flex-start;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      padding: 0.3rem 0.75rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
       background: rgba(6, 182, 212, 0.12);
       color: var(--accent-cyan);
       border: 1px solid rgba(6, 182, 212, 0.3);
@@ -312,40 +336,18 @@
       border-color: rgba(239, 68, 68, 0.3);
     }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-      transition: left 0.6s ease;
-    }
-
-    .card:hover::before {
-      left: 100%;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      border-color: var(--border-hover);
-      box-shadow: 0 20px 50px rgba(6, 182, 212, 0.25);
-    }
-
     .card h2 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
       color: var(--text-light);
-      letter-spacing: -0.3px;
     }
 
     .card p {
       color: var(--text-sub);
-      font-size: 0.88rem;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
     }
 
     .btn {
@@ -354,17 +356,11 @@
       background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
       color: #030712;
       font-weight: 700;
-      padding: 0.75rem 1.2rem;
-      border-radius: 12px;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
-      filter: brightness(1.1);
+      font-size: 0.85rem;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
     }
 
     .btn.disabled {
@@ -381,114 +377,114 @@
       background: var(--bg-card);
       backdrop-filter: blur(25px);
       border: 1px solid var(--border-glow);
-      border-radius: 24px;
-      padding: 3rem;
-      margin-bottom: 3rem;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+      border-radius: 18px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (min-width: 768px) {
+      .section-block { padding: 2.5rem; }
     }
 
     .section-block h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
       color: var(--text-light);
-      letter-spacing: -0.5px;
+    }
+
+    @media (min-width: 768px) {
+      .section-block h2 { font-size: 1.8rem; }
     }
 
     /* Chemistry Info Card */
     .atom-info-box {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .atom-info-box { grid-template-columns: repeat(2, 1fr); }
     }
 
     .atom-info-card {
       background: rgba(168, 85, 247, 0.04);
       border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: transform 0.3s ease;
-    }
-
-    .atom-info-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(168, 85, 247, 0.4);
-      background: rgba(168, 85, 247, 0.08);
+      border-radius: 12px;
+      padding: 1.15rem;
     }
 
     .atom-info-card h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: #c084fc;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.4rem;
     }
 
     .atom-info-card p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-sub);
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     /* About Us Grid */
     .about-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    @media (min-width: 640px) {
+      .about-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .about-item {
       background: rgba(255, 255, 255, 0.015);
       border: 1px solid var(--border-glow);
-      padding: 1.5rem;
-      border-radius: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .about-item:hover {
-      border-color: var(--accent-cyan);
-      background: rgba(6, 182, 212, 0.03);
+      padding: 1.15rem;
+      border-radius: 12px;
     }
 
     .about-item h3 {
-      font-size: 1.15rem;
+      font-size: 1rem;
       color: var(--accent-cyan);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.4rem;
     }
 
     .about-item p {
-      font-size: 0.92rem;
+      font-size: 0.85rem;
       color: var(--text-sub);
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     /* Feedback & Formalities Form */
     .feedback-form {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      gap: 1rem;
+      margin-top: 1rem;
     }
 
     .form-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
 
-    @media (max-width: 768px) {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
+    @media (min-width: 768px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .form-group label {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-sub);
     }
@@ -496,98 +492,89 @@
     .form-group input, .form-group textarea, .form-group select {
       background: rgba(3, 7, 18, 0.7);
       border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      padding: 0.75rem;
       color: var(--text-light);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       outline: none;
-      transition: all 0.3s ease;
-    }
-
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
     }
 
     .checkbox-group {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      align-items: flex-start;
+      gap: 0.6rem;
       margin-top: 0.25rem;
     }
 
     .checkbox-group input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       accent-color: var(--accent-cyan);
+      margin-top: 0.1rem;
       cursor: pointer;
     }
 
     .checkbox-group label {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       color: var(--text-sub);
       cursor: pointer;
+      line-height: 1.4;
     }
 
     .submit-btn {
-      align-self: flex-start;
+      width: 100%;
       border: none;
       cursor: pointer;
-      padding: 0.85rem 2rem;
-      font-size: 1rem;
+      padding: 0.8rem 1.5rem;
+      font-size: 0.95rem;
+      border-radius: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .submit-btn { width: auto; align-self: flex-start; }
     }
 
     #form-status {
       display: none;
-      padding: 1rem;
-      border-radius: 12px;
+      padding: 0.85rem;
+      border-radius: 10px;
       background: rgba(34, 197, 94, 0.15);
       border: 1px solid rgba(34, 197, 94, 0.4);
       color: #4ade80;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       text-align: center;
       font-weight: 600;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Contact Details */
     .contact-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .contact-container { grid-template-columns: repeat(2, 1fr); }
     }
 
     .contact-card {
       background: rgba(255, 255, 255, 0.015);
       border: 1px solid var(--border-glow);
-      padding: 1.5rem;
-      border-radius: 16px;
+      padding: 1.15rem;
+      border-radius: 12px;
       display: flex;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1rem;
       text-decoration: none;
       color: var(--text-light);
-      transition: all 0.3s ease;
-    }
-
-    .contact-card:hover {
-      border-color: var(--accent-cyan);
-      background: rgba(6, 182, 212, 0.05);
-      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.15);
-      transform: translateY(-3px);
     }
 
     footer {
       text-align: center;
-      padding: 2.5rem 0;
+      padding: 1.5rem 0;
       color: var(--text-sub);
-      font-size: 0.88rem;
+      font-size: 0.8rem;
       border-top: 1px solid var(--border-glow);
       width: 100%;
       max-width: 1400px;
@@ -611,6 +598,7 @@
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s ease;
+      padding: 1rem;
     }
 
     .rotate-popup-overlay.active {
@@ -621,10 +609,10 @@
     .rotate-popup-card {
       background: var(--bg-card);
       border: 1px solid var(--border-hover);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      max-width: 400px;
-      width: 90%;
+      border-radius: 20px;
+      padding: 1.75rem 1.25rem;
+      max-width: 360px;
+      width: 100%;
       text-align: center;
       box-shadow: 0 20px 60px rgba(6, 182, 212, 0.3);
       transform: scale(0.9);
@@ -636,8 +624,8 @@
     }
 
     .rotate-icon-animation {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
       display: inline-block;
       animation: rotatePhone 2s infinite ease-in-out;
     }
@@ -648,22 +636,22 @@
     }
 
     .rotate-popup-card h3 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: var(--text-light);
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
     .rotate-popup-card p {
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       color: var(--text-sub);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
     }
 
     .rotate-popup-btns {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       justify-content: center;
     }
 
@@ -671,34 +659,23 @@
       background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
       color: #030712;
       font-weight: 700;
-      padding: 0.7rem 1.5rem;
-      border-radius: 12px;
+      padding: 0.65rem 1.15rem;
+      border-radius: 10px;
       text-decoration: none;
+      font-size: 0.85rem;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(6, 182, 212, 0.35);
-      transition: all 0.3s ease;
-    }
-
-    .rotate-btn-proceed:hover {
-      filter: brightness(1.1);
-      transform: scale(1.02);
     }
 
     .rotate-btn-close {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-sub);
       font-weight: 600;
-      padding: 0.7rem 1.2rem;
-      border-radius: 12px;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
       border: 1px solid var(--border-glow);
+      font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .rotate-btn-close:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-light);
     }
   </style>
 </head>
@@ -712,8 +689,8 @@
       <li><a href="#chemistry-info">Chemistry</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#formalities">Formalities</a></li>
-      <li><a href="#contact">Contact Us</a></li>
-      <li><a href="#privacy">Privacy Policy</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#privacy">Privacy</a></li>
     </ul>
   </nav>
 
@@ -733,7 +710,7 @@
       <div class="controls-wrapper">
         <div class="search-bar-container">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, VSEPR, Kinetics, Thermodynamics, Electrochemistry)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar)...">
         </div>
 
         <div class="category-tabs">
@@ -851,7 +828,7 @@
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
-            <h2>Thermodynamics & Entropy-Enthalpy Sandbox</h2>
+            <h2>Thermodynamics & Entropy Sandbox</h2>
             <p>JEE/NEET Masterclass analyzing spontaneity criteria, Enthalpy, Entropy, and Gibbs Free Energy behavior across changing temperatures in real-time.</p>
           </div>
           <a href="thermodynamics.html" class="btn">Launch Model</a>
@@ -862,7 +839,7 @@
           <div>
             <span class="card-tag chemistry">Chemistry</span>
             <h2>3D Electrochemical Cell Lab</h2>
-            <p>Explore galvanic and voltaic cells in high-contrast 3D. Control half-cell types, electrolyte concentrations, temperature, and analyze real-time Nernst cell potentials and Gibbs free energy.</p>
+            <p>Explore galvanic and voltaic cells in high-contrast 3D. Control half-cell types, electrolyte concentrations, temperature, and analyze Nernst cell potentials.</p>
           </div>
           <a href="electrochemistry.html" class="btn">Launch Model</a>
         </div>
@@ -883,7 +860,7 @@
     <!-- Chemistry Overview Section -->
     <section id="chemistry-info" class="section-block">
       <h2>Chemistry Spotlight: Atomic Structure</h2>
-      <p style="color: var(--text-sub); line-height: 1.7;">
+      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.9rem;">
         An <strong>atom</strong> is the foundational building block of matter. It consists of a dense central region called the <strong>nucleus</strong> surrounded by a dynamic electron cloud.
       </p>
 
@@ -913,7 +890,7 @@
     <!-- About Us Section -->
     <section id="about" class="section-block">
       <h2>About Science Villa</h2>
-      <p style="color: var(--text-sub); line-height: 1.7;">
+      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.9rem;">
         Science Villa is an open-access platform built to transform abstract textbook concepts into immersive, interactive simulations for students, researchers, and educators worldwide.
       </p>
       <div class="about-grid">
@@ -935,7 +912,7 @@
     <!-- Formalities, Terms, & Institutional Compliance Section -->
     <section id="formalities" class="section-block">
       <h2>Institutional Access & Formalities</h2>
-      <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+      <p style="color: var(--text-sub); font-size: 0.88rem; line-height: 1.5; margin-bottom: 1rem;">
         Please complete the administrative formalities below for institutional registration, API sandbox testing credentials, or educational license inquiries.
       </p>
 
@@ -985,51 +962,38 @@
     <!-- Privacy Policy Section -->
     <section id="privacy" class="section-block">
       <h2>Privacy Policy</h2>
-      <p style="color: var(--text-sub); line-height: 1.7; margin-bottom: 1rem;">
+      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.88rem; margin-bottom: 1rem;">
         At <strong>sciencevilla.fun</strong>, accessible from https://sciencevilla.fun, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Science Villa and how we use it.
       </p>
 
-      <h3 style="color: var(--accent-cyan); font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Consent</h3>
-      <p style="color: var(--text-sub); line-height: 1.6;">By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+      <h3 style="color: var(--accent-cyan); font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.4rem;">Consent</h3>
+      <p style="color: var(--text-sub); line-height: 1.5; font-size: 0.88rem;">By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
 
-      <h3 style="color: var(--accent-cyan); font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Google DoubleClick DART Cookie</h3>
-      <p style="color: var(--text-sub); line-height: 1.6;">
-        Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to www.sciencevilla.fun and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com/technologies/ads" target="_blank" style="color: var(--accent-cyan);">https://policies.google.com/technologies/ads</a>
-      </p>
-
-      <h3 style="color: var(--accent-cyan); font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Our Advertising Partners</h3>
-      <p style="color: var(--text-sub); line-height: 1.6;">
-        Some of advertising partners on our site may use cookies and web beacons. Our advertising partners are listed below. Each of our advertising partners has their own Privacy Policy for their policies on user data. For easier access, we hyperlinked to their Privacy Policies below:
-      </p>
-      <ul style="color: var(--text-sub); margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.6;">
-        <li>Google: <a href="https://policies.google.com/technologies/ads" target="_blank" style="color: var(--accent-cyan);">https://policies.google.com/technologies/ads</a></li>
-      </ul>
-
-      <h3 style="color: var(--accent-cyan); font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem;">Changes to This Privacy Policy</h3>
-      <p style="color: var(--text-sub); line-height: 1.6;">
-        We may update our Privacy Policy from time to time. Thus, we advise you to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.
+      <h3 style="color: var(--accent-cyan); font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.4rem;">Google DoubleClick DART Cookie</h3>
+      <p style="color: var(--text-sub); line-height: 1.5; font-size: 0.88rem;">
+        Google is a third-party vendor on our site. It uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to www.sciencevilla.fun and other sites on the internet. Visitors may choose to decline DART cookies via Google's Privacy Policy: <a href="https://policies.google.com/technologies/ads" target="_blank" style="color: var(--accent-cyan);">https://policies.google.com/technologies/ads</a>
       </p>
     </section>
 
     <!-- Contact Us Section -->
     <section id="contact" class="section-block">
       <h2>Direct Communications</h2>
-      <p style="color: var(--text-sub); font-size: 0.95rem;">Reach out directly to our scientific development team and administrative desk.</p>
+      <p style="color: var(--text-sub); font-size: 0.88rem;">Reach out directly to our scientific development team and administrative desk.</p>
 
       <div class="contact-container">
         <a href="mailto:sciencevilla171@gmail.com" class="contact-card">
-          <span style="font-size: 1.6rem;">✉️</span>
+          <span style="font-size: 1.4rem;">✉️</span>
           <div>
-            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Email Support</strong>
-            <span style="font-size: 0.85rem; color: var(--accent-cyan);">sciencevilla171@gmail.com</span>
+            <strong style="display: block; font-size: 0.9rem; margin-bottom: 0.15rem;">Email Support</strong>
+            <span style="font-size: 0.8rem; color: var(--accent-cyan); word-break: break-all;">sciencevilla171@gmail.com</span>
           </div>
         </a>
 
         <div class="contact-card" style="cursor: default;">
-          <span style="font-size: 1.6rem;">🌐</span>
+          <span style="font-size: 1.4rem;">🌐</span>
           <div>
-            <strong style="display: block; font-size: 0.95rem; margin-bottom: 0.2rem;">Global Operations</strong>
-            <span style="font-size: 0.85rem; color: var(--text-sub);">Open Science Cloud Infrastructure</span>
+            <strong style="display: block; font-size: 0.9rem; margin-bottom: 0.15rem;">Global Operations</strong>
+            <span style="font-size: 0.8rem; color: var(--text-sub);">Open Science Cloud Infrastructure</span>
           </div>
         </div>
       </div>
@@ -1038,7 +1002,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Science Villa | Built for Advanced Interactive Science & Physics Education</p>
+    <p>&copy; 2026 Science Villa | Built for Advanced Mobile Science Education</p>
   </footer>
 
   <!-- Rotation Popup Modal Component -->
