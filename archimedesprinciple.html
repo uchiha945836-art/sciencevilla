@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Science Villa | Archimedes' Principle Master Lab</title>
+  <title>Science Villa | Archimedes' Principle Master Lab with Cursor Dragging</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #07090e;
-      --bg-card: rgba(18, 26, 43, 0.75);
+      --bg-card: rgba(18, 26, 43, 0.85);
       --accent-cyan: #38bdf8;
       --accent-blue: #0ea5e9;
       --text-light: #f8fafc;
@@ -33,19 +33,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
+      padding: 1rem;
+      overflow-x: hidden;
     }
 
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
       max-width: 800px;
+      padding: 0 0.5rem;
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
       background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -53,8 +55,8 @@
 
     p.subtitle {
       color: var(--text-sub);
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 0.85rem;
+      line-height: 1.4;
     }
 
     .sim-container {
@@ -62,19 +64,19 @@
       max-width: 1200px;
       background: var(--bg-card);
       border: 1px solid var(--border-glow);
-      border-radius: 16px;
-      padding: 1.5rem;
+      border-radius: 12px;
+      padding: 1rem;
       backdrop-filter: blur(16px);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
+      gap: 1rem;
     }
 
     .lab-layout {
       display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1.5rem;
+      grid-template-columns: 1fr 300px;
+      gap: 1rem;
     }
 
     @media (max-width: 900px) {
@@ -86,11 +88,22 @@
     .canvas-wrapper {
       position: relative;
       width: 100%;
-      height: 480px;
+      height: 340px;
       background: #030406;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: grab;
+    }
+
+    .canvas-wrapper:active {
+      cursor: grabbing;
+    }
+
+    @media (min-width: 600px) and (max-width: 900px) {
+      .canvas-wrapper {
+        height: 400px;
+      }
     }
 
     canvas {
@@ -103,44 +116,44 @@
     .math-panel {
       background: rgba(7, 9, 14, 0.6);
       border: 1px solid var(--border-glow);
-      border-radius: 12px;
-      padding: 1.25rem;
+      border-radius: 10px;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
       justify-content: space-between;
     }
 
     .math-panel h3 {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--accent-cyan);
       border-bottom: 1px solid var(--border-glow);
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.4rem;
     }
 
     .formula-box {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     .formula-box code {
       display: block;
       background: rgba(56, 189, 248, 0.08);
       color: var(--text-light);
-      padding: 0.4rem;
+      padding: 0.35rem;
       border-radius: 6px;
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       font-family: monospace;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .controls {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.85rem;
       background: rgba(0, 0, 0, 0.2);
-      padding: 1.2rem;
+      padding: 1rem;
       border-radius: 10px;
       border: 1px solid var(--border-glow);
     }
@@ -148,50 +161,56 @@
     .control-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
+      gap: 1rem;
       justify-content: space-between;
       align-items: center;
     }
 
     .control-group {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
       align-items: center;
       flex-wrap: wrap;
+      flex: 1;
+      min-width: 140px;
     }
 
     .control-group label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
       font-weight: 600;
+      width: 100%;
     }
 
     .control-group select, .control-group input[type="range"] {
       background: rgba(7, 9, 14, 0.8);
       border: 1px solid var(--border-glow);
-      padding: 0.4rem 0.7rem;
+      padding: 0.45rem 0.6rem;
       border-radius: 6px;
       color: var(--text-light);
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       outline: none;
+      width: 100%;
     }
 
     .control-group input[type="range"] {
       cursor: pointer;
       accent-color: var(--accent-cyan);
+      padding: 0;
     }
 
     .btn {
       background: linear-gradient(135deg, #38bdf8, #0284c7);
       color: #07090e;
       font-weight: 700;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 0.9rem;
       border-radius: 8px;
       border: none;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
       transition: all 0.2s ease;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      flex: 1;
     }
 
     .btn:hover {
@@ -212,26 +231,33 @@
 
     .telemetry {
       display: flex;
-      gap: 1.5rem;
-      font-size: 0.88rem;
+      gap: 1rem;
+      font-size: 0.82rem;
       color: var(--text-sub);
       flex-wrap: wrap;
       background: rgba(0,0,0,0.15);
-      padding: 0.75rem 1rem;
+      padding: 0.6rem 0.8rem;
       border-radius: 8px;
+      justify-content: space-around;
+    }
+
+    .telemetry div {
+      text-align: center;
     }
 
     .telemetry span {
       color: var(--text-light);
       font-weight: 700;
+      display: block;
     }
 
     .back-link {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       color: var(--accent-cyan);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
+      text-align: center;
     }
 
     .back-link:hover {
@@ -242,13 +268,13 @@
 <body>
 
   <header>
-    <h1>Archimedes' Principle: Master Calculation Lab</h1>
-    <p class="subtitle">Real-time force telemetry, displaced fluid calculations, and density computations combined in an interactive laboratory.</p>
+    <h1>Archimedes' Principle: Master Lab + Cursor Drag</h1>
+    <p class="subtitle">Click and drag the object directly inside the canvas to control its depth, or use the slider.</p>
   </header>
 
   <div class="sim-container">
     <div class="lab-layout">
-      <div class="canvas-wrapper">
+      <div class="canvas-wrapper" id="canvasWrapper">
         <canvas id="simCanvas"></canvas>
       </div>
 
@@ -262,12 +288,12 @@
         </div>
 
         <div class="formula-box">
-          <strong>2. Buoyant Force ($F_b = \rho \cdot V_{sub} \cdot g$):</strong>
+          <strong>2. Buoyant Force ($F_b$):</strong>
           <code id="calcBuoyForce">0.00 N</code>
         </div>
 
         <div class="formula-box">
-          <strong>3. Apparent Weight ($W_{app} = W_{true} - F_b$):</strong>
+          <strong>3. Apparent Weight ($W_{app}$):</strong>
           <code id="calcApparent">0.00 kg</code>
         </div>
 
@@ -283,10 +309,10 @@
         <div class="control-group">
           <label for="objectSelect">Object Material:</label>
           <select id="objectSelect">
-            <option value="lead">Lead (Dense - 8.0 kg)</option>
-            <option value="aluminum" selected>Aluminum Block (5.0 kg)</option>
-            <option value="wood">Wood (Light - 1.2 kg)</option>
-            <option value="ice">Ice Block (0.9 kg)</option>
+            <option value="lead">Lead (8.0 kg)</option>
+            <option value="aluminum" selected>Aluminum (5.0 kg)</option>
+            <option value="wood">Wood (1.2 kg)</option>
+            <option value="ice">Ice (0.9 kg)</option>
           </select>
         </div>
 
@@ -302,12 +328,14 @@
       </div>
 
       <div class="control-row">
-        <div class="control-group">
+        <div class="control-group" style="flex: 2;">
           <label for="depthSlider">Submersion Depth:</label>
           <input type="range" id="depthSlider" min="0" max="100" value="100">
         </div>
+      </div>
 
-        <div class="control-group">
+      <div class="control-row">
+        <div class="control-group" style="flex-direction: row; gap: 0.5rem; width: 100%;">
           <button class="btn" id="dropToggleBtn">Release / Float</button>
           <button class="btn btn-secondary" id="resetBtn">Reset</button>
         </div>
@@ -315,7 +343,7 @@
 
       <div class="telemetry">
         <div>True Mass: <span id="teleMass">5.0</span> kg</div>
-        <div>Total Volume: <span id="teleVol">1.85</span> L</div>
+        <div>Total Vol: <span id="teleVol">1.85</span> L</div>
         <div>Scale Reading: <span id="teleScale">5.0</span> kg</div>
       </div>
     </div>
@@ -326,10 +354,11 @@
   <script>
     const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
+    const canvasWrapper = document.getElementById('canvasWrapper');
 
     function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+      canvas.width = canvasWrapper.clientWidth;
+      canvas.height = canvasWrapper.clientHeight;
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
@@ -340,7 +369,6 @@
     const dropToggleBtn = document.getElementById('dropToggleBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // Materials configuration (Mass kg, Volume Liters)
     const materials = {
       lead: { name: 'Lead', mass: 8.0, volume: 0.7, color: '#64748b' },
       aluminum: { name: 'Aluminum', mass: 5.0, volume: 1.85, color: '#94a3b8' },
@@ -349,9 +377,16 @@
     };
 
     let currentMaterialKey = 'aluminum';
-    let fluidDensity = 1.0; // g/cm³ (which equals kg/L)
-    let sliderImmersion = 1.0; // 0 to 1
+    let fluidDensity = 1.0; 
+    let sliderImmersion = 1.0; 
     let isFreeDrop = false;
+    let isDragging = false;
+
+    // Track object position for hit-testing and dragging
+    let currentObjectDrawY = 0;
+    let currentObjectDrawX = 0;
+    const objWidth = 36;
+    const objHeight = 36;
 
     objectSelect.addEventListener('change', (e) => {
       currentMaterialKey = e.target.value;
@@ -363,18 +398,19 @@
     });
 
     depthSlider.addEventListener('input', (e) => {
-      if (!isFreeDrop) {
+      if (!isFreeDrop && !isDragging) {
         sliderImmersion = parseInt(e.target.value) / 100;
       }
     });
 
     dropToggleBtn.addEventListener('click', () => {
       isFreeDrop = !isFreeDrop;
-      dropToggleBtn.textContent = isFreeDrop ? "Attach Spring Scale" : "Release / Float";
+      dropToggleBtn.textContent = isFreeDrop ? "Attach Scale" : "Release / Float";
     });
 
     resetBtn.addEventListener('click', () => {
       isFreeDrop = false;
+      isDragging = false;
       sliderImmersion = 1.0;
       depthSlider.value = 100;
       objectSelect.value = 'aluminum';
@@ -383,24 +419,106 @@
       fluidDensity = 1.0;
     });
 
+    // Mouse / Touch Event Listeners for Dragging the Block
+    function getEventPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      if (isFreeDrop) return;
+      const pos = getEventPos(e);
+      // Check if click is inside the object bounding box
+      if (
+        pos.x >= currentObjectDrawX - objWidth / 2 - 10 &&
+        pos.x <= currentObjectDrawX + objWidth / 2 + 10 &&
+        pos.y >= currentObjectDrawY - objHeight / 2 - 10 &&
+        pos.y <= currentObjectDrawY + objHeight / 2 + 10
+      ) {
+        isDragging = true;
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging || isFreeDrop) return;
+      const pos = getEventPos(e);
+      
+      // Calculate container reference points to map Y coordinate to immersion [0, 1]
+      let beakerHeight = 150;
+      let beakerY = canvas.height / 2 - 40;
+      let waterHeight = 100;
+      let waterY = beakerY + beakerHeight - waterHeight;
+      
+      // Min Y (top of immersion range) and Max Y (fully submerged bottom range)
+      let minY = waterY + 15;
+      let maxY = minY + 30;
+
+      let mappedImmersion = (pos.y - minY) / (maxY - minY);
+      sliderImmersion = Math.max(0, Math.min(1.0, mappedImmersion));
+      depthSlider.value = Math.round(sliderImmersion * 100);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch support for mobile devices
+    canvas.addEventListener('touchstart', (e) => {
+      if (isFreeDrop) return;
+      const pos = getEventPos(e);
+      if (
+        pos.x >= currentObjectDrawX - objWidth / 2 - 15 &&
+        pos.x <= currentObjectDrawX + objWidth / 2 + 15 &&
+        pos.y >= currentObjectDrawY - objHeight / 2 - 15 &&
+        pos.y <= currentObjectDrawY + objHeight / 2 + 15
+      ) {
+        isDragging = true;
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging || isFreeDrop) return;
+      const pos = getEventPos(e);
+      let beakerHeight = 150;
+      let beakerY = canvas.height / 2 - 40;
+      let waterHeight = 100;
+      let waterY = beakerY + beakerHeight - waterHeight;
+      
+      let minY = waterY + 15;
+      let maxY = minY + 30;
+
+      let mappedImmersion = (pos.y - minY) / (maxY - minY);
+      sliderImmersion = Math.max(0, Math.min(1.0, mappedImmersion));
+      depthSlider.value = Math.round(sliderImmersion * 100);
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
     function drawSpringScale(x, y, reading) {
       ctx.beginPath();
-      ctx.arc(x, y, 38, 0, Math.PI * 2);
+      ctx.arc(x, y, 32, 0, Math.PI * 2);
       ctx.fillStyle = '#1e293b';
       ctx.fill();
       ctx.strokeStyle = '#64748b';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       ctx.fillStyle = '#cbd5e1';
-      ctx.font = '9px sans-serif';
+      ctx.font = '8px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
       for (let i = 0; i <= 10; i += 2) {
         let angle = (i / 10) * Math.PI * 1.6 - Math.PI * 1.3;
-        let tx = x + Math.cos(angle) * 26;
-        let ty = y + Math.sin(angle) * 26;
+        let tx = x + Math.cos(angle) * 22;
+        let ty = y + Math.sin(angle) * 22;
         ctx.fillText(i, tx, ty);
       }
 
@@ -408,7 +526,7 @@
       let needleAngle = (clamped / 10) * Math.PI * 1.6 - Math.PI * 1.3;
       ctx.beginPath();
       ctx.moveTo(x, y);
-      ctx.lineTo(x + Math.cos(needleAngle) * 24, y + Math.sin(needleAngle) * 24);
+      ctx.lineTo(x + Math.cos(needleAngle) * 20, y + Math.sin(needleAngle) * 20);
       ctx.strokeStyle = '#ef4444';
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -419,10 +537,10 @@
       ctx.fill();
 
       ctx.beginPath();
-      ctx.moveTo(x, y + 38);
-      ctx.lineTo(x, y + 52);
+      ctx.moveTo(x, y + 32);
+      ctx.lineTo(x, y + 45);
       ctx.strokeStyle = '#94a3b8';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2;
       ctx.stroke();
     }
 
@@ -433,59 +551,50 @@
       let trueMass = mat.mass;
       let totalVolume = mat.volume;
 
-      // Free floating physics calculation if enabled
       if (isFreeDrop) {
-        // Buoyant force equals weight when floating in equilibrium: Fb = mass * g
-        // Max buoyant force if fully submerged = totalVolume * fluidDensity * 9.81
         let maxBuoyant = totalVolume * fluidDensity;
         let targetFraction = Math.min(1.0, trueMass / maxBuoyant);
         sliderImmersion += (targetFraction - sliderImmersion) * 0.1;
         depthSlider.value = Math.round(sliderImmersion * 100);
       }
 
-      // Calculations
-      let submergedVol = totalVolume * sliderImmersion; // in Liters
-      let buoyantForceNewtons = submergedVol * fluidDensity * 9.81; // in Newtons
+      let submergedVol = totalVolume * sliderImmersion; 
+      let buoyantForceNewtons = submergedVol * fluidDensity * 9.81; 
       let apparentMassKg = Math.max(0, trueMass - (submergedVol * fluidDensity));
 
-      // Update Panel Text Calculations
-      document.getElementById('calcVolSub').textContent = `${submergedVol.toFixed(2)} L (${(submergedVol * 1000).toFixed(0)} cm³)`;
+      document.getElementById('calcVolSub').textContent = `${submergedVol.toFixed(2)} L`;
       document.getElementById('calcBuoyForce').textContent = `${buoyantForceNewtons.toFixed(2)} N`;
-      document.getElementById('calcApparent').textContent = `${apparentMassKg.toFixed(2)} kg (${(apparentMassKg * 9.81).toFixed(2)} N)`;
+      document.getElementById('calcApparent').textContent = `${apparentMassKg.toFixed(2)} kg`;
       
-      let statusText = "Partially Submerged";
-      if (sliderImmersion <= 0.02) statusText = "In Air (No Buoyancy)";
+      let statusText = "Partially Immersed";
+      if (sliderImmersion <= 0.02) statusText = "In Air";
       else if (sliderImmersion >= 0.98) {
-        statusText = trueMass >= (totalVolume * fluidDensity) ? "Fully Submerged (Sinks)" : "Fully Submerged (Floating Equilibrium)";
+        statusText = trueMass >= (totalVolume * fluidDensity) ? "Sinks" : "Floating Equilibrium";
       }
       document.getElementById('calcStatus').textContent = statusText;
 
-      // Update Telemetry Bar
       document.getElementById('teleMass').textContent = trueMass.toFixed(1);
       document.getElementById('teleVol').textContent = totalVolume.toFixed(2);
       document.getElementById('teleScale').textContent = apparentMassKg.toFixed(1);
 
-      // Canvas Rendering Geometry
-      let centerX = (canvas.width - 340) / 2 + 20; // accounting for layout
-      let beakerWidth = 260;
-      let beakerHeight = 175;
-      let beakerX = centerX - beakerWidth / 2 - 40;
-      let beakerY = canvas.height / 2 + 10;
+      let centerX = canvas.width / 2 - 25;
+      let beakerWidth = 200;
+      let beakerHeight = 150;
+      let beakerX = centerX - beakerWidth / 2;
+      let beakerY = canvas.height / 2 - 40;
 
-      let waterHeight = 115;
+      let waterHeight = 100;
       let waterY = beakerY + beakerHeight - waterHeight;
 
-      // Draw Beaker
       ctx.beginPath();
       ctx.moveTo(beakerX, beakerY);
-      ctx.lineTo(beakerX + 12, beakerY + beakerHeight);
-      ctx.lineTo(beakerX + beakerWidth - 12, beakerY + beakerHeight);
+      ctx.lineTo(beakerX + 10, beakerY + beakerHeight);
+      ctx.lineTo(beakerX + beakerWidth - 10, beakerY + beakerHeight);
       ctx.lineTo(beakerX + beakerWidth, beakerY);
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
       ctx.lineWidth = 3;
       ctx.stroke();
 
-      // Water Body
       ctx.fillStyle = fluidDensity === 13.6 ? 'rgba(148, 163, 184, 0.25)' : 'rgba(56, 189, 248, 0.25)';
       ctx.fillRect(beakerX + 3, waterY, beakerWidth - 6, waterHeight - 3);
 
@@ -496,54 +605,49 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Object Rendering Position
-      let scaleX = beakerX + beakerWidth / 2 - 20;
-      let scaleY = 60;
-      let targetWeightY = waterY + 20 + (sliderImmersion * 35);
-      let objWidth = 40;
-      let objHeight = 40;
+      let scaleX = beakerX + beakerWidth / 2;
+      let scaleY = 40;
+      let targetWeightY = waterY + 15 + (sliderImmersion * 30);
 
       if (!isFreeDrop) {
         drawSpringScale(scaleX, scaleY, apparentMassKg);
 
         ctx.beginPath();
-        ctx.moveTo(scaleX, scaleY + 52);
+        ctx.moveTo(scaleX, scaleY + 45);
         ctx.lineTo(scaleX, targetWeightY - objHeight / 2);
         ctx.strokeStyle = '#cbd5e1';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
 
-      let drawX = isFreeDrop ? beakerX + beakerWidth / 2 : scaleX;
-      let drawY = isFreeDrop ? waterY + 15 + (sliderImmersion * 30) : targetWeightY;
+      currentObjectDrawX = scaleX;
+      currentObjectDrawY = isFreeDrop ? waterY + 15 + (sliderImmersion * 25) : targetWeightY;
 
-      // Object Box
       ctx.beginPath();
-      ctx.roundRect(drawX - objWidth / 2, drawY - objHeight / 2, objWidth, objHeight, 6);
+      ctx.roundRect(currentObjectDrawX - objWidth / 2, currentObjectDrawY - objHeight / 2, objWidth, objHeight, 6);
       ctx.fillStyle = mat.color;
       ctx.fill();
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = isDragging ? '#38bdf8' : '#fff';
+      ctx.lineWidth = isDragging ? 2.5 : 1.5;
       ctx.stroke();
 
       ctx.fillStyle = '#07090e';
-      ctx.font = 'bold 10px sans-serif';
+      ctx.font = 'bold 9px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(mat.name, drawX, drawY);
+      ctx.fillText(mat.name, currentObjectDrawX, currentObjectDrawY);
 
-      // Overflow Catch Basin
-      let basinX = beakerX + beakerWidth + 20;
-      let basinY = beakerY + beakerHeight - 35;
+      let basinX = beakerX + beakerWidth + 10;
+      let basinY = beakerY + beakerHeight - 30;
       ctx.beginPath();
-      ctx.arc(basinX + 25, basinY + 15, 25, 0, Math.PI);
+      ctx.arc(basinX + 20, basinY + 12, 20, 0, Math.PI);
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      let overflowHeight = 18 * sliderImmersion;
+      let overflowHeight = 15 * sliderImmersion;
       ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
-      ctx.fillRect(basinX + 8, basinY + 15 - overflowHeight, 34, overflowHeight);
+      ctx.fillRect(basinX + 6, basinY + 12 - overflowHeight, 28, overflowHeight);
 
       requestAnimationFrame(animate);
     }

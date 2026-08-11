@@ -1,637 +1,388 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Science Villa | Ultra-Clear 3D Electrochemical Cell Model</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Newton&#39;s Cradle Simulation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* ===== Blue-Themed Styles ===== */
     :root {
-      --bg-dark: #030712;
-      --bg-card: rgba(15, 23, 42, 0.95);
-      --accent-cyan: #06b6d4;
-      --accent-amber: #f59e0b;
-      --text-light: #ffffff;
-      --text-sub: #cbd5e1;
-      --border-glow: rgba(255, 255, 255, 0.15);
+      --color-bg: #E3F2FD;          /* light blue background */
+      --color-panel: #90CAF9;       /* mid blue for panels */
+      --color-accent: #0D47A1;      /* dark blue accent */
+      --color-text: #212121;        /* dark text */
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
     body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.2) 0%, transparent 40%),
-        radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
-      color: var(--text-light);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0.5rem;
-      overflow-x: hidden;
+      margin: 0; padding: 0;
+      background-color: var(--color-bg);
+      font-family: Arial, sans-serif;
+      color: var(--color-text);
     }
-
-    header {
-      text-align: center;
-      margin-bottom: 0.5rem;
-      max-width: 950px;
-      padding: 0 0.5rem;
+    header { background-color: var(--color-accent); color: white;
+      padding: 10px; text-align: center; font-size: 1.5em; }
+    #container { display: flex; flex-wrap: wrap; align-items: flex-start;
+      justify-content: center; padding: 1em; }
+    /* Canvas area */
+    #cradleCanvas { background-color: white;
+      border: 4px solid var(--color-accent); border-radius: 4px; }
+    /* Control panel styling */
+    .panel { background-color: var(--color-panel); color: white;
+      border-radius: 5px; padding: 10px; margin: 10px; }
+    .panel label { display: block; margin-top: 0.5em; }
+    .panel input[type=range], .panel input[type=number], .panel select {
+      width: 100%; margin-top: 0.2em; }
+    .panel input[type=button] { margin-top: 1em; padding: 0.5em;
+      background-color: var(--color-accent); color: white; border: none;
+      cursor: pointer; border-radius: 3px; }
+    .panel input[type=button]:focus { outline: 2px solid yellow; }
+    /* Documentation (blue theme) */
+    .doc { flex: 1 1 100%; background-color: #E3F2FD; padding: 10px; color: var(--color-text); }
+    .doc h2 { color: var(--color-accent); }
+    table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+    table, th, td { border: 1px solid var(--color-accent); }
+    th, td { padding: 8px; text-align: left; }
+    /* Responsive canvas sizing */
+    @media (min-width: 600px) {
+      #cradleCanvas { width: 600px; height: 400px; }
     }
-
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 0.15rem;
-      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    p.subtitle {
-      color: var(--text-sub);
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-
-    .lab-stage {
-      background: var(--bg-card);
-      backdrop-filter: blur(25px);
-      border: 1px solid var(--border-glow);
-      border-radius: 16px;
-      padding: 0.75rem;
-      width: 100%;
-      max-width: 1650px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-
-    @media (min-width: 1100px) {
-      .lab-stage {
-        grid-template-columns: 3.4fr 1fr;
-        padding: 1.25rem;
-      }
-      h1 {
-        font-size: 2.4rem;
-      }
-      p.subtitle {
-        font-size: 1rem;
-      }
-    }
-
-    .canvas-container {
-      position: relative;
-      width: 100%;
-      height: 380px;
-      background: #020617;
-      border-radius: 12px;
-      border: 1px solid var(--border-glow);
-      overflow: hidden;
-      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.95);
-    }
-
-    @media (min-width: 768px) {
-      .canvas-container {
-        height: 550px;
-      }
-    }
-
-    @media (min-width: 1100px) {
-      .canvas-container {
-        height: 860px;
-      }
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      cursor: grab;
-    }
-    canvas:active {
-      cursor: grabbing;
-    }
-
-    .controls-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      justify-content: space-between;
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-glow);
-      padding: 0.5rem 0.7rem;
-      border-radius: 8px;
-    }
-
-    .control-group label {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .control-group label span {
-      color: #38bdf8;
-      font-weight: 800;
-    }
-
-    select, input[type="range"] {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--border-glow);
-      border-radius: 6px;
-      padding: 0.4rem;
-      color: var(--text-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      outline: none;
-      accent-color: var(--accent-cyan);
-      cursor: pointer;
-    }
-
-    .telemetry-box {
-      background: rgba(6, 182, 212, 0.08);
-      border: 1px solid rgba(6, 182, 212, 0.35);
-      border-radius: 8px;
-      padding: 0.7rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .telemetry-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-sub);
-    }
-
-    .telemetry-row span:last-child {
-      font-weight: 800;
-      color: var(--accent-amber);
-    }
-
-    .btn {
-      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
-      color: #030712;
-      font-weight: 800;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      font-size: 0.85rem;
-    }
-
-    .btn:hover {
-      filter: brightness(1.15);
-      transform: translateY(-1px);
-    }
-
-    footer {
-      text-align: center;
-      padding: 0.5rem 0;
-      color: var(--text-sub);
-      font-size: 0.75rem;
-      margin-top: auto;
+    @media (max-width: 599px) {
+      #cradleCanvas { width: 100%; height: 300px; }
+      #container { flex-direction: column; }
     }
   </style>
 </head>
 <body>
+  <header>Newton&#39;s Cradle Simulation (Blue Theme)</header>
+  <div id="container">
+    <canvas id="cradleCanvas" width="600" height="400">Your browser does not support canvas.</canvas>
+    <div class="panel" aria-label="Controls">
+      <h2>Controls</h2>
+      <label for="numBalls">Number of Balls: <output id="numBallsOut">5</output></label>
+      <input type="range" id="numBalls" min="3" max="7" value="5" step="1" oninput="updateNumBalls()">
+      
+      <label for="ballMass">Ball Mass (kg): <output id="ballMassOut">1.0</output></label>
+      <input type="range" id="ballMass" min="0.1" max="5.0" step="0.1" value="1.0" oninput="updateMass()">
 
-  <header>
-    <h1>Ultra-Clear 3D Electrochemical Cell</h1>
-    <p class="subtitle">Enlarged components, high-contrast typography, and fully visible interactive elements.</p>
-  </header>
+      <label for="stringLength">String Length (m): <output id="lengthOut">1.0</output></label>
+      <input type="range" id="stringLength" min="0.2" max="2.0" step="0.1" value="1.0" oninput="updateLength()">
 
-  <div class="lab-stage">
-    <div class="canvas-container">
-      <canvas id="simCanvas"></canvas>
-    </div>
+      <label>Lift Balls:</label>
+      <select id="liftSide" onchange="updateLift()">
+        <option value="none">None</option>
+        <option value="left">Left side</option>
+        <option value="right">Right side</option>
+        <option value="both">Both sides</option>
+      </select>
+      <label for="liftCount">Number of Balls: <output id="liftCountOut">1</output></label>
+      <input type="range" id="liftCount" min="1" max="3" step="1" value="1" oninput="updateLift()">
+      
+      <label for="angleInit">Initial Angle (°): <output id="angleOut">30</output></label>
+      <input type="range" id="angleInit" min="0" max="89" step="1" value="30" oninput="updateAngle()">
 
-    <div class="controls-panel">
-      <div>
-        <h2 style="font-size: 0.95rem; margin-bottom: 0.1rem; color: #fff; font-weight: 800;">Cell Controls</h2>
-        <p style="font-size: 0.72rem; color: var(--text-sub);">Drag mouse/touch across canvas to rotate the model.</p>
-      </div>
+      <label for="restitution">Restitution (0–1): <output id="restOut">0.98</output></label>
+      <input type="range" id="restitution" min="0" max="1" step="0.01" value="0.98" oninput="updateRestitution()">
 
-      <div class="control-group">
-        <label>Anode Half-Cell:</label>
-        <select id="anodeSelect">
-          <option value="Zn" selected>Zinc (Zn / Zn²⁺) [ -0.76 V ]</option>
-          <option value="Fe">Iron (Fe / Fe²⁺) [ -0.44 V ]</option>
-          <option value="Mg">Magnesium (Mg / Mg²⁺) [ -2.37 V ]</option>
-        </select>
-      </div>
+      <label for="damping">Damping (0–0.1): <output id="dampingOut">0.00</output></label>
+      <input type="range" id="damping" min="0" max="0.1" step="0.01" value="0.00" oninput="updateDamping()">
 
-      <div class="control-group">
-        <label>Cathode Half-Cell:</label>
-        <select id="cathodeSelect">
-          <option value="Cu" selected>Copper (Cu²⁺ / Cu) [ +0.34 V ]</option>
-          <option value="Ag">Silver (Ag⁺ / Ag) [ +0.80 V ]</option>
-          <option value="Au">Gold (Au³⁺ / Au) [ +1.50 V ]</option>
-        </select>
-      </div>
+      <label for="gravity">Gravity (m/s²): <output id="gravityOut">9.81</output></label>
+      <input type="range" id="gravity" min="0" max="20" step="0.1" value="9.81" oninput="updateGravity()">
 
-      <div class="control-group">
-        <label>Anode Concentration: <span id="concAnodeVal">1.00 M</span></label>
-        <input type="range" id="concAnodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
-      </div>
-
-      <div class="control-group">
-        <label>Cathode Concentration: <span id="concCathodeVal">1.00 M</span></label>
-        <input type="range" id="concCathodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
-      </div>
-
-      <div class="control-group">
-        <label>Temperature: <span id="tempVal">298 K</span></label>
-        <input type="range" id="tempRange" min="273" max="373" value="298" step="1">
-      </div>
-
-      <div class="telemetry-box">
-        <div class="telemetry-row">
-          <span>Standard Potential (E°cell):</span>
-          <span id="eStdVal">1.10 V</span>
-        </div>
-        <div class="telemetry-row">
-          <span>Actual Potential (Ecell):</span>
-          <span id="eActualVal">1.10 V</span>
-        </div>
-        <div class="telemetry-row">
-          <span>Gibbs Energy (ΔG):</span>
-          <span id="gibbsVal">-212.3 kJ</span>
-        </div>
-      </div>
-
-      <button class="btn" id="resetBtn">Reset Default</button>
+      <input type="button" id="startBtn" value="Start" onclick="startSim()" aria-label="Start simulation">
+      <input type="button" id="resetBtn" value="Reset" onclick="resetSim()" aria-label="Reset simulation">
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2026 Science Villa | Ultra-Clear Electrochemical Model</p>
-  </footer>
+  <div class="doc">
+    <h2>Usage Instructions</h2>
+    <p>Adjust the sliders and selectors to set the simulation parameters.  Use Tab/Shift-Tab to navigate inputs.  The “Start” button begins the animation; “Reset” returns to rest.  Keyboard users can adjust range inputs with arrow keys (accessible via labels).  The canvas fallback text will appear if HTML5 canvas is unsupported.</p>
+
+    <h2>Physics Model</h2>
+    <p>This simulation treats each ball as a simple pendulum of length <var>L</var> and mass <var>m</var>.  Between collisions, each satisfies the pendulum equation $$\ddot\theta = -\frac{g}{L}\sin\theta - c\,\dot\theta$$ (with damping coefficient <var>c</var>), which for small angles (<15°) approximates simple harmonic motion.  The period is $T=2\pi\sqrt{L/g}$, independent of mass.  When two balls collide, we apply 1D collision formulas conserving momentum and kinetic energy up to the restitution factor <var>e</var>.  Specifically, for two balls of masses <var>m₁,m₂</var> and incoming velocities <var>u₁,u₂</var>, the outgoing velocities are  
+    $$v_1 = \frac{m_1u_1 + m_2u_2 - m_2 e (u_1 - u_2)}{m_1+m_2},\quad 
+      v_2 = \frac{m_1u_1 + m_2u_2 + m_1 e (u_1 - u_2)}{m_1+m_2},$$  
+    where 0≤<var>e</var>≤1 (1 is perfectly elastic, 0 fully inelastic).  After collision, velocities are translated back to angular speeds.  Energy lost to damping or inelasticity leads to gradually smaller swings.  (We ignore air resistance and assume the strings constrain motion to a plane.)</p>
+
+    <h2>Code and Animation</h2>
+    <p>The code uses a single `<canvas>` (via 2D context) to draw the balls and strings each frame.  The animation loop is driven by `requestAnimationFrame`, yielding smooth motion and efficiency.  The update step integrates each ball’s angle with simple Euler (sufficient for small timesteps) and checks for collisions as balls pass the bottom of their swing.  Upon collision, we immediately apply the above velocity updates (pairwise collisions only) and reset angles to avoid overlap.  Strings are drawn as lines and balls as shaded circles.  This canvas-based approach offers high performance and easy pixel control, though we note that SVG or DOM-based methods (SVG circles/lines or HTML elements) could also be used.  Canvas was chosen for performance with multiple moving objects and to allow fine-grained animation, at the expense of requiring custom accessibility handling.</p>
+
+    <h2>Trade-offs: Canvas vs SVG vs DOM</h2>
+    <table>
+      <tr><th>Feature</th><th>Canvas</th><th>SVG</th><th>HTML DOM</th></tr>
+      <tr>
+        <td><strong>Rendering</strong></td>
+        <td>Pixel-based drawing surface, extremely fast for many objects/animations</td>
+        <td>Vector-based, retains object structure (scales crisp), easier event handling</td>
+        <td>Not suited to complex shapes (used for layout); drawing via CSS is cumbersome</td>
+      </tr>
+      <tr>
+        <td><strong>Interactivity</strong></td>
+        <td>All state must be managed in script; no native support for shapes or events</td>
+        <td>Each element is in DOM (click/hover easily applied); better for accessible graphics</td>
+        <td>Easy events on elements but limited to rectangular shapes; poor performance with many elements</td>
+      </tr>
+      <tr>
+        <td><strong>Performance</strong></td>
+        <td>Generally highest FPS with many elements; redraw as bitmap, good for animation</td>
+        <td>Better for few (≤1000) objects or static graphics; can slow with very many nodes</td>
+        <td>Scales poorly beyond dozens of elements; layout cost high</td>
+      </tr>
+      <tr>
+        <td><strong>Accessibility</strong></td>
+        <td>Canvas is a single element; must provide fallback/ARIA manually</td>
+        <td>SVG content lives in DOM; can include ARIA roles and text for screen readers</td>
+        <td>Native HTML is accessible; ARIA roles easily added</td>
+      </tr>
+    </table>
+
+    <h2>Testing Checklist</h2>
+    <ul>
+      <li>Verify physics: one ball out = one ball in; energy roughly conserved (with damping off).</li>
+      <li>Test parameter sliders (min/max values) and ensure live updates without page reload.</li>
+      <li>Test different browsers (Chrome, Firefox, Safari, Edge). Ensure canvas sizes scale correctly.</li>
+      <li>Keyboard accessibility: Tab through inputs, adjust via arrow keys, focus outlines visible.</li>
+      <li>Contrast check: blue theme provides sufficient text/background contrast.</li>
+      <li>Performance check: smooth animation at 60Hz with 7 balls. (Canvas re-draw is efficient.)</li>
+      <li>Fallback: Disable JS or use a non-supportive browser to see fallback text on `<canvas>`.</li>
+    </ul>
+
+    <h2>Extensions & Presets</h2>
+    <p>Possible enhancements include using **matter.js** or **planck.js** for more realistic physics, adding 3D CSS for a rotating cradle, or enabling mobile device tilt to simulate platform motion.  Sample presets might include “Moon” (gravity=1.6), “Mars” (g≈3.7), or “Damped” (high damping) to demonstrate effects.  One could also allow varying ball radii or asymmetric masses for experiments.  Suggestions: adding audio on collision, supporting touch controls, or using SVG fallback for vector graphics.</p>
+
+    <h2>Event Flow (mermaid diagram)</h2>
+    ```mermaid
+    graph LR
+      U[User adjusts controls] --> P[Update physics parameters]
+      P --> S[Start Animation (requestAnimationFrame)]
+      S --> O[Compute next positions (θ, ω integration)]
+      O --> C[Collision detection & response]
+      C --> D[Draw frame on canvas]
+      D --> S
+    ```
+    <p>(Flow: UI events set variables; the main loop updates physics and redraws repeatedly.)</p>
+
+    <h2>References</h2>
+    <ul>
+      <li>Fu-Kwun Hwang et al., *Newton’s Cradle Simulation Model* (Open Source Physics) – describes the differential equations and collision logic used.</li>
+      <li>Lumen HyperPhysics, *Simple Pendulum* – derivation of pendulum motion for small angles (θ″≈−(g/L)θ, period T=2π√(L/g)).</li>
+      <li>Wikipedia: *Coefficient of restitution*, *Inelastic collision* – definitions and 1D collision formulas.</li>
+      <li>StackOverflow (Simon Sarris) – Canvas vs SVG vs DIV performance and usage recommendations.</li>
+      <li>MDN Web Docs: `<canvas>` accessibility notes – Canvas lacks built-in semantics; recommend fallback content.</li>
+      <li>Ballistics texts and physics references on momentum/energy conservation in collisions.</li>
+    </ul>
+  </div>
 
   <script>
-    const canvas = document.getElementById('simCanvas');
+  // ===== JavaScript Physics and UI Logic =====
+  (function() {
+    const canvas = document.getElementById('cradleCanvas');
     const ctx = canvas.getContext('2d');
+    let width = canvas.width, height = canvas.height;
+    // Physics parameters (defaults)
+    let N = 5;            // number of balls
+    let mass = 1.0;       // ball mass
+    let L = 1.0;          // string length (m)
+    let g = 9.81;         // gravity (m/s^2)
+    let e = 0.98;         // coefficient of restitution
+    let damping = 0.0;    // damping coeff (rad/sec)
+    // Simulation state
+    let angles = []; let omegas = [];
+    let initialSetup = true;
+    let liftSide = 'left'; let liftCount = 1, initAngleDeg = 30;
+    let animating = false;
 
-    function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+    // UI elements
+    function $(id) { return document.getElementById(id); }
+    $('numBalls').addEventListener('input', updateNumBalls);
+    $('ballMass').addEventListener('input', updateMass);
+    $('stringLength').addEventListener('input', updateLength);
+    $('liftSide').addEventListener('change', updateLift);
+    $('liftCount').addEventListener('input', updateLift);
+    $('angleInit').addEventListener('input', updateAngle);
+    $('restitution').addEventListener('input', updateRestitution);
+    $('damping').addEventListener('input', updateDamping);
+    $('gravity').addEventListener('input', updateGravity);
+
+    function updateNumBalls() {
+      N = parseInt($('numBalls').value);
+      $('numBallsOut').textContent = N;
+      $('liftCount').max = Math.floor(N/2);
+      resetSim();
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    const standardPotentials = {
-      Zn: -0.76, Fe: -0.44, Mg: -2.37,
-      Cu: 0.34, Ag: 0.80, Au: 1.50
-    };
-
-    let anodeType = 'Zn';
-    let cathodeType = 'Cu';
-    let concAnode = 1.0;
-    let concCathode = 1.0;
-    let temperature = 298;
-
-    const anodeSelect = document.getElementById('anodeSelect');
-    const cathodeSelect = document.getElementById('cathodeSelect');
-    const concAnodeRange = document.getElementById('concAnodeRange');
-    const concCathodeRange = document.getElementById('concCathodeRange');
-    const tempRange = document.getElementById('tempRange');
-    
-    const concAnodeVal = document.getElementById('concAnodeVal');
-    const concCathodeVal = document.getElementById('concCathodeVal');
-    const tempVal = document.getElementById('tempVal');
-    const eStdVal = document.getElementById('eStdVal');
-    const eActualVal = document.getElementById('eActualVal');
-    const gibbsVal = document.getElementById('gibbsVal');
-    const resetBtn = document.getElementById('resetBtn');
-
-    anodeSelect.addEventListener('change', (e) => { anodeType = e.target.value; updateCalculations(); });
-    cathodeSelect.addEventListener('change', (e) => { cathodeType = e.target.value; updateCalculations(); });
-    
-    concAnodeRange.addEventListener('input', (e) => {
-      concAnode = parseFloat(e.target.value);
-      concAnodeVal.textContent = concAnode.toFixed(2) + ' M';
-      updateCalculations();
-    });
-
-    concCathodeRange.addEventListener('input', (e) => {
-      concCathode = parseFloat(e.target.value);
-      concCathodeVal.textContent = concCathode.toFixed(2) + ' M';
-      updateCalculations();
-    });
-
-    tempRange.addEventListener('input', (e) => {
-      temperature = parseInt(e.target.value);
-      tempVal.textContent = temperature + ' K';
-      updateCalculations();
-    });
-
-    resetBtn.addEventListener('click', () => {
-      anodeType = 'Zn'; cathodeType = 'Cu';
-      concAnode = 1.0; concCathode = 1.0; temperature = 298;
-      anodeSelect.value = 'Zn'; cathodeSelect.value = 'Cu';
-      concAnodeRange.value = 1.0; concCathodeRange.value = 1.0; tempRange.value = 298;
-      concAnodeVal.textContent = '1.00 M'; concCathodeVal.textContent = '1.00 M'; tempVal.textContent = '298 K';
-      updateCalculations();
-    });
-
-    let eStdCell = 0;
-    let eActualCell = 0;
-
-    function updateCalculations() {
-      let eAnodeStd = standardPotentials[anodeType];
-      let eCathodeStd = standardPotentials[cathodeType];
-      eStdCell = eCathodeStd - eAnodeStd;
-
-      let n = (cathodeType === 'Ag' || cathodeType === 'Au') ? 1 : 2;
-      let R = 8.314;
-      let F = 96485;
-      
-      let Q = concAnode / concCathode;
-      let factor = (R * temperature) / (n * F);
-      eActualCell = eStdCell - factor * Math.log(Q);
-      let deltaG = -n * F * eActualCell;
-
-      eStdVal.textContent = eStdCell.toFixed(2) + ' V';
-      eActualVal.textContent = eActualCell.toFixed(2) + ' V';
-      gibbsVal.textContent = (deltaG / 1000).toFixed(1) + ' kJ';
+    function updateMass() {
+      mass = parseFloat($('ballMass').value);
+      $('ballMassOut').textContent = mass.toFixed(1);
+    }
+    function updateLength() {
+      L = parseFloat($('stringLength').value);
+      $('lengthOut').textContent = L.toFixed(1);
+      resetSim();
+    }
+    function updateLift() {
+      liftSide = $('liftSide').value;
+      liftCount = parseInt($('liftCount').value);
+      $('liftCountOut').textContent = liftCount;
+    }
+    function updateAngle() {
+      initAngleDeg = parseInt($('angleInit').value);
+      $('angleOut').textContent = initAngleDeg;
+    }
+    function updateRestitution() {
+      e = parseFloat($('restitution').value);
+      $('restOut').textContent = e.toFixed(2);
+    }
+    function updateDamping() {
+      damping = parseFloat($('damping').value);
+      $('dampingOut').textContent = damping.toFixed(2);
+    }
+    function updateGravity() {
+      g = parseFloat($('gravity').value);
+      $('gravityOut').textContent = g.toFixed(1);
     }
 
-    updateCalculations();
-
-    let isDragging = false;
-    let startX = 0, startY = 0;
-    let rotX = 0.05, rotY = 0;
-
-    function handleStart(clientX, clientY) {
-      isDragging = true;
-      startX = clientX;
-      startY = clientY;
-    }
-
-    function handleMove(clientX, clientY) {
-      if (!isDragging) return;
-      let dx = clientX - startX;
-      let dy = clientY - startY;
-      rotY += dx * 0.004;
-      rotX -= dy * 0.004;
-      rotX = Math.max(-0.2, Math.min(0.25, rotX));
-      startX = clientX;
-      startY = clientY;
-    }
-
-    canvas.addEventListener('mousedown', (e) => handleStart(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-    window.addEventListener('mouseup', () => { isDragging = false; });
-
-    canvas.addEventListener('touchstart', (e) => {
-      if(e.touches.length === 1) handleStart(e.touches[0].clientX, e.touches[0].clientY);
-    });
-    window.addEventListener('touchmove', (e) => {
-      if(e.touches.length === 1) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-    });
-    window.addEventListener('touchend', () => { isDragging = false; });
-
-    let electrons = [];
-    for(let i=0; i<24; i++) electrons.push({progress: i / 24});
-    
-    let anodeIonsList = [];
-    for(let i=0; i<20; i++) anodeIonsList.push({x: (Math.random()-0.5)*240, y: (Math.random()-0.5)*150, z: (Math.random()-0.5)*130, vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35});
-
-    let cathodeIonsList = [];
-    for(let i=0; i<20; i++) cathodeIonsList.push({x: (Math.random()-0.5)*240, y: (Math.random()-0.5)*150, z: (Math.random()-0.5)*130, vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35});
-
-    let saltIons = [];
-    for(let i=0; i<20; i++) saltIons.push({progress: Math.random(), type: i%2 === 0 ? 'K+' : 'Cl-'});
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      let w = canvas.width;
-      let h = canvas.height;
-      let cx = w / 2;
-      let cy = h / 2 + 15;
-
-      function project(x, y, z) {
-        let cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-        let x1 = x * cosY + z * sinY;
-        let z1 = -x * sinY + z * cosY;
-        
-        let cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-        let y2 = y * cosX - z1 * sinX;
-        let z2 = y * sinX + z1 * cosX;
-
-        let fov = 1100;
-        let scale = fov / (fov + z2 + 450);
-        return {
-          x: cx + x1 * scale,
-          y: cy + y2 * scale,
-          scale: scale
-        };
+    // Initialize or reset the simulation state
+    function initSim() {
+      angles = new Array(N).fill(0);
+      omegas = new Array(N).fill(0);
+      // Set initial lifted balls angles
+      const rad = initAngleDeg * Math.PI/180;
+      if (liftSide === 'left' || liftSide === 'both') {
+        for (let i=0; i<liftCount; i++) angles[i] = -rad;
       }
+      if (liftSide === 'right' || liftSide === 'both') {
+        for (let i=0; i<liftCount; i++) angles[N-1-i] = rad;
+      }
+      initialSetup = false;
+    }
 
-      let separation = 380;
-      let beakerW = 290;
-      let beakerH = 240;
-
-      // Anode Beaker Box
-      let abTopL = project(-separation - beakerW/2, -beakerH/2, -90);
-      let abTopR = project(-separation + beakerW/2, -beakerH/2, -90);
-      let abBotL = project(-separation - beakerW/2, beakerH/2, -90);
-      let abBotR = project(-separation + beakerW/2, beakerH/2, -90);
-
-      ctx.beginPath();
-      ctx.moveTo(abTopL.x, abTopL.y);
-      ctx.lineTo(abBotL.x, abBotL.y);
-      ctx.lineTo(abBotR.x, abBotR.y);
-      ctx.lineTo(abTopR.x, abTopR.y);
-      ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
-      ctx.lineWidth = 4;
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
-      ctx.fill();
-
-      // Cathode Beaker Box
-      let cbTopL = project(separation - beakerW/2, -beakerH/2, -90);
-      let cbTopR = project(separation + beakerW/2, -beakerH/2, -90);
-      let cbBotL = project(separation - beakerW/2, beakerH/2, -90);
-      let cbBotR = project(separation + beakerW/2, beakerH/2, -90);
-
-      ctx.beginPath();
-      ctx.moveTo(cbTopL.x, cbTopL.y);
-      ctx.lineTo(cbBotL.x, cbBotL.y);
-      ctx.lineTo(cbBotR.x, cbBotR.y);
-      ctx.lineTo(cbTopR.x, cbTopR.y);
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
-      ctx.lineWidth = 4;
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(245, 158, 11, 0.05)';
-      ctx.fill();
-
-      // Salt Bridge U-tube
-      let sbStart = project(-separation + 60, -120, 0);
-      let sbMid1 = project(-separation + 60, -290, 0);
-      let sbMid2 = project(separation - 60, -290, 0);
-      let sbEnd = project(separation - 60, -120, 0);
-
-      ctx.beginPath();
-      ctx.moveTo(sbStart.x, sbStart.y);
-      ctx.lineTo(sbMid1.x, sbMid1.y);
-      ctx.lineTo(sbMid2.x, sbMid2.y);
-      ctx.lineTo(sbEnd.x, sbEnd.y);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-      ctx.lineWidth = 38 * sbStart.scale;
-      ctx.stroke();
-
-      // Salt bridge ionic particles
-      saltIons.forEach(ion => {
-        ion.progress += 0.0035;
-        if(ion.progress > 1) ion.progress = 0;
-        let curX = -separation + 60 + ion.progress * (2 * separation - 120);
-        let curY = -290;
-        let p = project(curX, curY, 0);
-        
-        ctx.fillStyle = ion.type === 'K+' ? '#ff3366' : '#00d2ff';
+    // Animation loop
+    function animate() {
+      if (!animating) return;
+      ctx.clearRect(0, 0, width, height);
+      // Calculate pivot spacing (pixels per meter)
+      const pxPerM = height / (L*2 + 0.5); // leave space at top/bottom
+      const centerX = width/2;
+      const centerY = 20;
+      // Compute positions and update physics
+      // 1. Integrate each pendulum
+      for (let i=0; i<N; i++) {
+        // angular acceleration: -(g/L) sinθ - damping*ω
+        const acc = -(g/L)*Math.sin(angles[i]) - damping*omegas[i];
+        omegas[i] += acc * 0.016;   // dt ≈ 1 frame (~16ms)
+        angles[i] += omegas[i] * 0.016;
+      }
+      // 2. Collision detection (simple: if one passes vertical)
+      for (let i=0; i<N-1; i++) {
+        // Detect if ball i crosses vertical and hits i+1
+        if (omegas[i] > 0 && angles[i] > 0 && Math.abs(angles[i+1]) < 0.01) {
+          // ball i hit ball i+1; use 1D collision
+          let u1 = L * omegas[i];
+          let u2 = L * omegas[i+1];
+          let m1 = mass, m2 = mass;
+          // 1D collision formulas (conserve momentum, apply restitution)
+          let v1 = (m1*u1 + m2*u2 - m2*e*(u1-u2)) / (m1+m2);
+          let v2 = (m1*u1 + m2*u2 + m1*e*(u1-u2)) / (m1+m2);
+          // convert back to angular velocities
+          omegas[i] = v1 / L;
+          omegas[i+1] = v2 / L;
+          // fix positions (both go vertical)
+          angles[i] = 0;
+          angles[i+1] = 0;
+        }
+      }
+      // 3. Draw each pendulum and ball
+      const ballRadius = 15; // px
+      const spacing = 2 * ballRadius;
+      const startX = centerX - (N-1)*spacing/2;
+      for (let i=0; i<N; i++) {
+        // Pivot point
+        let pivotX = startX + i*spacing, pivotY = centerY;
+        // Ball position
+        let x = pivotX + pxPerM * L * Math.sin(angles[i]);
+        let y = pivotY + pxPerM * L * Math.cos(angles[i]);
+        // Draw string
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 6 * p.scale, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(ion.type, p.x + 6, p.y + 3);
-      });
-
-      // Anode Electrode Plate
-      let anP1 = project(-separation, -110, 0);
-      let anP2 = project(-separation, 100, 0);
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 54;
-      ctx.beginPath();
-      ctx.moveTo(anP1.x, anP1.y);
-      ctx.lineTo(anP2.x, anP2.y);
-      ctx.stroke();
-
-      // Anode Solution Ion Particles
-      anodeIonsList.forEach(ion => {
-        ion.x += ion.vx; ion.y += ion.vy;
-        if(ion.x < -120 || ion.x > 120) ion.vx *= -1;
-        if(ion.y < -70 || ion.y > 100) ion.vy *= -1;
-        let p = project(-separation + ion.x, ion.y, ion.z);
-        
-        ctx.fillStyle = '#00d2ff';
+        ctx.strokeStyle = '#555';
+        ctx.moveTo(pivotX, pivotY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        // Draw ball (simple fill circle)
+        // Make ball color steel-gray with blue tint
+        const grad = ctx.createRadialGradient(x-5,y-5,2,x,y,ballRadius);
+        grad.addColorStop(0, '#eeeeee');
+        grad.addColorStop(1, '#888888');
+        ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5.5 * p.scale, 0, Math.PI * 2);
+        ctx.arc(x, y, ballRadius, 0, 2*Math.PI);
         ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(anodeType + '²⁺', p.x + 6, p.y + 3);
-      });
-
-      // Cathode Electrode Plate
-      let catP1 = project(separation, -110, 0);
-      let catP2 = project(separation, 100, 0);
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 54;
-      ctx.beginPath();
-      ctx.moveTo(catP1.x, catP1.y);
-      ctx.lineTo(catP2.x, catP2.y);
-      ctx.stroke();
-
-      // Cathode Solution Ion Particles
-      cathodeIonsList.forEach(ion => {
-        ion.x += ion.vx; ion.y += ion.vy;
-        if(ion.x < -120 || ion.x > 120) ion.vx *= -1;
-        if(ion.y < -70 || ion.y > 100) ion.vy *= -1;
-        let p = project(separation + ion.x, ion.y, ion.z);
-        
-        ctx.fillStyle = '#10b981';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 5.5 * p.scale, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 9px "Plus Jakarta Sans", sans-serif';
-        ctx.fillText(cathodeType + '²⁺', p.x + 6, p.y + 3);
-      });
-
-      // External Circuit Wire & Voltmeter Box
-      let wStart = project(-separation, -110, 0);
-      let wMid1 = project(-separation, -330, 0);
-      let wMid2 = project(separation, -330, 0);
-      let wEnd = project(separation, -110, 0);
-
-      ctx.beginPath();
-      ctx.moveTo(wStart.x, wStart.y);
-      ctx.lineTo(wMid1.x, wMid1.y);
-      ctx.lineTo(wMid2.x, wMid2.y);
-      ctx.lineTo(wEnd.x, wEnd.y);
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 5;
-      ctx.stroke();
-
-      let vmPos = project(0, -330, 0);
-      ctx.fillStyle = '#0f172a';
-      ctx.strokeStyle = '#06b6d4';
-      ctx.lineWidth = 2.5;
-      ctx.fillRect(vmPos.x - 70, vmPos.y - 32, 140, 64);
-      ctx.strokeRect(vmPos.x - 70, vmPos.y - 32, 140, 64);
-      
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = 'bold 18px monospace';
-      ctx.fillText(eActualVal.textContent, vmPos.x - 44, vmPos.y + 7);
-
-      // Traveling Electrons
-      electrons.forEach(el => {
-        el.progress += 0.007;
-        if(el.progress > 1) el.progress = 0;
-        
-        let curX = -separation + el.progress * (2 * separation);
-        let curY = -330;
-        let p = project(curX, curY, 0);
-
-        ctx.fillStyle = '#38bdf8';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 5 * p.scale, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 9px monospace';
-        ctx.fillText('e⁻', p.x + 5, p.y - 4);
-      });
-
-      // Chamber Base Labels
-      let lblAnode = project(-separation, 155, 0);
-      let lblCathode = project(separation, 155, 0);
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText('ANODE (-) Oxidation', lblAnode.x - 78, lblAnode.y);
-      ctx.fillText('CATHODE (+) Reduction', lblCathode.x - 88, lblCathode.y);
-
+        ctx.strokeStyle = '#000';
+        ctx.stroke();
+      }
       requestAnimationFrame(animate);
     }
 
-    animate();
-  </script>
+    // Start animation
+    window.startSim = function() {
+      if (initialSetup) initSim();
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
+    };
+    // Reset to initial rest state
+    window.resetSim = function() {
+      animating = false;
+      initialSetup = true;
+      initSim();
+      // Draw initial static configuration
+      ctx.clearRect(0, 0, width, height);
+      // Draw one frame without animation
+      const ev = new Event('draw');
+      canvas.dispatchEvent(ev);
+      ctx.clearRect(0, 0, width, height);
+      // Re-run drawing part of animate once
+      if (initialSetup) initSim();
+      for (let i=0; i<N; i++) { omegas[i] = 0; }
+      // (call draw frame manually)
+      const fakeCtx = ctx;
+      requestAnimationFrame(function() {});
+      animating = false;
+      // Actually just call animate once without recursion
+      (function singleDraw() {
+        // (same drawing code from animate without recursion)
+        const pxPerM = height / (L*2 + 0.5);
+        const centerX = width/2, centerY = 20;
+        for (let i=0; i<N; i++) {
+          let pivotX = centerX - (N-1)*spacing/2 + i*spacing;
+          let x = pivotX + pxPerM * L * Math.sin(angles[i]);
+          let y = centerY + pxPerM * L * Math.cos(angles[i]);
+          fakeCtx.beginPath();
+          fakeCtx.strokeStyle = '#555';
+          fakeCtx.moveTo(pivotX, centerY);
+          fakeCtx.lineTo(x, y);
+          fakeCtx.stroke();
+          const grad = fakeCtx.createRadialGradient(x-5,y-5,2,x,y,ballRadius);
+          grad.addColorStop(0, '#eeeeee');
+          grad.addColorStop(1, '#888888');
+          fakeCtx.fillStyle = grad;
+          fakeCtx.beginPath();
+          fakeCtx.arc(x, y, ballRadius, 0, 2*Math.PI);
+          fakeCtx.fill();
+          fakeCtx.strokeStyle = '#000'; fakeCtx.stroke();
+        }
+      })();
+    };
 
+    // Initialize UI display values
+    $('numBallsOut').textContent = N;
+    $('ballMassOut').textContent = mass.toFixed(1);
+    $('lengthOut').textContent = L.toFixed(1);
+    $('liftCountOut').textContent = liftCount;
+    $('angleOut').textContent = initAngleDeg;
+    $('restOut').textContent = e.toFixed(2);
+    $('dampingOut').textContent = damping.toFixed(2);
+    $('gravityOut').textContent = g.toFixed(1);
+  })();
+  </script>
 </body>
 </html>
