@@ -1,388 +1,470 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Newton&#39;s Cradle Simulation</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Neon Minimalist Newton's Cradle</title>
   <style>
-    /* ===== Blue-Themed Styles ===== */
     :root {
-      --color-bg: #E3F2FD;          /* light blue background */
-      --color-panel: #90CAF9;       /* mid blue for panels */
-      --color-accent: #0D47A1;      /* dark blue accent */
-      --color-text: #212121;        /* dark text */
+      --bg-color: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --border-color: rgba(56, 189, 248, 0.2);
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.4);
     }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
     body {
-      margin: 0; padding: 0;
-      background-color: var(--color-bg);
-      font-family: Arial, sans-serif;
-      color: var(--color-text);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
-    header { background-color: var(--color-accent); color: white;
-      padding: 10px; text-align: center; font-size: 1.5em; }
-    #container { display: flex; flex-wrap: wrap; align-items: flex-start;
-      justify-content: center; padding: 1em; }
-    /* Canvas area */
-    #cradleCanvas { background-color: white;
-      border: 4px solid var(--color-accent); border-radius: 4px; }
-    /* Control panel styling */
-    .panel { background-color: var(--color-panel); color: white;
-      border-radius: 5px; padding: 10px; margin: 10px; }
-    .panel label { display: block; margin-top: 0.5em; }
-    .panel input[type=range], .panel input[type=number], .panel select {
-      width: 100%; margin-top: 0.2em; }
-    .panel input[type=button] { margin-top: 1em; padding: 0.5em;
-      background-color: var(--color-accent); color: white; border: none;
-      cursor: pointer; border-radius: 3px; }
-    .panel input[type=button]:focus { outline: 2px solid yellow; }
-    /* Documentation (blue theme) */
-    .doc { flex: 1 1 100%; background-color: #E3F2FD; padding: 10px; color: var(--color-text); }
-    .doc h2 { color: var(--color-accent); }
-    table { width: 100%; border-collapse: collapse; margin: 1em 0; }
-    table, th, td { border: 1px solid var(--color-accent); }
-    th, td { padding: 8px; text-align: left; }
-    /* Responsive canvas sizing */
-    @media (min-width: 600px) {
-      #cradleCanvas { width: 600px; height: 400px; }
+
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
-    @media (max-width: 599px) {
-      #cradleCanvas { width: 100%; height: 300px; }
-      #container { flex-direction: column; }
+
+    .ui-overlay {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      text-align: center;
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      width: 90%;
+      max-width: 380px;
+    }
+
+    h1 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      margin-bottom: 0.05rem;
+    }
+
+    p {
+      font-size: 0.6rem;
+      color: var(--text-sub);
+    }
+
+    .info-panel {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      width: calc(100% - 24px);
+      max-width: 300px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      padding: 0.7rem;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      z-index: 10;
+      pointer-events: auto;
+      max-height: 38vh;
+      overflow-y: auto;
+    }
+
+    @media (min-width: 768px) {
+      .info-panel {
+        left: auto;
+        right: 20px;
+        top: 20px;
+        bottom: auto;
+        max-width: 280px;
+        max-height: none;
+      }
+      .ui-overlay {
+        top: 20px;
+        max-width: 450px;
+      }
+    }
+
+    .info-panel h2 {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .control-group {
+      margin-bottom: 0.4rem;
+    }
+
+    .control-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--text-sub);
+      margin-bottom: 0.15rem;
+    }
+
+    .control-group label span {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      background: #374151;
+      border-radius: 2px;
+      outline: none;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .stats-box {
+      margin-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 0.4rem;
+    }
+
+    .stats-box ul {
+      list-style: none;
+      font-size: 0.65rem;
+      color: var(--text-sub);
+      line-height: 1.3;
+    }
+
+    .stats-box span {
+      color: var(--text-main);
+      font-weight: 600;
+      float: right;
     }
   </style>
 </head>
 <body>
-  <header>Newton&#39;s Cradle Simulation (Blue Theme)</header>
-  <div id="container">
-    <canvas id="cradleCanvas" width="600" height="400">Your browser does not support canvas.</canvas>
-    <div class="panel" aria-label="Controls">
-      <h2>Controls</h2>
-      <label for="numBalls">Number of Balls: <output id="numBallsOut">5</output></label>
-      <input type="range" id="numBalls" min="3" max="7" value="5" step="1" oninput="updateNumBalls()">
-      
-      <label for="ballMass">Ball Mass (kg): <output id="ballMassOut">1.0</output></label>
-      <input type="range" id="ballMass" min="0.1" max="5.0" step="0.1" value="1.0" oninput="updateMass()">
 
-      <label for="stringLength">String Length (m): <output id="lengthOut">1.0</output></label>
-      <input type="range" id="stringLength" min="0.2" max="2.0" step="0.1" value="1.0" oninput="updateLength()">
+  <div class="ui-overlay">
+    <h1>Neon Physics Lab</h1>
+    <p>Drag any orb to launch • Robust 2D Collision Physics</p>
+  </div>
 
-      <label>Lift Balls:</label>
-      <select id="liftSide" onchange="updateLift()">
-        <option value="none">None</option>
-        <option value="left">Left side</option>
-        <option value="right">Right side</option>
-        <option value="both">Both sides</option>
-      </select>
-      <label for="liftCount">Number of Balls: <output id="liftCountOut">1</output></label>
-      <input type="range" id="liftCount" min="1" max="3" step="1" value="1" oninput="updateLift()">
-      
-      <label for="angleInit">Initial Angle (°): <output id="angleOut">30</output></label>
-      <input type="range" id="angleInit" min="0" max="89" step="1" value="30" oninput="updateAngle()">
+  <div class="info-panel">
+    <h2>Parameters</h2>
+    
+    <div class="control-group">
+      <label>Gravity (g): <span id="valGravity">9.81</span> m/s²</label>
+      <input type="range" id="rangeGravity" min="1" max="25" step="0.5" value="9.81">
+    </div>
 
-      <label for="restitution">Restitution (0–1): <output id="restOut">0.98</output></label>
-      <input type="range" id="restitution" min="0" max="1" step="0.01" value="0.98" oninput="updateRestitution()">
+    <div class="control-group">
+      <label>Damping: <span id="valDamping">0.9999</span></label>
+      <input type="range" id="rangeDamping" min="0.990" max="1.000" step="0.0001" value="0.9999">
+    </div>
 
-      <label for="damping">Damping (0–0.1): <output id="dampingOut">0.00</output></label>
-      <input type="range" id="damping" min="0" max="0.1" step="0.01" value="0.00" oninput="updateDamping()">
+    <div class="control-group">
+      <label>Mass (m): <span id="valMass">1.0</span> kg</label>
+      <input type="range" id="rangeMass" min="0.2" max="5.0" step="0.1" value="1.0">
+    </div>
 
-      <label for="gravity">Gravity (m/s²): <output id="gravityOut">9.81</output></label>
-      <input type="range" id="gravity" min="0" max="20" step="0.1" value="9.81" oninput="updateGravity()">
-
-      <input type="button" id="startBtn" value="Start" onclick="startSim()" aria-label="Start simulation">
-      <input type="button" id="resetBtn" value="Reset" onclick="resetSim()" aria-label="Reset simulation">
+    <div class="stats-box">
+      <h2>Telemetry</h2>
+      <ul>
+        <li>State: <span id="sysState">Running</span></li>
+        <li>Active: <span id="activeCount">1 Orb</span></li>
+        <li>KE: <span id="calcKE">0.00 J</span></li>
+        <li>PE: <span id="calcPE">0.00 J</span></li>
+      </ul>
     </div>
   </div>
 
-  <div class="doc">
-    <h2>Usage Instructions</h2>
-    <p>Adjust the sliders and selectors to set the simulation parameters.  Use Tab/Shift-Tab to navigate inputs.  The “Start” button begins the animation; “Reset” returns to rest.  Keyboard users can adjust range inputs with arrow keys (accessible via labels).  The canvas fallback text will appear if HTML5 canvas is unsupported.</p>
-
-    <h2>Physics Model</h2>
-    <p>This simulation treats each ball as a simple pendulum of length <var>L</var> and mass <var>m</var>.  Between collisions, each satisfies the pendulum equation $$\ddot\theta = -\frac{g}{L}\sin\theta - c\,\dot\theta$$ (with damping coefficient <var>c</var>), which for small angles (<15°) approximates simple harmonic motion.  The period is $T=2\pi\sqrt{L/g}$, independent of mass.  When two balls collide, we apply 1D collision formulas conserving momentum and kinetic energy up to the restitution factor <var>e</var>.  Specifically, for two balls of masses <var>m₁,m₂</var> and incoming velocities <var>u₁,u₂</var>, the outgoing velocities are  
-    $$v_1 = \frac{m_1u_1 + m_2u_2 - m_2 e (u_1 - u_2)}{m_1+m_2},\quad 
-      v_2 = \frac{m_1u_1 + m_2u_2 + m_1 e (u_1 - u_2)}{m_1+m_2},$$  
-    where 0≤<var>e</var>≤1 (1 is perfectly elastic, 0 fully inelastic).  After collision, velocities are translated back to angular speeds.  Energy lost to damping or inelasticity leads to gradually smaller swings.  (We ignore air resistance and assume the strings constrain motion to a plane.)</p>
-
-    <h2>Code and Animation</h2>
-    <p>The code uses a single `<canvas>` (via 2D context) to draw the balls and strings each frame.  The animation loop is driven by `requestAnimationFrame`, yielding smooth motion and efficiency.  The update step integrates each ball’s angle with simple Euler (sufficient for small timesteps) and checks for collisions as balls pass the bottom of their swing.  Upon collision, we immediately apply the above velocity updates (pairwise collisions only) and reset angles to avoid overlap.  Strings are drawn as lines and balls as shaded circles.  This canvas-based approach offers high performance and easy pixel control, though we note that SVG or DOM-based methods (SVG circles/lines or HTML elements) could also be used.  Canvas was chosen for performance with multiple moving objects and to allow fine-grained animation, at the expense of requiring custom accessibility handling.</p>
-
-    <h2>Trade-offs: Canvas vs SVG vs DOM</h2>
-    <table>
-      <tr><th>Feature</th><th>Canvas</th><th>SVG</th><th>HTML DOM</th></tr>
-      <tr>
-        <td><strong>Rendering</strong></td>
-        <td>Pixel-based drawing surface, extremely fast for many objects/animations</td>
-        <td>Vector-based, retains object structure (scales crisp), easier event handling</td>
-        <td>Not suited to complex shapes (used for layout); drawing via CSS is cumbersome</td>
-      </tr>
-      <tr>
-        <td><strong>Interactivity</strong></td>
-        <td>All state must be managed in script; no native support for shapes or events</td>
-        <td>Each element is in DOM (click/hover easily applied); better for accessible graphics</td>
-        <td>Easy events on elements but limited to rectangular shapes; poor performance with many elements</td>
-      </tr>
-      <tr>
-        <td><strong>Performance</strong></td>
-        <td>Generally highest FPS with many elements; redraw as bitmap, good for animation</td>
-        <td>Better for few (≤1000) objects or static graphics; can slow with very many nodes</td>
-        <td>Scales poorly beyond dozens of elements; layout cost high</td>
-      </tr>
-      <tr>
-        <td><strong>Accessibility</strong></td>
-        <td>Canvas is a single element; must provide fallback/ARIA manually</td>
-        <td>SVG content lives in DOM; can include ARIA roles and text for screen readers</td>
-        <td>Native HTML is accessible; ARIA roles easily added</td>
-      </tr>
-    </table>
-
-    <h2>Testing Checklist</h2>
-    <ul>
-      <li>Verify physics: one ball out = one ball in; energy roughly conserved (with damping off).</li>
-      <li>Test parameter sliders (min/max values) and ensure live updates without page reload.</li>
-      <li>Test different browsers (Chrome, Firefox, Safari, Edge). Ensure canvas sizes scale correctly.</li>
-      <li>Keyboard accessibility: Tab through inputs, adjust via arrow keys, focus outlines visible.</li>
-      <li>Contrast check: blue theme provides sufficient text/background contrast.</li>
-      <li>Performance check: smooth animation at 60Hz with 7 balls. (Canvas re-draw is efficient.)</li>
-      <li>Fallback: Disable JS or use a non-supportive browser to see fallback text on `<canvas>`.</li>
-    </ul>
-
-    <h2>Extensions & Presets</h2>
-    <p>Possible enhancements include using **matter.js** or **planck.js** for more realistic physics, adding 3D CSS for a rotating cradle, or enabling mobile device tilt to simulate platform motion.  Sample presets might include “Moon” (gravity=1.6), “Mars” (g≈3.7), or “Damped” (high damping) to demonstrate effects.  One could also allow varying ball radii or asymmetric masses for experiments.  Suggestions: adding audio on collision, supporting touch controls, or using SVG fallback for vector graphics.</p>
-
-    <h2>Event Flow (mermaid diagram)</h2>
-    ```mermaid
-    graph LR
-      U[User adjusts controls] --> P[Update physics parameters]
-      P --> S[Start Animation (requestAnimationFrame)]
-      S --> O[Compute next positions (θ, ω integration)]
-      O --> C[Collision detection & response]
-      C --> D[Draw frame on canvas]
-      D --> S
-    ```
-    <p>(Flow: UI events set variables; the main loop updates physics and redraws repeatedly.)</p>
-
-    <h2>References</h2>
-    <ul>
-      <li>Fu-Kwun Hwang et al., *Newton’s Cradle Simulation Model* (Open Source Physics) – describes the differential equations and collision logic used.</li>
-      <li>Lumen HyperPhysics, *Simple Pendulum* – derivation of pendulum motion for small angles (θ″≈−(g/L)θ, period T=2π√(L/g)).</li>
-      <li>Wikipedia: *Coefficient of restitution*, *Inelastic collision* – definitions and 1D collision formulas.</li>
-      <li>StackOverflow (Simon Sarris) – Canvas vs SVG vs DIV performance and usage recommendations.</li>
-      <li>MDN Web Docs: `<canvas>` accessibility notes – Canvas lacks built-in semantics; recommend fallback content.</li>
-      <li>Ballistics texts and physics references on momentum/energy conservation in collisions.</li>
-    </ul>
+  <div id="canvas-container">
+    <canvas id="c2d"></canvas>
   </div>
 
   <script>
-  // ===== JavaScript Physics and UI Logic =====
-  (function() {
-    const canvas = document.getElementById('cradleCanvas');
+    const canvas = document.getElementById('c2d');
     const ctx = canvas.getContext('2d');
-    let width = canvas.width, height = canvas.height;
-    // Physics parameters (defaults)
-    let N = 5;            // number of balls
-    let mass = 1.0;       // ball mass
-    let L = 1.0;          // string length (m)
-    let g = 9.81;         // gravity (m/s^2)
-    let e = 0.98;         // coefficient of restitution
-    let damping = 0.0;    // damping coeff (rad/sec)
-    // Simulation state
-    let angles = []; let omegas = [];
-    let initialSetup = true;
-    let liftSide = 'left'; let liftCount = 1, initAngleDeg = 30;
-    let animating = false;
 
-    // UI elements
-    function $(id) { return document.getElementById(id); }
-    $('numBalls').addEventListener('input', updateNumBalls);
-    $('ballMass').addEventListener('input', updateMass);
-    $('stringLength').addEventListener('input', updateLength);
-    $('liftSide').addEventListener('change', updateLift);
-    $('liftCount').addEventListener('input', updateLift);
-    $('angleInit').addEventListener('input', updateAngle);
-    $('restitution').addEventListener('input', updateRestitution);
-    $('damping').addEventListener('input', updateDamping);
-    $('gravity').addEventListener('input', updateGravity);
+    const sysState = document.getElementById('sysState');
+    const activeCount = document.getElementById('activeCount');
+    const calcKE = document.getElementById('calcKE');
+    const calcPE = document.getElementById('calcPE');
 
-    function updateNumBalls() {
-      N = parseInt($('numBalls').value);
-      $('numBallsOut').textContent = N;
-      $('liftCount').max = Math.floor(N/2);
-      resetSim();
+    const rangeGravity = document.getElementById('rangeGravity');
+    const valGravity = document.getElementById('valGravity');
+    const rangeDamping = document.getElementById('rangeDamping');
+    const valDamping = document.getElementById('valDamping');
+    const rangeMass = document.getElementById('rangeMass');
+    const valMass = document.getElementById('valMass');
+
+    let userGravity = 9.81;
+    let userDamping = 0.9999;
+    let userMass = 1.0;
+
+    rangeGravity.addEventListener('input', (e) => {
+      userGravity = parseFloat(e.target.value);
+      valGravity.innerText = userGravity.toFixed(1);
+    });
+
+    rangeDamping.addEventListener('input', (e) => {
+      userDamping = parseFloat(e.target.value);
+      valDamping.innerText = userDamping.toFixed(4);
+    });
+
+    rangeMass.addEventListener('input', (e) => {
+      userMass = parseFloat(e.target.value);
+      valMass.innerText = userMass.toFixed(1);
+    });
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-    function updateMass() {
-      mass = parseFloat($('ballMass').value);
-      $('ballMassOut').textContent = mass.toFixed(1);
-    }
-    function updateLength() {
-      L = parseFloat($('stringLength').value);
-      $('lengthOut').textContent = L.toFixed(1);
-      resetSim();
-    }
-    function updateLift() {
-      liftSide = $('liftSide').value;
-      liftCount = parseInt($('liftCount').value);
-      $('liftCountOut').textContent = liftCount;
-    }
-    function updateAngle() {
-      initAngleDeg = parseInt($('angleInit').value);
-      $('angleOut').textContent = initAngleDeg;
-    }
-    function updateRestitution() {
-      e = parseFloat($('restitution').value);
-      $('restOut').textContent = e.toFixed(2);
-    }
-    function updateDamping() {
-      damping = parseFloat($('damping').value);
-      $('dampingOut').textContent = damping.toFixed(2);
-    }
-    function updateGravity() {
-      g = parseFloat($('gravity').value);
-      $('gravityOut').textContent = g.toFixed(1);
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const numBalls = 5;
+    const radius = 22;
+    const stringLength = 190;
+    
+    const balls = [];
+    for (let i = 0; i < numBalls; i++) {
+      balls.push({
+        id: i,
+        angle: i === 0 ? Math.PI / 3 : 0,
+        v: 0,
+        radius: radius
+      });
     }
 
-    // Initialize or reset the simulation state
-    function initSim() {
-      angles = new Array(N).fill(0);
-      omegas = new Array(N).fill(0);
-      // Set initial lifted balls angles
-      const rad = initAngleDeg * Math.PI/180;
-      if (liftSide === 'left' || liftSide === 'both') {
-        for (let i=0; i<liftCount; i++) angles[i] = -rad;
+    let isDragging = false;
+    let selectedBall = null;
+
+    function getOriginX() {
+      return canvas.width / 2;
+    }
+    function getOriginY() {
+      return canvas.height * 0.32;
+    }
+
+    function getPointerPos(e) {
+      let clientX = e.clientX;
+      let clientY = e.clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
       }
-      if (liftSide === 'right' || liftSide === 'both') {
-        for (let i=0; i<liftCount; i++) angles[N-1-i] = rad;
-      }
-      initialSetup = false;
+      return { x: clientX, y: clientY };
     }
 
-    // Animation loop
-    function animate() {
-      if (!animating) return;
-      ctx.clearRect(0, 0, width, height);
-      // Calculate pivot spacing (pixels per meter)
-      const pxPerM = height / (L*2 + 0.5); // leave space at top/bottom
-      const centerX = width/2;
-      const centerY = 20;
-      // Compute positions and update physics
-      // 1. Integrate each pendulum
-      for (let i=0; i<N; i++) {
-        // angular acceleration: -(g/L) sinθ - damping*ω
-        const acc = -(g/L)*Math.sin(angles[i]) - damping*omegas[i];
-        omegas[i] += acc * 0.016;   // dt ≈ 1 frame (~16ms)
-        angles[i] += omegas[i] * 0.016;
-      }
-      // 2. Collision detection (simple: if one passes vertical)
-      for (let i=0; i<N-1; i++) {
-        // Detect if ball i crosses vertical and hits i+1
-        if (omegas[i] > 0 && angles[i] > 0 && Math.abs(angles[i+1]) < 0.01) {
-          // ball i hit ball i+1; use 1D collision
-          let u1 = L * omegas[i];
-          let u2 = L * omegas[i+1];
-          let m1 = mass, m2 = mass;
-          // 1D collision formulas (conserve momentum, apply restitution)
-          let v1 = (m1*u1 + m2*u2 - m2*e*(u1-u2)) / (m1+m2);
-          let v2 = (m1*u1 + m2*u2 + m1*e*(u1-u2)) / (m1+m2);
-          // convert back to angular velocities
-          omegas[i] = v1 / L;
-          omegas[i+1] = v2 / L;
-          // fix positions (both go vertical)
-          angles[i] = 0;
-          angles[i+1] = 0;
+    function handleDown(e) {
+      const pos = getPointerPos(e);
+      if (!pos) return;
+      
+      const originX = getOriginX();
+      const originY = getOriginY();
+      const spacing = radius * 2;
+
+      for (let i = 0; i < numBalls; i++) {
+        let b = balls[i];
+        let pivotX = originX + (i * spacing - ((numBalls - 1) * spacing) / 2);
+        let bx = pivotX + Math.sin(b.angle) * stringLength;
+        let by = originY + Math.cos(b.angle) * stringLength;
+
+        let dist = Math.hypot(pos.x - bx, pos.y - by);
+        if (dist < radius * 2.2) {
+          selectedBall = b;
+          isDragging = true;
+          sysState.innerText = "Dragging";
+          break;
         }
       }
-      // 3. Draw each pendulum and ball
-      const ballRadius = 15; // px
-      const spacing = 2 * ballRadius;
-      const startX = centerX - (N-1)*spacing/2;
-      for (let i=0; i<N; i++) {
-        // Pivot point
-        let pivotX = startX + i*spacing, pivotY = centerY;
-        // Ball position
-        let x = pivotX + pxPerM * L * Math.sin(angles[i]);
-        let y = pivotY + pxPerM * L * Math.cos(angles[i]);
-        // Draw string
+    }
+
+    function handleMove(e) {
+      if (!isDragging || !selectedBall) return;
+      const pos = getPointerPos(e);
+      if (!pos) return;
+
+      const originX = getOriginX();
+      const originY = getOriginY();
+      const spacing = radius * 2;
+      
+      let pivotX = originX + (selectedBall.id * spacing - ((numBalls - 1) * spacing) / 2);
+      let dx = pos.x - pivotX;
+      let dy = pos.y - originY;
+
+      let newAngle = Math.atan2(dx, dy);
+      selectedBall.angle = Math.max(-1.4, Math.min(1.4, newAngle));
+      selectedBall.v = 0;
+    }
+
+    function handleUp() {
+      if (isDragging) {
+        isDragging = false;
+        selectedBall = null;
+        sysState.innerText = "Running";
+      }
+    }
+
+    window.addEventListener('pointerdown', handleDown);
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const originX = getOriginX();
+      const originY = getOriginY();
+      const spacing = radius * 2;
+
+      const subSteps = 30;
+      const subDt = 0.016 / subSteps;
+
+      if (!isDragging) {
+        for (let step = 0; step < subSteps; step++) {
+          for (let i = 0; i < numBalls; i++) {
+            let b = balls[i];
+            let a = -(userGravity / (stringLength / 100)) * Math.sin(b.angle);
+            b.v += a * subDt;
+            b.v *= userDamping;
+            b.angle += b.v * subDt;
+          }
+
+          // Accurate 2D World Position & Collision Resolution
+          let coords = [];
+          for (let i = 0; i < numBalls; i++) {
+            let b = balls[i];
+            let pivotX = originX + (i * spacing - ((numBalls - 1) * spacing) / 2);
+            let pivotY = originY;
+            coords.push({
+              x: pivotX + Math.sin(b.angle) * stringLength,
+              y: pivotY + Math.cos(b.angle) * stringLength
+            });
+          }
+
+          for (let i = 0; i < numBalls - 1; i++) {
+            let b1 = balls[i];
+            let b2 = balls[i+1];
+            let p1 = coords[i];
+            let p2 = coords[i+1];
+
+            let dx = p2.x - p1.x;
+            let dy = p2.y - p1.y;
+            let distance = Math.hypot(dx, dy);
+            let minDist = radius * 2;
+
+            if (distance < minDist) {
+              // Swap angular velocities properly based on momentum transfer
+              let tempV = b1.v;
+              b1.v = b2.v;
+              b2.v = tempV;
+
+              // Positional push-apart to eliminate overlap glitches
+              let overlap = (minDist - distance) * 0.5;
+              if (distance > 0) {
+                let nx = dx / distance;
+                let ny = dy / distance;
+                b1.angle -= (nx * overlap) / (stringLength / 100);
+                b2.angle += (nx * overlap) / (stringLength / 100);
+              }
+            }
+          }
+        }
+      }
+
+      // Neon Track / Rail Bar
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "#38bdf8";
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      let frameW = (numBalls * spacing) + 50;
+      ctx.moveTo(originX - frameW/2, originY);
+      ctx.lineTo(originX + frameW/2, originY);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      let totalKE = 0;
+      let totalPE = 0;
+      let movingCount = 0;
+
+      for (let i = 0; i < numBalls; i++) {
+        let b = balls[i];
+        let pivotX = originX + (i * spacing - ((numBalls - 1) * spacing) / 2);
+        let pivotY = originY;
+
+        let bx = pivotX + Math.sin(b.angle) * stringLength;
+        let by = pivotY + Math.cos(b.angle) * stringLength;
+
+        // Glowing String
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.strokeStyle = '#555';
         ctx.moveTo(pivotX, pivotY);
-        ctx.lineTo(x, y);
+        ctx.lineTo(bx, by);
         ctx.stroke();
-        // Draw ball (simple fill circle)
-        // Make ball color steel-gray with blue tint
-        const grad = ctx.createRadialGradient(x-5,y-5,2,x,y,ballRadius);
-        grad.addColorStop(0, '#eeeeee');
-        grad.addColorStop(1, '#888888');
+
+        // Neon Orb Glow & Gradient
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#38bdf8";
+
+        const grad = ctx.createRadialGradient(bx - 6, by - 6, 2, bx, by, radius);
+        grad.addColorStop(0, "#bae6fd");
+        grad.addColorStop(0.4, "#38bdf8");
+        grad.addColorStop(1, "#0369a1");
+
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, 2*Math.PI);
+        ctx.arc(bx, by, radius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#000';
+
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "#e0f2fe";
+        ctx.lineWidth = 1.5;
         ctx.stroke();
+
+        let h = (stringLength / 100) * (1 - Math.cos(b.angle));
+        let linearVel = b.v * (stringLength / 100);
+
+        totalKE += 0.5 * userMass * (linearVel * linearVel);
+        totalPE += userMass * userGravity * h;
+
+        if (Math.abs(b.angle) > 0.02 || Math.abs(b.v) > 0.05) {
+          movingCount++;
+        }
       }
+
+      calcKE.innerText = totalKE.toFixed(2) + " J";
+      calcPE.innerText = totalPE.toFixed(2) + " J";
+      activeCount.innerText = movingCount > 0 ? `${movingCount} Orb${movingCount > 1 ? 's' : ''}` : "At Rest";
+
       requestAnimationFrame(animate);
     }
 
-    // Start animation
-    window.startSim = function() {
-      if (initialSetup) initSim();
-      if (!animating) {
-        animating = true;
-        requestAnimationFrame(animate);
-      }
-    };
-    // Reset to initial rest state
-    window.resetSim = function() {
-      animating = false;
-      initialSetup = true;
-      initSim();
-      // Draw initial static configuration
-      ctx.clearRect(0, 0, width, height);
-      // Draw one frame without animation
-      const ev = new Event('draw');
-      canvas.dispatchEvent(ev);
-      ctx.clearRect(0, 0, width, height);
-      // Re-run drawing part of animate once
-      if (initialSetup) initSim();
-      for (let i=0; i<N; i++) { omegas[i] = 0; }
-      // (call draw frame manually)
-      const fakeCtx = ctx;
-      requestAnimationFrame(function() {});
-      animating = false;
-      // Actually just call animate once without recursion
-      (function singleDraw() {
-        // (same drawing code from animate without recursion)
-        const pxPerM = height / (L*2 + 0.5);
-        const centerX = width/2, centerY = 20;
-        for (let i=0; i<N; i++) {
-          let pivotX = centerX - (N-1)*spacing/2 + i*spacing;
-          let x = pivotX + pxPerM * L * Math.sin(angles[i]);
-          let y = centerY + pxPerM * L * Math.cos(angles[i]);
-          fakeCtx.beginPath();
-          fakeCtx.strokeStyle = '#555';
-          fakeCtx.moveTo(pivotX, centerY);
-          fakeCtx.lineTo(x, y);
-          fakeCtx.stroke();
-          const grad = fakeCtx.createRadialGradient(x-5,y-5,2,x,y,ballRadius);
-          grad.addColorStop(0, '#eeeeee');
-          grad.addColorStop(1, '#888888');
-          fakeCtx.fillStyle = grad;
-          fakeCtx.beginPath();
-          fakeCtx.arc(x, y, ballRadius, 0, 2*Math.PI);
-          fakeCtx.fill();
-          fakeCtx.strokeStyle = '#000'; fakeCtx.stroke();
-        }
-      })();
-    };
-
-    // Initialize UI display values
-    $('numBallsOut').textContent = N;
-    $('ballMassOut').textContent = mass.toFixed(1);
-    $('lengthOut').textContent = L.toFixed(1);
-    $('liftCountOut').textContent = liftCount;
-    $('angleOut').textContent = initAngleDeg;
-    $('restOut').textContent = e.toFixed(2);
-    $('dampingOut').textContent = damping.toFixed(2);
-    $('gravityOut').textContent = g.toFixed(1);
-  })();
+    animate();
   </script>
 </body>
 </html>
