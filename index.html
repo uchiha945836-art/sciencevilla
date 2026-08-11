@@ -4,46 +4,119 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Science Villa | Interactive Models</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0f172a;
-      --card-bg: #1e293b;
+      --bg-dark: #07090e;
+      --bg-card: rgba(18, 26, 43, 0.75);
       --accent-cyan: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
       --text-light: #f8fafc;
       --text-sub: #94a3b8;
+      --border-glow: rgba(255, 255, 255, 0.1);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
     }
 
     body {
       background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
       color: var(--text-light);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 3rem 1.5rem;
+      padding: 1.5rem;
     }
 
+    /* Navigation Bar */
+    nav {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-glow);
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-cyan);
+    }
+
+    /* Header & Hero */
     header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
+      max-width: 700px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.35rem 0.9rem;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--text-light);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
     }
 
     p.subtitle {
       color: var(--text-sub);
       font-size: 1.1rem;
+      line-height: 1.6;
     }
 
     .container {
@@ -51,97 +124,540 @@
       max-width: 1100px;
     }
 
+    /* Controls: Search & Category Tabs */
+    .controls-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .search-bar-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: 12px;
+      padding: 1rem 1.2rem 1rem 3rem;
+      color: var(--text-light);
+      font-size: 1rem;
+      outline: none;
+      backdrop-filter: blur(16px);
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-sub);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-glow);
+      color: var(--text-sub);
+      padding: 0.6rem 1.2rem;
+      border-radius: 99px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* Model Cards Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+      margin-bottom: 4rem;
     }
 
     .card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 1.75rem;
+      position: relative;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-glow);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .card.hidden {
+      display: none !important;
+    }
+
+    .card-tag {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0.25rem 0.60rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .card-tag.chemistry {
+      background: rgba(168, 85, 247, 0.12);
+      color: #c084fc;
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .card-tag.biology {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .card:hover::before {
+      left: 100%;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      transform: translateY(-6px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 12px 30px -5px var(--accent-glow);
     }
 
     .card h2 {
-      font-size: 1.35rem;
-      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
       color: var(--text-light);
     }
 
     .card p {
       color: var(--text-sub);
       font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
     }
 
     .btn {
       display: inline-block;
       text-align: center;
-      background-color: var(--accent-cyan);
-      color: #0f172a;
-      font-weight: 600;
-      padding: 0.75rem 1.25rem;
-      border-radius: 8px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #07090e;
+      font-weight: 700;
+      padding: 0.8rem 1.4rem;
+      border-radius: 10px;
       text-decoration: none;
-      transition: background-color 0.2s ease;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
+      transition: all 0.2s ease;
     }
 
     .btn:hover {
-      background-color: #7dd3fc;
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn.disabled {
+      background: #334155;
+      color: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* Section Component Styling */
+    .section-block {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-block h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    /* About Us Grid */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .about-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glow);
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+
+    .about-item h3 {
+      font-size: 1.1rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.5rem;
+    }
+
+    .about-item p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    /* Feedback Form */
+    .feedback-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      background: rgba(7, 9, 14, 0.6);
+      border: 1px solid var(--border-glow);
+      border-radius: 8px;
+      padding: 0.8rem;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .submit-btn {
+      align-self: flex-start;
+      border: none;
+      cursor: pointer;
+    }
+
+    #form-status {
+      display: none;
+      padding: 0.8rem;
+      border-radius: 8px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+      font-size: 0.9rem;
+    }
+
+    /* Contact Details */
+    .contact-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .contact-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glow);
+      padding: 1.2rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--text-light);
+      transition: all 0.2s ease;
+    }
+
+    .contact-card:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.05);
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-glow);
+      width: 100%;
+      max-width: 1100px;
     }
   </style>
 </head>
 <body>
 
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">Science Villa</div>
+    <ul class="nav-links">
+      <li><a href="#models">Models</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#feedback">Feedback</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Header -->
   <header>
-    <h1>Science Villa</h1>
-    <p class="subtitle">Interactive Physics & Science Models</p>
+    <div class="badge">
+      <span class="badge-dot"></span> Interactive Web Science
+    </div>
+    <h1>Explore the Universe through Simulations</h1>
+    <p class="subtitle">Experience interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.</p>
   </header>
 
   <div class="container">
-    <div class="grid">
-
-      <!-- Vortex Model -->
-      <div class="card">
-        <div>
-          <h2>Vortex Drop Shaft</h2>
-          <p>Explore hydraulic mechanics, air core formation, and energy dissipation in vortex drop structures.</p>
+    
+    <!-- Controls: Search & Subject Filters -->
+    <section id="models">
+      <div class="controls-wrapper">
+        <div class="search-bar-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Gravity, Vortex, Solar, Chemistry)...">
         </div>
-        <a href="vortex.html" class="btn">Launch Model</a>
+
+        <div class="category-tabs">
+          <button class="tab-btn active" data-category="all">All Models</button>
+          <button class="tab-btn" data-category="physics">Physics</button>
+          <button class="tab-btn" data-category="chemistry">Chemistry</button>
+          <button class="tab-btn" data-category="biology">Biology</button>
+        </div>
       </div>
 
-      <!-- Solar System Gravity Model -->
-      <div class="card">
-        <div>
-          <h2>Solar System Sandbox</h2>
-          <p>Real N-body Newtonian gravitational physics simulator. Create custom orbits, tweak gravity, and spawn celestial bodies.</p>
-        </div>
-        <a href="gravity.html" class="btn">Launch Model</a>
-      </div>
+      <!-- Models Grid -->
+      <div class="grid" id="modelsGrid">
 
-      <!-- Solar System Scale & Distance Explorer -->
-      <div class="card">
-        <div>
-          <h2>Solar System </h2>
-          <p>Realistic scale & distance model. View real physical astronomical units (AU), orbital speeds, and interactive planet details.</p>
+        <!-- Vortex Model (Physics) -->
+        <div class="card" data-category="physics">
+          <div>
+            <span class="card-tag">Physics</span>
+            <h2>Vortex Drop Shaft</h2>
+            <p>Explore hydraulic mechanics, air core formation, and energy dissipation in vortex drop structures.</p>
+          </div>
+          <a href="vortex.html" class="btn">Launch Model</a>
         </div>
-        <a href="solar system.html" class="btn">Launch Model</a>
-      </div>
 
-    </div>
+        <!-- Solar System Gravity Model (Physics) -->
+        <div class="card" data-category="physics">
+          <div>
+            <span class="card-tag">Physics</span>
+            <h2>Solar System Sandbox</h2>
+            <p>Real N-body Newtonian gravitational physics simulator. Create custom orbits, tweak gravity, and spawn celestial bodies.</p>
+          </div>
+          <a href="gravity.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- Solar System Scale Explorer (Physics) -->
+        <div class="card" data-category="physics">
+          <div>
+            <span class="card-tag">Physics</span>
+            <h2>Solar System Explorer</h2>
+            <p>Realistic scale & distance model featuring an interactive irregular Asteroid Belt, orbital periods, speeds, and planetary metrics.</p>
+          </div>
+          <a href="solar_system.html" class="btn">Launch Model</a>
+        </div>
+
+        <!-- Molecular Structure Model (Chemistry Placeholder) -->
+        <div class="card" data-category="chemistry">
+          <div>
+            <span class="card-tag chemistry">Chemistry</span>
+            <h2>3D Molecular Viewer</h2>
+            <p>Interactive 3D atomic orbital structure visualizer. Explore chemical bonding and molecular geometry.</p>
+          </div>
+          <a href="#" class="btn disabled">Coming Soon</a>
+        </div>
+
+        <!-- Cell Structure Model (Biology Placeholder) -->
+        <div class="card" data-category="biology">
+          <div>
+            <span class="card-tag biology">Biology</span>
+            <h2>Interactive Cell Explorer</h2>
+            <p>Explore plant and animal cell organelles, membrane transport dynamics, and cellular respiration.</p>
+          </div>
+          <a href="#" class="btn disabled">Coming Soon</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="section-block">
+      <h2>About Science Villa</h2>
+      <p style="color: var(--text-sub); line-height: 1.6;">
+        Science Villa is an open platform built to make complex physical, chemical, and biological phenomena intuitive through interactive web-based simulations.
+      </p>
+      <div class="about-grid">
+        <div class="about-item">
+          <h3>Real-Time Physics & Math</h3>
+          <p>Driven by mathematical and astronomical algorithms designed to bring textbook science to life.</p>
+        </div>
+        <div class="about-item">
+          <h3>Interactive Learning</h3>
+          <p>Tweak parameters, alter speed, and observe real-time dynamic environmental feedback.</p>
+        </div>
+        <div class="about-item">
+          <h3>100% Web-Based</h3>
+          <p>Built with lightweight HTML5 Canvas technologies for seamless cross-device performance.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feedback & Improve Section -->
+    <section id="feedback" class="section-block">
+      <h2>Tell Us What to Improve</h2>
+      <p style="color: var(--text-sub); font-size: 0.95rem;">Have ideas for a new physics, chemistry, or biology module, feature request, or visual bug to report? Let us know!</p>
+
+      <form class="feedback-form" id="reviewForm">
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="modelSelect">Which subject/model are you reviewing?</label>
+          <select id="modelSelect">
+            <option value="General Suggestion">General / Entire Site</option>
+            <option value="Vortex Drop Shaft">Vortex Drop Shaft (Physics)</option>
+            <option value="Solar System Sandbox">Solar System Sandbox (Physics)</option>
+            <option value="Solar System Explorer">Solar System Explorer (Physics)</option>
+            <option value="Chemistry Section">Chemistry Section Suggestion</option>
+            <option value="Biology Section">Biology Section Suggestion</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="feedbackMsg">Your Feedback / Suggestions</label>
+          <textarea id="feedbackMsg" rows="4" placeholder="What features or visual improvements would you like to see?" required></textarea>
+        </div>
+
+        <button type="submit" class="btn submit-btn">Submit Feedback</button>
+        <div id="form-status">Thank you! Your feedback has been recorded.</div>
+      </form>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="section-block">
+      <h2>Get In Touch</h2>
+      <p style="color: var(--text-sub); font-size: 0.95rem;">Connect with the developers or send your inquiries.</p>
+
+      <div class="contact-links">
+        <a href="mailto:sciencevilla171@gmail.com" class="contact-card">
+          <span style="font-size: 1.4rem;">✉️</span>
+          <div>
+            <strong style="display: block; font-size: 0.95rem;">Email Us</strong>
+            <span style="font-size: 0.85rem; color: var(--accent-cyan);">sciencevilla171@gmail.com</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
   </div>
+
+  <footer>
+    <p>&copy; Science Villa | Built for Interactive Science & Physics Education</p>
+  </footer>
+
+  <script>
+    // Live Search and Category Filtering Script
+    const searchInput = document.getElementById('searchInput');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const cards = document.querySelectorAll('#modelsGrid .card');
+
+    let activeCategory = 'all';
+
+    function filterCards() {
+      const query = searchInput.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const title = card.querySelector('h2').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        const category = card.getAttribute('data-category');
+
+        const matchesSearch = title.includes(query) || desc.includes(query);
+        const matchesCategory = activeCategory === 'all' || category === activeCategory;
+
+        if (matchesSearch && matchesCategory) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category');
+        filterCards();
+      });
+    });
+
+    // Client-side feedback form handler
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const status = document.getElementById('form-status');
+      status.style.display = 'block';
+      this.reset();
+      setTimeout(() => {
+        status.style.display = 'none';
+      }, 4000);
+    });
+  </script>
 
 </body>
 </html>
