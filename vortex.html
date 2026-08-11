@@ -29,46 +29,49 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+            overflow-x: hidden;
         }
 
         .back-nav {
             width: 100%;
             max-width: 1100px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            padding: 0 5px;
         }
 
         .back-nav a {
             color: var(--accent-blue);
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            padding: 0 5px;
         }
 
         header h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--accent-blue);
             margin-bottom: 5px;
         }
 
         header p {
             color: var(--text-sub);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
 
         .container {
             display: flex;
             flex-direction: row;
-            gap: 20px;
+            gap: 15px;
             max-width: 1100px;
             width: 100%;
             background: var(--panel-bg);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
@@ -83,36 +86,42 @@
             justify-content: center;
             align-items: center;
             border: 1px solid #334155;
+            width: 100%;
+            min-height: 350px;
         }
 
         canvas {
             display: block;
+            width: 100%;
+            height: auto;
+            max-width: 600px;
+            max-height: 500px;
         }
 
         .controls-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .control-group {
             background: #0f172a;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #334155;
         }
 
         .control-group h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--accent-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-bottom: 1px solid #334155;
-            padding-bottom: 5px;
+            padding-bottom: 4px;
         }
 
         .control-item {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .control-item:last-child {
@@ -122,9 +131,9 @@
         label {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-main);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         input[type="range"] {
@@ -135,7 +144,7 @@
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         button {
@@ -145,6 +154,7 @@
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
         }
 
@@ -170,54 +180,61 @@
         .stats-panel {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
 
         .stat-card {
             background: #0f172a;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             text-align: center;
             border: 1px solid #334155;
         }
 
         .stat-card .val {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--accent-blue);
         }
 
         .stat-card .lbl {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-sub);
         }
 
         .legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.8rem;
+            gap: 8px;
+            font-size: 0.75rem;
             margin-top: 5px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
         }
 
         @media (max-width: 850px) {
             .container {
                 flex-direction: column;
+                padding: 10px;
             }
             .canvas-container {
-                height: 400px;
+                min-height: 300px;
+            }
+            body {
+                padding: 5px;
+            }
+            header h1 {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -255,7 +272,7 @@
 
             <div class="control-group">
                 <h3>Controls & Views</h3>
-                <div class="btn-group" style="margin-bottom: 10px;">
+                <div class="btn-group" style="margin-bottom: 8px;">
                     <button class="btn-primary" id="btnToggleSim">Pause Simulation</button>
                     <button class="btn-secondary" id="btnReset">Reset System</button>
                 </div>
@@ -476,12 +493,12 @@
             ctx.fill();
 
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '12px sans-serif';
-            ctx.fillText("Tangential River Inflow", 20, 60);
-            ctx.fillText("Swirl Chamber (Funnel)", funnelX + 90, funnelY + 40);
+            ctx.font = '11px sans-serif';
+            ctx.fillText("Tangential River Inflow", 15, 60);
+            ctx.fillText("Swirl Chamber", funnelX + 85, funnelY + 40);
             ctx.fillText("Sediment Trap", funnelX + 60, funnelY + funnelHeight);
-            ctx.fillText("Air Core", funnelX - 20, funnelY + 15);
-            ctx.fillText("Groundwater Recharge Well", funnelX + 40, funnelY + funnelHeight + shaftHeight + 30);
+            ctx.fillText("Air Core", funnelX - 25, funnelY + 15);
+            ctx.fillText("Groundwater Recharge Well", funnelX + 35, funnelY + funnelHeight + shaftHeight + 30);
         }
 
         function drawStructureTopView() {
@@ -511,8 +528,9 @@
             ctx.stroke();
 
             ctx.fillStyle = '#94a3b8';
-            ctx.fillText("High Centrifugal Force (Sediment Pushed Out)", centerX - 120, centerY + 180);
-            ctx.fillText("Low Pressure Air Core (Debris Trapped)", centerX - 100, centerY - 180);
+            ctx.font = '11px sans-serif';
+            ctx.fillText("High Centrifugal Force (Sediment Pushed Out)", centerX - 130, centerY + 180);
+            ctx.fillText("Low Pressure Air Core (Debris Trapped)", centerX - 110, centerY - 180);
         }
 
         function animate() {
