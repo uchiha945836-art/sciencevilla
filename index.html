@@ -393,37 +393,6 @@
       .section-block h2 { font-size: 1.8rem; }
     }
 
-    /* Chemistry Info Card */
-    .atom-info-box {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    @media (min-width: 640px) {
-      .atom-info-box { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .atom-info-card {
-      background: rgba(168, 85, 247, 0.04);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: 12px;
-      padding: 1.15rem;
-    }
-
-    .atom-info-card h3 {
-      font-size: 1rem;
-      color: #c084fc;
-      margin-bottom: 0.4rem;
-    }
-
-    .atom-info-card p {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      line-height: 1.5;
-    }
-
     /* About Us Grid */
     .about-grid {
       display: grid;
@@ -694,7 +663,6 @@
     <div class="logo"><span></span>Science Villa</div>
     <ul class="nav-links">
       <li><a href="#models">Models</a></li>
-      <li><a href="#chemistry-info">Chemistry</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#formalities">Formalities</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -852,36 +820,6 @@
           <a href="#" class="btn disabled">Coming Soon</a>
         </div>
 
-      </div>
-    </section>
-
-    <!-- Chemistry Overview Section -->
-    <section id="chemistry-info" class="section-block">
-      <h2>Chemistry Spotlight: Atomic Structure</h2>
-      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.9rem;">
-        An <strong>atom</strong> is the foundational building block of matter. It consists of a dense central region called the <strong>nucleus</strong> surrounded by a dynamic electron cloud.
-      </p>
-
-      <div class="atom-info-box">
-        <div class="atom-info-card">
-          <h3>Protons (+)</h3>
-          <p>Positively charged particles located in the nucleus. The proton count dictates the atomic number and chemical identity of each element.</p>
-        </div>
-
-        <div class="atom-info-card">
-          <h3>Neutrons (0)</h3>
-          <p>Neutral subatomic particles residing in the nucleus that add atomic mass and nuclear stability against electromagnetic repulsion.</p>
-        </div>
-
-        <div class="atom-info-card">
-          <h3>Electrons (-)</h3>
-          <p>Lightweight, negatively charged particles traveling in quantum orbital shells. They dictate bonding behavior and molecular interactions.</p>
-        </div>
-
-        <div class="atom-info-card">
-          <h3>Electron Shells</h3>
-          <p>Discrete energy levels organizing electron orbitals: up to 2 in the inner K-shell, followed by structured outer shells for valence bonding.</p>
-        </div>
       </div>
     </section>
 
