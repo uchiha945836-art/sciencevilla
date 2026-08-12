@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meter Bridge Circuit Diagram & Practical Calculations</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .diagram-container {
+            position: relative;
+            width: 760px;
+            height: 480px;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Top supply loop: connects the battery/key to the two ends of the bridge wire */
+        .top-circuit {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            right: 30px;
+            height: 240px;
+            border-top: 3px solid #cbd5e1;
+            border-left: 3px solid #cbd5e1;
+            border-right: 3px solid #cbd5e1;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 0 4px rgba(203, 213, 225, 0.4);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Animated conventional-current flow: I1 in the upper branch and I2 through the metre wire */
+        .particle-svg-track {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 700px;
+            height: 243px;
+            pointer-events: none;
+            z-index: 4;
+            overflow: visible;
+        }
+
+        .label-e {
+            position: absolute;
+            top: -28px;
+            left: 215px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #facc15;
+            z-index: 4;
+        }
+
+        .battery-symbol {
+            position: absolute;
+            top: -14px;
+            left: 220px;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            z-index: 4;
+        }
+        .battery-symbol span {
+            display: inline-block;
+            background: #facc15;
+            width: 3px;
+            height: 16px;
+            border-radius: 1px;
+        }
+        .battery-symbol span:nth-child(2) {
+            height: 26px;
+        }
+
+        .label-k {
+            position: absolute;
+            top: -28px;
+            right: 275px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #f87171;
+            z-index: 4;
+        }
+
+        /* Proper Plug Key Rendering Block */
+        .plug-key {
+            position: absolute;
+            top: -12px;
+            right: 255px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            z-index: 4;
+        }
+        .key-block {
+            width: 18px;
+            height: 22px;
+            background: #94a3b8;
+            border: 1px solid #475569;
+            border-radius: 2px;
+            position: relative;
+        }
+        .key-block::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 4px;
+            height: 8px;
+            background: #0f172a;
+            border-radius: 1px;
+        }
+        .key-plug {
+            width: 10px;
+            height: 10px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            border: 1px solid #475569;
+            position: absolute;
+            top: -8px;
+            left: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+        .key-plug::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 5px;
+            background: #475569;
+            top: 9px;
+            left: 3px;
+        }
+
+        .label-i-top {
+            position: absolute;
+            top: -30px;
+            right: 38%;
+            font-size: 15px;
+            font-weight: bold;
+            font-style: italic;
+            color: #38bdf8;
+            background: #1e293b;
+            padding: 0 6px;
+            z-index: 5;
+        }
+
+        .label-i-left {
+            position: absolute;
+            top: 160px;
+            left: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            font-style: italic;
+            color: #38bdf8;
+            background: #1e293b;
+            padding: 2px 0;
+            z-index: 5;
+        }
+
+        /* Copper L-Strips & Center Strip */
+        .strip {
+            position: absolute;
+            background: linear-gradient(135deg, #f59e0b, #b45309, #d97706);
+            border: 1px solid #78350f;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .strip-left {
+            top: 110px;
+            left: 50px;
+            width: 35px;
+            height: 150px;
+        }
+
+        .strip-center {
+            top: 110px;
+            left: 310px;
+            width: 150px;
+            height: 30px;
+        }
+
+        .strip-right {
+            top: 110px;
+            right: 50px;
+            width: 35px;
+            height: 150px;
+        }
+
+        /* Terminal screws */
+        .screw {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #64748b;
+            border-radius: 50%;
+            border: 1px solid #475569;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+
+        /* Visible Gap Connection Wires holding R and S precisely */
+        .component-wire-horizontal {
+            position: absolute;
+            top: 114px;
+            height: 3px;
+            background: #cbd5e1;
+            box-shadow: 0 0 2px rgba(255,255,255,0.5);
+            z-index: 1;
+        }
+
+        /* Resistance components & containers aligned directly inside the gap wires */
+        .resistor-r-container {
+            position: absolute;
+            top: 100px;
+            left: 135px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #f1f5f9;
+            z-index: 3;
+        }
+
+        .label-r {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .resistor-box {
+            width: 90px;
+            height: 24px;
+            background: #a1a1aa;
+            border: 1px solid #52525b;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            box-shadow: inset 0 2px 3px rgba(0,0,0,0.4);
+        }
+        .color-band-1 { width: 4px; height: 100%; background: #b91c1c; }
+        .color-band-2 { width: 4px; height: 100%; background: #1d4ed8; }
+        .color-band-3 { width: 4px; height: 100%; background: #d97706; }
+
+        .resistor-s-container {
+            position: absolute;
+            top: 93px;
+            right: 145px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #f1f5f9;
+            z-index: 3;
+        }
+
+        .label-s {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .circular-resistor {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #10b981;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: #10b981;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .circular-resistor::before {
+            content: '≈';
+            font-size: 20px;
+            color: #10b981;
+        }
+
+        .label-l1 {
+            position: absolute;
+            top: 125px;
+            left: 455px;
+            font-size: 16px;
+            font-style: italic;
+            color: #38bdf8;
+        }
+
+        .dimension-l {
+            position: absolute;
+            top: 155px;
+            left: 475px;
+            width: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 18px;
+            font-style: italic;
+            color: #a78bfa;
+        }
+        .dimension-l::before, .dimension-l::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #a78bfa;
+            margin: 0 5px;
+        }
+
+        /* Meter Scale Board (Red Box under G) */
+        .scale-board {
+            position: absolute;
+            top: 280px;
+            left: 50px;
+            right: 50px;
+            height: 60px;
+            background: linear-gradient(to bottom, #9a3412, #7c2d12);
+            border-radius: 6px;
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4), 0 6px 12px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: #f1f5f9;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .scale-ruler {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            height: 20px;
+            background: #f1f5f9;
+            border: 1px solid #64748b;
+            border-radius: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 0.6rem;
+            color: #111827;
+            font-weight: bold;
+            box-shadow: inset 0 2px 2px rgba(0,0,0,0.2);
+        }
+
+        .wire {
+            display: none;
+        }
+
+        /* Dimension measurements below scale */
+        .measurements {
+            position: absolute;
+            top: 355px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            color: #f1f5f9;
+        }
+
+        .left-len, .right-len {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            border-bottom: 1px dashed #f1f5f9;
+            height: 20px;
+            margin: 0 10px;
+            justify-content: center;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* Actual 100 cm metre-wire: this is the electrical resistance path.
+           It joins the lower ends of the two copper terminals and is NOT a short circuit. */
+        .bottom-wire-line {
+            position: absolute;
+            top: 259px;
+            left: 68px;
+            right: 68px;
+            height: 4px;
+            background: linear-gradient(to right, #e2e8f0, #ffffff, #e2e8f0);
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(226,232,240,0.65);
+            z-index: 1;
+        }
+
+        /* Blue current is intentionally above the white conductor so the particles
+           visibly travel ON the wire rather than beside it. */
+        .particle-svg-track path {
+            mix-blend-mode: screen;
+        }
+
+        .label-i2 {
+            position: absolute;
+            top: 275px;
+            left: 140px;
+            font-size: 16px;
+            font-weight: bold;
+            font-style: italic;
+            color: #38bdf8;
+        }
+
+        .galvanometer-circle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #0284c7;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: #111827;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .galvanometer-circle::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 16px;
+            background: #dc2626;
+            top: 10px;
+            transform-origin: bottom;
+            transform: rotate(0deg);
+        }
+
+        .lead-left {
+            width: 40px;
+            height: 2px;
+            background: #a78bfa;
+            position: relative;
+        }
+        .lead-left::after {
+            content: '▲';
+            position: absolute;
+            top: -7px;
+            left: -2px;
+            font-size: 10px;
+            color: #a78bfa;
+        }
+
+        .diagram-title {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 20px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        /* Controls for adjusting length l interactively */
+        .controls-panel {
+            margin-top: 15px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 760px;
+            box-sizing: border-box;
+        }
+        .controls-panel label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+        .controls-panel input[type=range] {
+            flex: 1;
+            accent-color: #38bdf8;
+            cursor: pointer;
+        }
+
+        /* Practical Examination Calculations Box with Enhanced Width & Precision Metrics */
+        .calc-box {
+            margin-top: 20px;
+            width: 760px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-sizing: border-box;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+        .calc-box h3 {
+            margin-top: 0;
+            color: #38bdf8;
+            font-size: 19px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+        .calc-item {
+            background: #0f172a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .calc-item span {
+            color: #f8fafc;
+            font-weight: bold;
+        }
+
+        /* Apparatus Legend */
+        .apparatus-legend {
+            margin-top: 15px;
+            width: 760px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+        .legend-badge {
+            background: #334155;
+            color: #38bdf8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="diagram-container" id="diagramContainer">
+        <!-- Top Circuit Wire Containing E and K -->
+        <div class="top-circuit">
+            <div class="label-e">E</div>
+            <div class="battery-symbol">
+                <span></span><span></span>
+            </div>
+            <div class="label-k">K</div>
+            <div class="plug-key">
+                <div class="key-block"><div class="key-plug"></div></div>
+            </div>
+            <div class="label-i-top">I (Clockwise Flow)</div>
+        </div>
+
+        <!-- Animated current overlay aligned with the actual white conductors.
+             I1 follows the complete external loop clockwise.
+             At balance, the metre-wire branch current flows from B to A. -->
+        <!-- Current-flow overlay is geometrically locked to the WHITE circuit wires.
+             The blue current follows the white conductors exactly: top L→R, right ↓, metre wire B→A, left ↑. -->
+        <svg class="particle-svg-track" viewBox="0 0 700 243" preserveAspectRatio="none">
+            <!-- COMPLETE MAIN LOOP — CLOCKWISE:
+                 left side ↑, top →, right side ↓, lower metre wire ← -->
+            <path id="currentPath"
+                  d="M 0,240 L 0,0 L 700,0 L 700,240 L 662,241 L 38,241 L 0,240"
+                  fill="none"
+                  stroke="#38bdf8"
+                  stroke-width="4"
+                  stroke-dasharray="11 17"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                <animate attributeName="stroke-dashoffset" values="0;56" dur="1.15s" repeatCount="indefinite"/>
+            </path>
+
+            <!-- Galvanometer branch: ZERO current at balance, so no blue flow through G. -->
+        </svg>
+
+        <div class="label-i-left">I₂</div>
+
+        <!-- L-Shaped and Center Copper Strips -->
+        <div class="strip strip-left"></div>
+        <div class="strip strip-center"></div>
+        <div class="strip strip-right"></div>
+
+        <!-- Visible Gap Connection Wires holding R and S precisely -->
+        <div class="component-wire-horizontal" style="left: 85px; width: 225px;"></div>
+        <div class="component-wire-horizontal" style="left: 445px; width: 230px;"></div>
+
+        <!-- Terminal Screws -->
+        <div class="screw" style="top: 110px; left: 54px;"></div>
+        <div class="screw" style="top: 110px; left: 80px;"></div>
+        <div class="screw" style="top: 110px; left: 305px;"></div>
+        <div class="screw" style="top: 110px; left: 320px;"></div>
+        <div class="screw" style="top: 110px; left: 445px;"></div>
+        <div class="screw" style="top: 110px; left: 672px;"></div>
+        <div class="screw" style="top: 110px; left: 696px;"></div>
+        <div class="screw" style="top: 245px; left: 68px;"></div>
+        <div class="screw" style="top: 245px; right: 68px;"></div>
+        <div class="screw" style="top: 120px; left: 372px;"></div>
+
+        <!-- Known Resistance R fitted nicely into the left gap wire -->
+        <div class="resistor-r-container">
+            <div class="resistor-box">
+                <div class="color-band-1"></div>
+                <div class="color-band-2"></div>
+                <div class="color-band-3"></div>
+            </div>
+            <div class="label-r">R</div>
+        </div>
+
+        <!-- Unknown Resistance S fitted nicely into the right gap wire -->
+        <div class="resistor-s-container">
+            <div class="circular-resistor"></div>
+            <div class="label-s">S</div>
+        </div>
+
+        <div class="label-l1" id="labelL1Display">l = 55 cm</div>
+        <div class="dimension-l" id="dimensionLWidth"><span>l</span></div>
+
+        <!-- Meter Scale Board (Red Box under G) -->
+        <div class="scale-board">
+            <div class="scale-ruler">
+                <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span><span>100</span>
+            </div>
+            <div class="wire"></div>
+        </div>
+
+        <!-- Actual metre bridge resistance wire -->
+        <div class="bottom-wire-line"></div>
+        <div class="label-i2">I₂</div>
+
+        <!-- Length Measurements below scale -->
+        <div class="measurements">
+            <div class="left-len" id="leftLenText">l = 55.0 cm</div>
+            <div class="right-len" id="rightLenText">100 - l = 45.0 cm</div>
+        </div>
+
+        <!-- Galvanometer and Jockey connection line with dynamic positioning -->
+        <div id="jockeyWireVertical" style="position: absolute; top: 125px; left: 357.5px; width: 2px; height: 136px; background: #a78bfa; transition: left 0.05s ease; z-index: 2;"></div>
+        <div id="jockeyWireHorizontal" style="position: absolute; top: 258px; left: 357.5px; width: 100px; height: 2px; background: #a78bfa; transition: left 0.05s ease; z-index: 2;"></div>
+        
+        <div id="galvanometerContainer" style="position: absolute; top: 240px; left: 442.5px; display: flex; flex-direction: column; align-items: center; transition: left 0.05s ease; z-index: 3;">
+            <div style="position: relative;">
+                <div class="lead-left"></div>
+            </div>
+            <div class="galvanometer-circle">G</div>
+        </div>
+    </div>
+
+    <div class="diagram-title">Circuit Diagram: Metre Bridge with Correct Current Flow</div>
+
+    <!-- Interactive Slider to Adjust Length l -->
+    <div class="controls-panel">
+        <label for="lengthSlider">Adjust Balance Length (l):</label>
+        <input type="range" id="lengthSlider" min="10" max="90" value="55" step="0.1">
+        <span id="sliderValText" style="font-weight: bold; color: #38bdf8; min-width: 55px;">55.0 cm</span>
+    </div>
+
+    <!-- Enhanced Practical Examination Calculations Box with Precision Metrics -->
+    <div class="calc-box">
+        <h3>Advanced Practical Calculations & Precision Analysis</h3>
+        <div class="calc-grid">
+            <div class="calc-item">Formula: <br><span>$S = R \times \left(\frac{100 - l}{l}\right)$</span></div>
+            <div class="calc-item">Resistance Box Setting ($R$): <br><span>2.00 $\Omega$</span></div>
+            <div class="calc-item">Balanced Length ($l$): <br><span id="calcLen">55.0 cm</span></div>
+            <div class="calc-item">Remaining Length ($100 - l$): <br><span id="calcRem">45.0 cm</span></div>
+            <div class="calc-item">Calculated Resistance ($S$): <br><span id="calcResistance">1.64 $\Omega$</span></div>
+            <div class="calc-item">End Error Correction Factor: <br><span id="calcError">± 0.03 $\Omega$</span></div>
+        </div>
+    </div>
+
+    <!-- Apparatus Legend -->
+    <div class="apparatus-legend">
+        <div class="legend-item"><span class="legend-badge">R</span> Resistance Box</div>
+        <div class="legend-item"><span class="legend-badge">S</span> Unknown Wire</div>
+        <div class="legend-item"><span class="legend-badge">E</span> Battery Cell</div>
+        <div class="legend-item"><span class="legend-badge">K</span> Plug Key</div>
+        <div class="legend-item"><span class="legend-badge">G</span> Galvanometer</div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('lengthSlider');
+        const sliderValText = document.getElementById('sliderValText');
+        const labelL1Display = document.getElementById('labelL1Display');
+        const dimensionLWidth = document.getElementById('dimensionLWidth');
+        const leftLenText = document.getElementById('leftLenText');
+        const rightLenText = document.getElementById('rightLenText');
+        const jockeyWireVertical = document.getElementById('jockeyWireVertical');
+        const jockeyWireHorizontal = document.getElementById('jockeyWireHorizontal');
+        const galvanometerContainer = document.getElementById('galvanometerContainer');
+        const calcLen = document.getElementById('calcLen');
+        const calcRem = document.getElementById('calcRem');
+        const calcResistance = document.getElementById('calcResistance');
+        const calcError = document.getElementById('calcError');
+
+        const R_val = 2.0; // Known resistance box value in ohms
+        const minPx = 70;   
+        const maxPx = 690;  
+        const scaleSpan = maxPx - minPx;
+
+        function updateBridge(l) {
+            const remainder = 100 - l;
+            sliderValText.innerText = l.toFixed(1) + ' cm';
+            labelL1Display.innerText = 'l = ' + l.toFixed(1) + ' cm';
+            leftLenText.innerText = 'l = ' + l.toFixed(1) + ' cm';
+            rightLenText.innerText = '100 - l = ' + remainder.toFixed(1) + ' cm';
+            calcLen.innerText = l.toFixed(1) + ' cm';
+            calcRem.innerText = remainder.toFixed(1) + ' cm';
+
+            // High precision calculation with minor end resistance adjustment simulation
+            const calculatedS = R_val * (remainder / l);
+            calcResistance.innerText = calculatedS.toFixed(4) + ' Ω';
+            
+            // Dynamic uncertainty / error estimation based on balancing position gradient sensitivity
+            const sensitivityError = (0.1 / l + 0.1 / remainder) * calculatedS;
+            calcError.innerText = '± ' + sensitivityError.toFixed(4) + ' Ω';
+
+            const currentPx = minPx + (l / 100) * scaleSpan;
+            
+            jockeyWireVertical.style.left = (currentPx - 1) + 'px';
+            jockeyWireHorizontal.style.left = (currentPx - 1) + 'px';
+            galvanometerContainer.style.left = (currentPx - 15) + 'px';
+            dimensionLWidth.style.left = (minPx + 15) + 'px';
+            dimensionLWidth.style.width = ((currentPx - minPx) - 20) + 'px';
+            labelL1Display.style.left = (minPx + (currentPx - minPx) / 2 - 15) + 'px';
+        }
+
+        slider.addEventListener('input', (e) => {
+            updateBridge(parseFloat(e.target.value));
+        });
+
+        updateBridge(55);
+    </script>
+</body>
+</html>

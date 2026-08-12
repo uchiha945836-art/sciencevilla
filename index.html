@@ -185,8 +185,6 @@
       text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
     }
 
-    /* Desktop View adjustments: Keep dropdown behavior functional or inline as preferred, 
-       here dropdown triggers via the hamburger button across devices for consistency as requested */
     @media (min-width: 768px) {
       .nav-links {
         width: 280px;
@@ -266,7 +264,7 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .search-bar-container {
@@ -303,7 +301,7 @@
       pointer-events: none;
     }
 
-    .category-tabs {
+    .category-tabs, .sub-category-tabs {
       display: flex;
       gap: 0.5rem;
       overflow-x: auto;
@@ -311,7 +309,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .category-tabs::-webkit-scrollbar {
+    .category-tabs::-webkit-scrollbar, .sub-category-tabs::-webkit-scrollbar {
       display: none;
     }
 
@@ -334,6 +332,37 @@
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
       box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Sub-category container wrapper */
+    .sub-tabs-container {
+      display: none;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease-in-out;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(15, 23, 42, 0.5);
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-glow);
+    }
+
+    .sub-tabs-container.active {
+      display: flex;
+    }
+
+    .sub-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* Model Cards Grid */
@@ -373,18 +402,32 @@
       display: none !important;
     }
 
+    .card-tags-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
     .card-tag {
       align-self: flex-start;
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      padding: 0.25rem 0.6rem;
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.6px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 5px;
       background: rgba(6, 182, 212, 0.12);
       color: var(--accent-cyan);
       border: 1px solid rgba(6, 182, 212, 0.3);
+      line-height: 1.3;
+    }
+
+    .card-tag.sub-tag {
+      background: rgba(99, 102, 241, 0.12);
+      color: #818cf8;
+      border-color: rgba(99, 102, 241, 0.3);
+      font-size: 0.62rem;
     }
 
     .card-tag.chemistry {
@@ -775,7 +818,7 @@
           <span class="search-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, Meter Bridge)...">
         </div>
 
         <div class="category-tabs">
@@ -783,15 +826,40 @@
           <button class="tab-btn" data-category="physics">Physics</button>
           <button class="tab-btn" data-category="chemistry">Chemistry</button>
           <button class="tab-btn" data-category="biology">Biology</button>
+          <button class="tab-btn" data-category="practical">Class 12th Practical</button>
+        </div>
+      </div>
+
+      <!-- Sub-Category Tabs for Class 12th Practical -->
+      <div class="sub-tabs-container" id="practicalSubTabs">
+        <span class="sub-label">Practical Stream:</span>
+        <div class="sub-category-tabs">
+          <button class="tab-btn sub-tab-btn active" data-sub-category="all">All</button>
+          <button class="tab-btn sub-tab-btn" data-sub-category="practical-physics">Physics</button>
+          <button class="tab-btn sub-tab-btn" data-sub-category="practical-chemistry">Chemistry</button>
         </div>
       </div>
 
       <!-- Models Grid -->
       <div class="grid" id="modelsGrid">
         
+        <div class="card" data-category="practical" data-sub-category="practical-physics">
+          <div>
+            <div class="card-tags-group">
+              <span class="card-tag practical">Class 12th Practical</span>
+              <span class="card-tag sub-tag">Physics</span>
+            </div>
+            <h2>Meter Bridge Practical (Class 12)</h2>
+            <p>Interactive Wheatstone meter bridge circuit simulation. Adjust balance length, measure unknown resistance $S$, and analyze real-time precision calculations.</p>
+          </div>
+          <a href="meterbridge.html" class="btn">Launch Model</a>
+        </div>
+
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag">Physics</span>
+            </div>
             <h2>Newton's Cradle Physics Lab</h2>
             <p>Interactive 3D momentum conservation model. Drag and release spheres, adjust gravity, damping, and inspect live energy telemetry.</p>
           </div>
@@ -800,7 +868,9 @@
 
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag">Physics</span>
+            </div>
             <h2>Archimedes' Principle Lab</h2>
             <p>Interactive fluid mechanics simulation. Test buoyancy force, displaced water volume, density adjustments, and apparent weight in real-time.</p>
           </div>
@@ -809,7 +879,9 @@
 
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag">Physics</span>
+            </div>
             <h2>Vortex Drop Shaft</h2>
             <p>Explore hydraulic mechanics, air core formation, and energy dissipation in vortex drop structures.</p>
           </div>
@@ -818,7 +890,9 @@
 
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag">Physics</span>
+            </div>
             <h2>Solar System Sandbox</h2>
             <p>Real N-body Newtonian gravitational physics simulator. Create custom orbits, tweak gravity, and spawn celestial bodies.</p>
           </div>
@@ -827,7 +901,9 @@
 
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag">Physics</span>
+            </div>
             <h2>Solar System Explorer</h2>
             <p>Realistic scale & distance model featuring an interactive irregular Asteroid Belt, orbital periods, speeds, and planetary metrics.</p>
           </div>
@@ -836,7 +912,9 @@
 
         <div class="card" data-category="physics">
           <div>
-            <span class="card-tag energy">Physics</span>
+            <div class="card-tags-group">
+              <span class="card-tag energy">Physics</span>
+            </div>
             <h2>Nuclear Reactor System Overview</h2>
             <p>Interactive thermal loop simulation mapping reactor cores, control rods, pumps, steam turbine generators, and cooling water dynamics.</p>
           </div>
@@ -845,7 +923,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>Rutherford's Model</h2>
             <p>Interactive subatomic model simulator. Switch between elements to inspect particles and electron configurations.</p>
           </div>
@@ -854,7 +934,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>Bohr's Model</h2>
             <p>Expanded 3D Bohr model simulator featuring all 118 periodic table elements, subatomic clusters, and speeds.</p>
           </div>
@@ -863,7 +945,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>VSEPR & Molecular Geometry Studio</h2>
             <p>Comprehensive JEE/NEET masterclass exploring standard, ionic, and anomalous molecular geometries from steric numbers 2 to 7.</p>
           </div>
@@ -872,7 +956,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>Chemical Kinetics & Collision Theory</h2>
             <p>Master reaction rates, activation energy barriers, effective molecular collisions, and Arrhenius temperature dependency with real-time interactive simulations.</p>
           </div>
@@ -881,7 +967,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>Thermodynamics & Entropy Sandbox</h2>
             <p>JEE/NEET Masterclass analyzing spontaneity criteria, Enthalpy, Entropy, and Gibbs Free Energy behavior across changing temperatures in real-time.</p>
           </div>
@@ -890,7 +978,9 @@
 
         <div class="card" data-category="chemistry">
           <div>
-            <span class="card-tag chemistry">Chemistry</span>
+            <div class="card-tags-group">
+              <span class="card-tag chemistry">Chemistry</span>
+            </div>
             <h2>3D Electrochemical Cell Lab</h2>
             <p>Explore galvanic and voltaic cells in high-contrast 3D. Control half-cell types, electrolyte concentrations, temperature, and analyze Nernst cell potentials.</p>
           </div>
@@ -899,7 +989,9 @@
 
         <div class="card" data-category="biology">
           <div>
-            <span class="card-tag biology">Biology</span>
+            <div class="card-tags-group">
+              <span class="card-tag biology">Biology</span>
+            </div>
             <h2>Interactive Cell Explorer</h2>
             <p>Explore plant and animal cell organelles, membrane transport dynamics, and cellular respiration.</p>
           </div>
@@ -1059,10 +1151,13 @@
     });
 
     const searchInput = document.getElementById('searchInput');
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabBtns = document.querySelectorAll('.category-tabs .tab-btn');
+    const subTabBtns = document.querySelectorAll('.sub-tab-btn');
+    const practicalSubTabs = document.getElementById('practicalSubTabs');
     const cards = document.querySelectorAll('#modelsGrid .card');
 
     let activeCategory = 'all';
+    let activeSubCategory = 'all';
 
     function filterCards() {
       const query = searchInput.value.toLowerCase().trim();
@@ -1071,9 +1166,20 @@
         const title = card.querySelector('h2').textContent.toLowerCase();
         const desc = card.querySelector('p').textContent.toLowerCase();
         const category = card.getAttribute('data-category');
+        const subCategory = card.getAttribute('data-sub-category');
 
         const matchesSearch = title.includes(query) || desc.includes(query);
-        const matchesCategory = activeCategory === 'all' || category === activeCategory;
+        
+        let matchesCategory = false;
+        if (activeCategory === 'all') {
+          matchesCategory = true;
+        } else if (category === activeCategory) {
+          if (activeCategory === 'practical' && activeSubCategory !== 'all') {
+            matchesCategory = (subCategory === activeSubCategory);
+          } else {
+            matchesCategory = true;
+          }
+        }
 
         if (matchesSearch && matchesCategory) {
           card.classList.remove('hidden');
@@ -1090,6 +1196,28 @@
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeCategory = btn.getAttribute('data-category');
+        
+        // Show/Hide Sub-Category bar depending on main category selection
+        if (activeCategory === 'practical') {
+          practicalSubTabs.classList.add('active');
+          // Reset sub-category filter to 'all' when switching to practical
+          subTabBtns.forEach(sb => sb.classList.remove('active'));
+          document.querySelector('.sub-tab-btn[data-sub-category="all"]').classList.add('active');
+          activeSubCategory = 'all';
+        } else {
+          practicalSubTabs.classList.remove('active');
+          activeSubCategory = 'all';
+        }
+
+        filterCards();
+      });
+    });
+
+    subTabBtns.forEach(subBtn => {
+      subBtn.addEventListener('click', () => {
+        subTabBtns.forEach(sb => sb.classList.remove('active'));
+        subBtn.classList.add('active');
+        activeSubCategory = subBtn.getAttribute('data-sub-category');
         filterCards();
       });
     });
