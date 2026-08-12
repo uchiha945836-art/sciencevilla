@@ -5,6 +5,7 @@
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Science Villa provides next-gen interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.">
   <title>Science Villa | Interactive Models & Quantum Laboratory</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -224,7 +225,8 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--accent-cyan);
-      font-size: 1rem;
+      display: flex;
+      align-items: center;
       pointer-events: none;
     }
 
@@ -261,7 +263,7 @@
       box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
     }
 
-    /* Model Cards Grid - Mobile First Single/Double Column */
+    /* Model Cards Grid */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -270,21 +272,15 @@
     }
 
     @media (min-width: 640px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (min-width: 1024px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     @media (min-width: 1400px) {
-      .grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
+      .grid { grid-template-columns: repeat(5, 1fr); }
     }
 
     .card {
@@ -677,6 +673,18 @@
       font-size: 0.85rem;
       cursor: pointer;
     }
+
+    /* Small Blue Colored Terms and Conditions Link Style */
+    .terms-link {
+      font-size: 0.75rem;
+      color: #3b82f6;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .terms-link:hover {
+      text-decoration: underline;
+      opacity: 0.85;
+    }
   </style>
 </head>
 <body>
@@ -691,6 +699,7 @@
       <li><a href="#formalities">Formalities</a></li>
       <li><a href="#contact">Contact</a></li>
       <li><a href="#privacy">Privacy</a></li>
+      <li><a href="terms.html" class="terms-link">Terms & Conditions</a></li>
     </ul>
   </nav>
 
@@ -709,7 +718,9 @@
     <section id="models">
       <div class="controls-wrapper">
         <div class="search-bar-container">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
           <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar)...">
         </div>
 
@@ -724,7 +735,6 @@
       <!-- Models Grid -->
       <div class="grid" id="modelsGrid">
         
-        <!-- Newton's Cradle Model (Physics) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag">Physics</span>
@@ -734,7 +744,6 @@
           <a href="newtoncradle.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Archimedes' Principle Model (Physics) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag">Physics</span>
@@ -744,7 +753,6 @@
           <a href="archimedesprinciple.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Vortex Model (Physics) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag">Physics</span>
@@ -754,7 +762,6 @@
           <a href="vortex.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Solar System Gravity Model (Physics) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag">Physics</span>
@@ -764,7 +771,6 @@
           <a href="gravity.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Solar System Scale Explorer (Physics) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag">Physics</span>
@@ -774,7 +780,6 @@
           <a href="solar system.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Nuclear Reactor Model (Physics / Energy) -->
         <div class="card" data-category="physics">
           <div>
             <span class="card-tag energy">Physics</span>
@@ -784,7 +789,6 @@
           <a href="nuclearreactor.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Rutherford's Model (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -794,7 +798,6 @@
           <a href="atom.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Bohr's Model (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -804,7 +807,6 @@
           <a href="bohrmodel.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- VSEPR & Molecular Geometry Studio (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -814,7 +816,6 @@
           <a href="vsepr.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Chemical Kinetics & Collision Theory (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -824,7 +825,6 @@
           <a href="chemicalkinetics.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Thermodynamics & Entropy-Enthalpy Sandbox (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -834,7 +834,6 @@
           <a href="thermodynamics.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Electrochemistry 3D Cell Model (Chemistry) -->
         <div class="card" data-category="chemistry">
           <div>
             <span class="card-tag chemistry">Chemistry</span>
@@ -844,7 +843,6 @@
           <a href="electrochemistry.html" class="btn">Launch Model</a>
         </div>
 
-        <!-- Cell Structure Model (Biology Placeholder) -->
         <div class="card" data-category="biology">
           <div>
             <span class="card-tag biology">Biology</span>
@@ -909,7 +907,7 @@
       </div>
     </section>
 
-    <!-- Formalities, Terms, & Institutional Compliance Section -->
+    <!-- Formalities Section -->
     <section id="formalities" class="section-block">
       <h2>Institutional Access & Formalities</h2>
       <p style="color: var(--text-sub); font-size: 0.88rem; line-height: 1.5; margin-bottom: 1rem;">
@@ -982,7 +980,7 @@
 
       <div class="contact-container">
         <a href="mailto:sciencevilla171@gmail.com" class="contact-card">
-          <span style="font-size: 1.4rem;">✉️</span>
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           <div>
             <strong style="display: block; font-size: 0.9rem; margin-bottom: 0.15rem;">Email Support</strong>
             <span style="font-size: 0.8rem; color: var(--accent-cyan); word-break: break-all;">sciencevilla171@gmail.com</span>
@@ -990,7 +988,7 @@
         </a>
 
         <div class="contact-card" style="cursor: default;">
-          <span style="font-size: 1.4rem;">🌐</span>
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <div>
             <strong style="display: block; font-size: 0.9rem; margin-bottom: 0.15rem;">Global Operations</strong>
             <span style="font-size: 0.8rem; color: var(--text-sub);">Open Science Cloud Infrastructure</span>
@@ -1010,7 +1008,7 @@
     <div class="rotate-popup-card">
       <div class="rotate-icon-animation">📱</div>
       <h3>Rotate Your Screen</h3>
-      <p>Rotate the screen for better experience.</p>
+      <p>Rotate the screen for a better experience.</p>
       <div class="rotate-popup-btns">
         <button class="rotate-btn-close" id="closeRotatePopup">Continue Anyway</button>
         <a href="#" id="proceedLink" class="rotate-btn-proceed">Proceed</a>
@@ -1019,7 +1017,6 @@
   </div>
 
   <script>
-    // Live Search and Category Filtering Script
     const searchInput = document.getElementById('searchInput');
     const tabBtns = document.querySelectorAll('.tab-btn');
     const cards = document.querySelectorAll('#modelsGrid .card');
@@ -1056,7 +1053,6 @@
       });
     });
 
-    // Formalities form handler
     document.getElementById('formalityForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const status = document.getElementById('form-status');
@@ -1067,7 +1063,6 @@
       }, 5000);
     });
 
-    // Rotation Popup Logic when clicking card launch buttons
     const rotatePopup = document.getElementById('rotatePopup');
     const closeRotatePopup = document.getElementById('closeRotatePopup');
     const proceedLink = document.getElementById('proceedLink');
@@ -1097,7 +1092,6 @@
       }
     });
 
-    // Close popup if clicking outside the card box
     rotatePopup.addEventListener('click', function(e) {
       if (e.target === rotatePopup) {
         rotatePopup.classList.remove('active');
