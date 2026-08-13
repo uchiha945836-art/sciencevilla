@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Convex Mirror Focal Length Practical | Science Villa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --bg-card: rgba(15, 23, 42, 0.9);
+      --accent-cyan: #06b6d4;
+      --accent-indigo: #6366f1;
+      --text-light: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-glow: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(6, 182, 212, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.12) 0%, transparent 45%);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, #fff 20%, var(--accent-cyan) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .back-btn {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border-glow);
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      color: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.08);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 992px) {
+      .container {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text-light);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 1.25rem;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 340px;
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid var(--border-glow);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+      .controls-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .control-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group label span {
+      color: var(--accent-cyan);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    .telemetry-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0.85rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-glow);
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
+
+    .telemetry-row span:last-child {
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+      color: #030712;
+      font-weight: 700;
+      padding: 0.75rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 0;
+      color: var(--text-sub);
+      font-size: 0.8rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo"><span></span>Science Villa</a>
+    <a href="index.html" class="back-btn">&larr; Back to Labs</a>
+  </nav>
+
+  <div class="container">
+    <!-- Simulation Viewport -->
+    <div class="card">
+      <h1>Convex Mirror Focal Length Practical</h1>
+      <p class="subtitle">Determine the focal length of a convex mirror using a convex lens auxiliary setup.</p>
+      
+      <div class="canvas-container">
+        <canvas id="simCanvas"></canvas>
+      </div>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="objectDistance">Object Distance ($u$): <span id="uVal">-30 cm</span></label>
+          <input type="range" id="objectDistance" min="-50" max="-15" value="-30" step="1">
+        </div>
+        <div class="control-group">
+          <label for="mirrorRadius">Mirror Radius of Curvature ($R$): <span id="rVal">20 cm</span></label>
+          <input type="range" id="mirrorRadius" min="10" max="30" value="20" step="1">
+        </div>
+      </div>
+    </div>
+
+    <!-- Telemetry & Calculations -->
+    <div class="card telemetry-box">
+      <h1>Observation Table</h1>
+      <p class="subtitle">Real-time ray optics computations.</p>
+
+      <div class="telemetry-row">
+        <span>Object Distance ($u$)</span>
+        <span id="teleU">-30.0 cm</span>
+      </div>
+      <div class="telemetry-row">
+        <span>Image Distance ($v$)</span>
+        <span id="teleV">6.0 cm</span>
+      </div>
+      <div class="telemetry-row">
+        <span>Radius of Curvature ($R$)</span>
+        <span id="teleR">20.0 cm</span>
+      </div>
+      <div class="telemetry-row">
+        <span>Calculated Focal Length ($f = R/2$)</span>
+        <span id="teleF">10.0 cm</span>
+      </div>
+      <div class="telemetry-row">
+        <span>Magnification ($m = -v/u$)</span>
+        <span id="teleM">+0.20</span>
+      </div>
+
+      <button class="btn" id="resetBtn">Reset Parameters</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Science Villa | Interactive Physics Practical Suite</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const uSlider = document.getElementById('objectDistance');
+    const rSlider = document.getElementById('mirrorRadius');
+
+    const uValSpan = document.getElementById('uVal');
+    const rValSpan = document.getElementById('rVal');
+
+    const teleU = document.getElementById('teleU');
+    const teleV = document.getElementById('teleV');
+    const teleR = document.getElementById('teleR');
+    const teleF = document.getElementById('teleF');
+    const teleM = document.getElementById('teleM');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function updateSimulation() {
+      let u = parseFloat(uSlider.value); // negative value
+      let R = parseFloat(rSlider.value); // positive value
+      let f = R / 2; // focal length of convex mirror is positive (+f)
+
+      uValSpan.textContent = u + ' cm';
+      rValSpan.textContent = R + ' cm';
+
+      // Mirror formula for convex mirror: 1/f = 1/v + 1/u => 1/v = 1/f - 1/u
+      // Since f is positive and u is negative: 1/v = 1/f + 1/1|u| => v is positive (virtual image behind mirror)
+      let f_val = f;
+      let u_val = u; // negative
+      let invV = (1 / f_val) - (1 / u_val);
+      let v = 1 / invV; // positive value
+
+      let m = -v / u_val; // magnification (+ve, virtual & erect)
+
+      teleU.textContent = u.toFixed(1) + ' cm';
+      teleV.textContent = v.toFixed(1) + ' cm';
+      teleR.textContent = R.toFixed(1) + ' cm';
+      teleF.textContent = f.toFixed(1) + ' cm';
+      teleM.textContent = (m >= 0 ? '+' : '') + m.toFixed(2);
+
+      drawScene(u, v, f);
+    }
+
+    function drawScene(u, v, f) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let cx = canvas.width / 2 - 50;
+      let cy = canvas.height / 2;
+      let scale = 4; // pixels per cm
+
+      // Principal Axis
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(20, cy);
+      ctx.lineTo(canvas.width - 20, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Convex Mirror (reflecting surface bulging outwards to the left, center of curvature to the right)
+      let mirrorX = cx;
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      // Arc opening to the left
+      ctx.arc(mirrorX + 40, cy, 50, Math.PI * 0.7, Math.PI * 1.3, false);
+      ctx.stroke();
+
+      // Hatching behind mirror (right side)
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+      ctx.lineWidth = 1;
+      for(let i = -40; i <= 40; i += 10) {
+        let px = mirrorX + 12;
+        let py = cy + i;
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(px + 8, py + 6);
+        ctx.stroke();
+      }
+
+      // Focus F and Center C (to the right of mirror)
+      let fDist = f * scale;
+      let cDist = (2 * f) * scale;
+      let fx = mirrorX + fDist;
+      let cxPos = mirrorX + cDist;
+
+      // Draw F and C markers
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.fillText('F', fx - 3, cy + 18);
+      ctx.fillText('C', cxPos - 3, cy + 18);
+
+      ctx.beginPath();
+      ctx.arc(fx, cy, 3, 0, Math.PI * 2);
+      ctx.arc(cxPos, cy, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Object (Pin) to the left
+      let objX = mirrorX + (u * scale);
+      let objHeight = 40;
+      ctx.strokeStyle = '#f87171';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(objX, cy);
+      ctx.lineTo(objX, cy - objHeight);
+      ctx.stroke();
+      // Arrow head
+      ctx.fillStyle = '#f87171';
+      ctx.beginPath();
+      ctx.moveTo(objX, cy - objHeight);
+      ctx.lineTo(objX - 5, cy - objHeight + 10);
+      ctx.lineTo(objX + 5, cy - objHeight + 10);
+      ctx.fill();
+      ctx.fillText('Object Pin', objX - 25, cy + 20);
+
+      // Virtual Image behind mirror (to the right)
+      let imgX = mirrorX + (v * scale);
+      let imgHeight = objHeight * (v / Math.abs(u));
+      ctx.strokeStyle = '#34d399';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([2, 2]);
+      ctx.beginPath();
+      ctx.moveTo(imgX, cy);
+      ctx.lineTo(imgX, cy - imgHeight);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Arrow head
+      ctx.fillStyle = '#34d399';
+      ctx.beginPath();
+      ctx.moveTo(imgX, cy - imgHeight);
+      ctx.lineTo(imgX - 4, cy - imgHeight + 8);
+      ctx.lineTo(imgX + 4, cy - imgHeight + 8);
+      ctx.fill();
+      ctx.fillText('Virtual Image', imgX - 30, cy + 32);
+
+      // Incident Ray (Parallel to principal axis)
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(objX, cy - objHeight);
+      ctx.lineTo(mirrorX, cy - objHeight);
+      // Appears to diverge from F
+      let slope = (cy - (cy - objHeight)) / (fx - mirrorX);
+      ctx.lineTo(canvas.width, (cy - objHeight) + slope * (canvas.width - mirrorX));
+      ctx.stroke();
+
+      // Virtual reflected ray extension
+      ctx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mirrorX, cy - objHeight);
+      ctx.lineTo(fx, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    uSlider.addEventListener('input', updateSimulation);
+    rSlider.addEventListener('input', updateSimulation);
+
+    resetBtn.addEventListener('click', () => {
+      uSlider.value = -30;
+      rSlider.value = 20;
+      updateSimulation();
+    });
+
+    updateSimulation();
+  </script>
+</body>
+</html>

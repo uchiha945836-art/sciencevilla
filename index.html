@@ -47,6 +47,56 @@
       overflow-x: hidden;
     }
 
+    /* Science Lab Background Decorations / Floating Elements */
+    .sci-decor-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .sci-orbit {
+      position: absolute;
+      border: 1px dashed rgba(6, 182, 212, 0.15);
+      border-radius: 50%;
+      animation: spinOrbit 30s linear infinite;
+    }
+
+    .sci-orbit-1 {
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      left: -200px;
+    }
+
+    .sci-orbit-2 {
+      width: 800px;
+      height: 800px;
+      bottom: -300px;
+      right: -300px;
+      animation-direction: reverse;
+      animation-duration: 45s;
+      border-color: rgba(99, 102, 241, 0.12);
+    }
+
+    @keyframes spinOrbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .atom-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
     /* Mobile-Optimized Navigation Bar */
     nav {
       width: 100%;
@@ -756,6 +806,12 @@
 </head>
 <body>
 
+  <!-- Science Decorations Background -->
+  <div class="sci-decor-container">
+    <div class="sci-orbit sci-orbit-1"></div>
+    <div class="sci-orbit sci-orbit-2"></div>
+  </div>
+
   <!-- Navigation -->
   <nav>
     <div class="nav-left">
@@ -783,7 +839,7 @@
       <span class="badge-dot"></span> Next-Gen Interactive Science Laboratory
     </div>
     <h1>Explore the Universe through Simulations</h1>
-    <p class="subtitle">Experience cutting-edge interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time[cite: 5].</p>
+    <p class="subtitle">Experience cutting-edge interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.</p>
   </header>
 
   <div class="container">
@@ -795,7 +851,7 @@
           <span class="search-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </span>
-          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, Meter Bridge)...">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search models (e.g. Atom, Gravity, Nuclear, Solar, Meter Bridge, Concave Mirror, Convex Mirror)...">
         </div>
 
         <div class="category-tabs">
@@ -828,6 +884,30 @@
             <p>Interactive Wheatstone meter bridge circuit simulation. Adjust balance length, measure unknown resistance $S$, and analyze real-time precision calculations.</p>
           </div>
           <a href="meterbridge.html" class="btn">Launch Model</a>
+        </div>
+
+        <div class="card" data-category="practical" data-sub-category="practical-physics">
+          <div>
+            <div class="card-tags-group">
+              <span class="card-tag practical">Class 12th Practical</span>
+              <span class="card-tag sub-tag">Physics</span>
+            </div>
+            <h2>Concave Mirror Focal Length Practical</h2>
+            <p>Interactive optical bench setup. Adjust object and image search pins, remove parallax errors, and verify the mirror formula in real-time.</p>
+          </div>
+          <a href="concavemirror.html" class="btn">Launch Model</a>
+        </div>
+
+        <div class="card" data-category="practical" data-sub-category="practical-physics">
+          <div>
+            <div class="card-tags-group">
+              <span class="card-tag practical">Class 12th Practical</span>
+              <span class="card-tag sub-tag">Physics</span>
+            </div>
+            <h2>Convex Mirror Focal Length Practical</h2>
+            <p>Interactive optical bench setup with a convex mirror and auxiliary convex lens. Determine the focal length and verify ray optics principles.</p>
+          </div>
+          <a href="convexmirror.html" class="btn">Launch Model</a>
         </div>
 
         <div class="card" data-category="physics">
@@ -994,7 +1074,6 @@
         Please complete the administrative formalities below for institutional registration, API sandbox testing credentials, or educational license inquiries.
       </p>
 
-      <!-- Added a valid action endpoint attribute to prevent simulated-only form behavior -->
       <form class="feedback-form" id="formalityForm" action="https://formspree.io/f/sciencevilla171" method="POST">
         <div class="form-row">
           <div class="form-group">
@@ -1065,7 +1144,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Science Villa | Built for Advanced Mobile Science Education[cite: 5]</p>
+    <p>&copy; 2026 Science Villa | Built for Advanced Mobile Science Education</p>
   </footer>
 
   <!-- Rotation Popup Modal Component -->
@@ -1073,7 +1152,7 @@
     <div class="rotate-popup-card">
       <div class="rotate-icon-animation">📱</div>
       <h3>Rotate Your Screen</h3>
-      <p>Rotate the screen for a better experience[cite: 5].</p>
+      <p>Rotate the screen for a better experience.</p>
       <div class="rotate-popup-btns">
         <button class="rotate-btn-close" id="closeRotatePopup">Continue Anyway</button>
         <a href="#" id="proceedLink" class="rotate-btn-proceed">Proceed</a>
@@ -1168,7 +1247,6 @@
     });
 
     document.getElementById('formalityForm').addEventListener('submit', function(e) {
-      // Let standard submission flow handle or handle via fetch/backend as required
       const status = document.getElementById('form-status');
       status.style.display = 'block';
       setTimeout(() => {
@@ -1214,3 +1292,4 @@
 
 </body>
 </html>
+```[cite: 4]
