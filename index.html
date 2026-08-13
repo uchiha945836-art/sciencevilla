@@ -103,7 +103,6 @@
       transition: all 0.3s ease;
     }
 
-    /* Hamburger Animation to 'X' */
     .menu-toggle.active span:nth-child(1) {
       transform: translateY(8px) rotate(45deg);
     }
@@ -135,7 +134,6 @@
       box-shadow: 0 0 12px var(--accent-cyan);
     }
 
-    /* Dropdown / Sliding Nav Links */
     .nav-links {
       position: absolute;
       top: 100%;
@@ -195,7 +193,6 @@
       }
     }
 
-    /* Hero Header */
     header {
       text-align: center;
       margin-bottom: 2rem;
@@ -259,7 +256,6 @@
       max-width: 1400px;
     }
 
-    /* Controls: Search & Category Tabs */
     .controls-wrapper {
       display: flex;
       flex-direction: column;
@@ -334,7 +330,6 @@
       box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
     }
 
-    /* Sub-category container wrapper */
     .sub-tabs-container {
       display: none;
       margin-bottom: 1.5rem;
@@ -365,7 +360,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Model Cards Grid */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -475,16 +469,6 @@
       box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
     }
 
-    .btn.disabled {
-      background: #1e293b;
-      color: #64748b;
-      box-shadow: none;
-      cursor: not-allowed;
-      pointer-events: none;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Section Component Styling */
     .section-block {
       background: var(--bg-card);
       backdrop-filter: blur(25px);
@@ -509,7 +493,6 @@
       .section-block h2 { font-size: 1.8rem; }
     }
 
-    /* About Us Grid */
     .about-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -540,7 +523,6 @@
       line-height: 1.5;
     }
 
-    /* Feedback & Formalities Form */
     .feedback-form {
       display: flex;
       flex-direction: column;
@@ -627,7 +609,6 @@
       font-weight: 600;
     }
 
-    /* Contact Details */
     .contact-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -662,7 +643,6 @@
       margin-top: auto;
     }
 
-    /* Rotation Popup Modal Overlay Styling */
     .rotate-popup-overlay {
       position: fixed;
       top: 0;
@@ -759,7 +739,6 @@
       cursor: pointer;
     }
 
-    /* Small Blue Colored Terms and Conditions Link Style */
     .terms-link {
       font-size: 0.95rem;
       color: #3b82f6;
@@ -780,7 +759,6 @@
   <!-- Navigation -->
   <nav>
     <div class="nav-left">
-      <!-- Triple Line (Hamburger) Menu Button -->
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
         <span></span>
         <span></span>
@@ -789,13 +767,12 @@
       <div class="logo"><span></span>Science Villa</div>
     </div>
     
-    <!-- Collapsible Menu Options inside Hamburger Dropdown -->
     <ul class="nav-links" id="navLinks">
       <li><a href="#models">Models</a></li>
       <li><a href="#about">About Us</a></li>
       <li><a href="#formalities">Formalities</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="privacy.html" class="terms-link">Privacy Policy</a></li>
       <li><a href="terms.html" class="terms-link">Terms & Conditions</a></li>
     </ul>
   </nav>
@@ -806,7 +783,7 @@
       <span class="badge-dot"></span> Next-Gen Interactive Science Laboratory
     </div>
     <h1>Explore the Universe through Simulations</h1>
-    <p class="subtitle">Experience cutting-edge interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time.</p>
+    <p class="subtitle">Experience cutting-edge interactive scientific scale models across physics, chemistry, biology, and space mechanics in real-time[cite: 5].</p>
   </header>
 
   <div class="container">
@@ -825,12 +802,10 @@
           <button class="tab-btn active" data-category="all">All Models</button>
           <button class="tab-btn" data-category="physics">Physics</button>
           <button class="tab-btn" data-category="chemistry">Chemistry</button>
-          <button class="tab-btn" data-category="biology">Biology</button>
           <button class="tab-btn" data-category="practical">Class 12th Practical</button>
         </div>
       </div>
 
-      <!-- Sub-Category Tabs for Class 12th Practical -->
       <div class="sub-tabs-container" id="practicalSubTabs">
         <span class="sub-label">Practical Stream:</span>
         <div class="sub-category-tabs">
@@ -987,38 +962,27 @@
           <a href="electrochemistry.html" class="btn">Launch Model</a>
         </div>
 
-        <div class="card" data-category="biology">
-          <div>
-            <div class="card-tags-group">
-              <span class="card-tag biology">Biology</span>
-            </div>
-            <h2>Interactive Cell Explorer</h2>
-            <p>Explore plant and animal cell organelles, membrane transport dynamics, and cellular respiration.</p>
-          </div>
-          <a href="#" class="btn disabled">Coming Soon</a>
-        </div>
-
       </div>
     </section>
 
     <!-- About Us Section -->
     <section id="about" class="section-block">
-      <h2>About Science Villa</h2>
-      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.9rem;">
-        Science Villa is an open-access platform built to transform abstract textbook concepts into immersive, interactive simulations for students, researchers, and educators worldwide.
+      <h2>About Science Villa & Educational Methodology</h2>
+      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.9rem; margin-bottom: 1rem;">
+        Science Villa is an open-access digital laboratory platform engineered to bridge the gap between theoretical textbook formulas and practical implementation. By transforming abstract physical, chemical, and biological laws into responsive web simulations, we empower students, educators, and independent researchers to visualize complex phenomena effortlessly without requiring expensive hardware laboratories.
       </p>
       <div class="about-grid">
         <div class="about-item">
           <h3>Real-Time Simulation Engines</h3>
-          <p>Driven by rigorous mathematical, physical, and chemical algorithms ensuring scientific accuracy.</p>
+          <p>Driven by rigorous mathematical, physical, and chemical algorithms ensuring high scientific accuracy across all modules.</p>
         </div>
         <div class="about-item">
           <h3>Interactive Parametric Control</h3>
-          <p>Manipulate live variables, test hypotheses, and analyze graphical telemetry feeds instantly.</p>
+          <p>Manipulate live variables, test dynamic hypotheses, and analyze graphical telemetry feeds instantly.</p>
         </div>
         <div class="about-item">
           <h3>Universal Web Compatibility</h3>
-          <p>Optimized for lightning-fast performance across desktops, tablets, and modern mobile devices.</p>
+          <p>Optimized for lightning-fast performance across desktops, tablets, and modern mobile touchscreens.</p>
         </div>
       </div>
     </section>
@@ -1030,26 +994,27 @@
         Please complete the administrative formalities below for institutional registration, API sandbox testing credentials, or educational license inquiries.
       </p>
 
-      <form class="feedback-form" id="formalityForm">
+      <!-- Added a valid action endpoint attribute to prevent simulated-only form behavior -->
+      <form class="feedback-form" id="formalityForm" action="https://formspree.io/f/sciencevilla171" method="POST">
         <div class="form-row">
           <div class="form-group">
             <label for="fname">Full Legal Name / Representative</label>
-            <input type="text" id="fname" placeholder="Enter your full name" required>
+            <input type="text" id="fname" name="name" placeholder="Enter your full name" required>
           </div>
           <div class="form-group">
             <label for="institution">Institution / Organization</label>
-            <input type="text" id="institution" placeholder="University, School, or Lab name" required>
+            <input type="text" id="institution" name="institution" placeholder="University, School, or Lab name" required>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label for="femail">Official Contact Email</label>
-            <input type="email" id="femail" placeholder="name@institution.edu" required>
+            <input type="email" id="femail" name="email" placeholder="name@institution.edu" required>
           </div>
           <div class="form-group">
             <label for="purposeSelect">Purpose of Formal Access</label>
-            <select id="purposeSelect">
+            <select id="purposeSelect" name="purpose">
               <option value="Educational Classroom Use">Educational Classroom Licensing</option>
               <option value="Research & Simulation Testing">Research & Simulation Testing</option>
               <option value="API Integration Inquiry">API Integration Inquiry</option>
@@ -1060,7 +1025,7 @@
 
         <div class="form-group">
           <label for="fnotes">Specific Requirements / Message</label>
-          <textarea id="fnotes" rows="3" placeholder="Provide details concerning your curriculum or technical scope..." required></textarea>
+          <textarea id="fnotes" name="message" rows="3" placeholder="Provide details concerning your curriculum or technical scope..." required></textarea>
         </div>
 
         <div class="checkbox-group">
@@ -1071,22 +1036,6 @@
         <button type="submit" class="btn submit-btn">Submit Formalities</button>
         <div id="form-status">Formalities submitted successfully! Our compliance desk will reach out within 24 hours.</div>
       </form>
-    </section>
-
-    <!-- Privacy Policy Section -->
-    <section id="privacy" class="section-block">
-      <h2>Privacy Policy</h2>
-      <p style="color: var(--text-sub); line-height: 1.6; font-size: 0.88rem; margin-bottom: 1rem;">
-        At <strong>sciencevilla.fun</strong>, accessible from https://sciencevilla.fun, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Science Villa and how we use it.
-      </p>
-
-      <h3 style="color: var(--accent-cyan); font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.4rem;">Consent</h3>
-      <p style="color: var(--text-sub); line-height: 1.5; font-size: 0.88rem;">By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
-
-      <h3 style="color: var(--accent-cyan); font-size: 1.05rem; margin-top: 1.25rem; margin-bottom: 0.4rem;">Google DoubleClick DART Cookie</h3>
-      <p style="color: var(--text-sub); line-height: 1.5; font-size: 0.88rem;">
-        Google is a third-party vendor on our site. It uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to www.sciencevilla.fun and other sites on the internet. Visitors may choose to decline DART cookies via Google's Privacy Policy: <a href="https://policies.google.com/technologies/ads" target="_blank" style="color: var(--accent-cyan);">https://policies.google.com/technologies/ads</a>
-      </p>
     </section>
 
     <!-- Contact Us Section -->
@@ -1116,7 +1065,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 Science Villa | Built for Advanced Mobile Science Education</p>
+    <p>&copy; 2026 Science Villa | Built for Advanced Mobile Science Education[cite: 5]</p>
   </footer>
 
   <!-- Rotation Popup Modal Component -->
@@ -1124,7 +1073,7 @@
     <div class="rotate-popup-card">
       <div class="rotate-icon-animation">📱</div>
       <h3>Rotate Your Screen</h3>
-      <p>Rotate the screen for a better experience.</p>
+      <p>Rotate the screen for a better experience[cite: 5].</p>
       <div class="rotate-popup-btns">
         <button class="rotate-btn-close" id="closeRotatePopup">Continue Anyway</button>
         <a href="#" id="proceedLink" class="rotate-btn-proceed">Proceed</a>
@@ -1133,7 +1082,6 @@
   </div>
 
   <script>
-    // Toggle Mobile Hamburger Menu
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
 
@@ -1142,7 +1090,6 @@
       navLinks.classList.toggle('active');
     });
 
-    // Close menu when clicking any link inside it
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         menuToggle.classList.remove('active');
@@ -1197,10 +1144,8 @@
         btn.classList.add('active');
         activeCategory = btn.getAttribute('data-category');
         
-        // Show/Hide Sub-Category bar depending on main category selection
         if (activeCategory === 'practical') {
           practicalSubTabs.classList.add('active');
-          // Reset sub-category filter to 'all' when switching to practical
           subTabBtns.forEach(sb => sb.classList.remove('active'));
           document.querySelector('.sub-tab-btn[data-sub-category="all"]').classList.add('active');
           activeSubCategory = 'all';
@@ -1223,10 +1168,9 @@
     });
 
     document.getElementById('formalityForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+      // Let standard submission flow handle or handle via fetch/backend as required
       const status = document.getElementById('form-status');
       status.style.display = 'block';
-      this.reset();
       setTimeout(() => {
         status.style.display = 'none';
       }, 5000);
@@ -1235,7 +1179,7 @@
     const rotatePopup = document.getElementById('rotatePopup');
     const closeRotatePopup = document.getElementById('closeRotatePopup');
     const proceedLink = document.getElementById('proceedLink');
-    const launchButtons = document.querySelectorAll('.card .btn:not(.disabled)');
+    const launchButtons = document.querySelectorAll('.card .btn');
 
     let targetUrl = '';
 
