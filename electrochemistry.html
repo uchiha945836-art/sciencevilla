@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Science Villa | Ultra-Clear 3D Electrochemical Cell Model</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Electrochemical Cell Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #030712;
       --bg-card: rgba(15, 23, 42, 0.95);
@@ -205,77 +206,66 @@
       margin-top: auto;
     }
   </style>
-</head>
-<body>
-
-  <header>
-    <h1>Ultra-Clear 3D Electrochemical Cell</h1>
-    <p class="subtitle">Drag touch across the canvas to rotate the mobile view model.</p>
-  </header>
-
-  <div class="lab-stage">
-    <div class="canvas-container">
-      <canvas id="simCanvas"></canvas>
-    </div>
-
-    <div class="controls-panel">
-      <div class="control-group">
-        <label>Anode Half-Cell:</label>
-        <select id="anodeSelect">
-          <option value="Zn" selected>Zinc (Zn / Zn²⁺) [ -0.76 V ]</option>
-          <option value="Fe">Iron (Fe / Fe²⁺) [ -0.44 V ]</option>
-          <option value="Mg">Magnesium (Mg / Mg²⁺) [ -2.37 V ]</option>
-        </select>
-      </div>
-
-      <div class="control-group">
-        <label>Cathode Half-Cell:</label>
-        <select id="cathodeSelect">
-          <option value="Cu" selected>Copper (Cu²⁺ / Cu) [ +0.34 V ]</option>
-          <option value="Ag">Silver (Ag⁺ / Ag) [ +0.80 V ]</option>
-          <option value="Au">Gold (Au³⁺ / Au) [ +1.50 V ]</option>
-        </select>
-      </div>
-
-      <div class="control-group">
-        <label>Anode Conc: <span id="concAnodeVal">1.00 M</span></label>
-        <input type="range" id="concAnodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
-      </div>
-
-      <div class="control-group">
-        <label>Cathode Conc: <span id="concCathodeVal">1.00 M</span></label>
-        <input type="range" id="concCathodeRange" min="0.01" max="2.0" value="1.0" step="0.05">
-      </div>
-
-      <div class="control-group">
-        <label>Temperature: <span id="tempVal">298 K</span></label>
-        <input type="range" id="tempRange" min="273" max="373" value="298" step="1">
-      </div>
-
-      <div class="telemetry-box">
-        <div class="telemetry-row">
-          <span>Standard Potential (E°cell):</span>
-          <span id="eStdVal">1.10 V</span>
-        </div>
-        <div class="telemetry-row">
-          <span>Actual Potential (Ecell):</span>
-          <span id="eActualVal">1.10 V</span>
-        </div>
-        <div class="telemetry-row">
-          <span>Gibbs Energy (ΔG):</span>
-          <span id="gibbsVal">-212.3 kJ</span>
-        </div>
-      </div>
-
-      <button class="btn" id="resetBtn">Reset Default</button>
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2026 Science Villa | Mobile Optimized</p>
-  </footer>
-
-  <script>
+<meta content="Interactive electrochemical cell simulator explaining anode, cathode, redox reactions, cell potential, the Nernst equation, concentration, temperature, and Gibbs energy." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/electrochemistry.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<header>
+<h1>Ultra-Clear 3D Electrochemical Cell</h1>
+<p class="subtitle">Drag touch across the canvas to rotate the mobile view model.</p>
+</header>
+<div class="lab-stage">
+<div class="canvas-container">
+<canvas id="simCanvas"></canvas>
+</div>
+<div class="controls-panel">
+<div class="control-group">
+<label>Anode Half-Cell:</label>
+<select id="anodeSelect">
+<option selected="" value="Zn">Zinc (Zn / Zn²⁺) [ -0.76 V ]</option>
+<option value="Fe">Iron (Fe / Fe²⁺) [ -0.44 V ]</option>
+<option value="Mg">Magnesium (Mg / Mg²⁺) [ -2.37 V ]</option>
+</select>
+</div>
+<div class="control-group">
+<label>Cathode Half-Cell:</label>
+<select id="cathodeSelect">
+<option selected="" value="Cu">Copper (Cu²⁺ / Cu) [ +0.34 V ]</option>
+<option value="Ag">Silver (Ag⁺ / Ag) [ +0.80 V ]</option>
+<option value="Au">Gold (Au³⁺ / Au) [ +1.50 V ]</option>
+</select>
+</div>
+<div class="control-group">
+<label>Anode Conc: <span id="concAnodeVal">1.00 M</span></label>
+<input id="concAnodeRange" max="2.0" min="0.01" step="0.05" type="range" value="1.0"/>
+</div>
+<div class="control-group">
+<label>Cathode Conc: <span id="concCathodeVal">1.00 M</span></label>
+<input id="concCathodeRange" max="2.0" min="0.01" step="0.05" type="range" value="1.0"/>
+</div>
+<div class="control-group">
+<label>Temperature: <span id="tempVal">298 K</span></label>
+<input id="tempRange" max="373" min="273" step="1" type="range" value="298"/>
+</div>
+<div class="telemetry-box">
+<div class="telemetry-row">
+<span>Standard Potential (E°cell):</span>
+<span id="eStdVal">1.10 V</span>
+</div>
+<div class="telemetry-row">
+<span>Actual Potential (Ecell):</span>
+<span id="eActualVal">1.10 V</span>
+</div>
+<div class="telemetry-row">
+<span>Gibbs Energy (ΔG):</span>
+<span id="gibbsVal">-212.3 kJ</span>
+</div>
+</div>
+<button class="btn" id="resetBtn">Reset Default</button>
+</div>
+</div>
+<footer>
+<p>© 2026 Science Villa | Mobile Optimized</p>
+</footer>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>This model demonstrates how oxidation and reduction are coupled in an electrochemical cell. Change half-cells, concentration, and temperature to explore a simplified cell-potential calculation.</p></div><div class="sv-grid"><article class="sv-card"><h2>Anode and cathode</h2><p>Oxidation occurs at the anode and reduction at the cathode. In a spontaneous galvanic cell, electrons move through the external circuit from anode to cathode.</p></article><article class="sv-card"><h2>Cell potential</h2><p>Using reduction potentials, E°cell = E°cathode − E°anode. A positive E°cell indicates a favorable reaction under standard conditions.</p></article><article class="sv-card"><h2>Nernst equation</h2><p>E = E° − (RT/nF) ln Q. R is the gas constant, T absolute temperature, F Faraday’s constant, and Q the reaction quotient.</p></article><article class="sv-card"><h2>Gibbs energy</h2><p>For a reversible cell, ΔG = −nFE. Under standard conditions, ΔG° = −nFE°.</p></article><article class="sv-card"><h2>Model limitations</h2><p>Real cells can include non-ideal activities, resistance, junction potentials, and electrode kinetics; this simulation is intentionally simplified.</p></article><article class="sv-card"><h2>Safety</h2><p>This is an educational model, not a substitute for supervised laboratory procedures.</p></article></div></section><script>
     const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -589,5 +579,5 @@
 
     animate();
   </script>
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

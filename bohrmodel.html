@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Periodic Atomic Visualizer (118 Elements) | Science Villa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bohr Model Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #07090e;
       --bg-card: rgba(18, 26, 43, 0.75);
@@ -200,67 +201,59 @@
       cursor: pointer;
     }
   </style>
-</head>
-<body>
-
-  <nav>
-    <a href="index.html" class="logo">Science Villa</a>
-    <a href="index.html" class="back-btn">&#8592; Back to Dashboard</a>
-  </nav>
-
-  <div class="main-layout">
-    
-    <!-- 3D Realistic Bohr Model Simulation Canvas -->
-    <div class="canvas-container">
-      <canvas id="atomCanvas"></canvas>
-    </div>
-
-    <!-- Sidebar Controls & Telemetry -->
-    <div class="sidebar">
-      <div class="panel">
-        <h2>Select Element (1-118)</h2>
-        <div class="select-wrapper">
-          <select id="elementSelect" onchange="onElementChange(this.value)">
-            <!-- Dynamically populated via script -->
-          </select>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>Live Subatomic Specs</h2>
-        <div class="stats-list">
-          <div class="stat-row">
-            <span class="stat-label">Element</span>
-            <span class="stat-value" id="elName">Hydrogen (H)</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Atomic Number (Z)</span>
-            <span class="stat-value" id="atomicNum">1</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Protons (+)</span>
-            <span class="stat-value" id="protonCount">1</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Neutrons (0)</span>
-            <span class="stat-value" id="neutronCount">0</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">Electrons (-)</span>
-            <span class="stat-value" id="electronCount">1</span>
-          </div>
-        </div>
-
-        <div class="controls-group" style="margin-top: 1.2rem;">
-          <label>Orbit Rotation Speed</label>
-          <input type="range" id="speedRange" min="0.2" max="3" step="0.1" value="1">
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
+<meta content="Interactive Bohr model visualizer for atomic number, electron shells, energy levels, spectra, and the limits of the historical Bohr model." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/bohrmodel.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<nav>
+<a class="logo" href="index.html">Science Villa</a>
+<a class="back-btn" href="index.html">← Back to Dashboard</a>
+</nav>
+<div class="main-layout">
+<!-- 3D Realistic Bohr Model Simulation Canvas -->
+<div class="canvas-container">
+<canvas id="atomCanvas"></canvas>
+</div>
+<!-- Sidebar Controls & Telemetry -->
+<div class="sidebar">
+<div class="panel">
+<h2>Select Element (1-118)</h2>
+<div class="select-wrapper">
+<select id="elementSelect" onchange="onElementChange(this.value)">
+<!-- Dynamically populated via script -->
+</select>
+</div>
+</div>
+<div class="panel">
+<h2>Live Subatomic Specs</h2>
+<div class="stats-list">
+<div class="stat-row">
+<span class="stat-label">Element</span>
+<span class="stat-value" id="elName">Hydrogen (H)</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Atomic Number (Z)</span>
+<span class="stat-value" id="atomicNum">1</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Protons (+)</span>
+<span class="stat-value" id="protonCount">1</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Neutrons (0)</span>
+<span class="stat-value" id="neutronCount">0</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Electrons (-)</span>
+<span class="stat-value" id="electronCount">1</span>
+</div>
+</div>
+<div class="controls-group" style="margin-top: 1.2rem;">
+<label>Orbit Rotation Speed</label>
+<input id="speedRange" max="3" min="0.2" step="0.1" type="range" value="1"/>
+</div>
+</div>
+</div>
+</div>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>Use the model to connect atomic number with electrons and shell arrangement. The Bohr model is useful for introductory ideas about quantized energy levels, while modern atoms require quantum mechanics.</p></div><div class="sv-grid"><article class="sv-card"><h2>Bohr model</h2><p>Bohr proposed allowed energy levels for electrons. A transition between levels can involve absorption or emission of a photon.</p></article><article class="sv-card"><h2>Energy and spectra</h2><p>Photon energy is related to frequency by E = hf. Discrete energy differences help explain line spectra.</p></article><article class="sv-card"><h2>Shell information</h2><p>For a neutral atom, atomic number equals the number of electrons. The shell display is a simplified educational representation.</p></article><article class="sv-card"><h2>Limitations</h2><p>The Bohr picture is not a literal map of electron motion for multi-electron atoms; orbitals and quantum effects are needed for a fuller description.</p></article><article class="sv-card"><h2>How to use</h2><p>Choose an element, inspect its atomic number and shell data, and compare the arrangement across elements.</p></article></div></section><script>
     // Complete 118 Elements Dataset (Name, Symbol, Standard Neutrons estimation)
     const elementsData = [
       {z: 1, name: "Hydrogen", symbol: "H", n: 0}, {z: 2, name: "Helium", symbol: "He", n: 2},
@@ -519,6 +512,5 @@
 
     animate();
   </script>
-
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

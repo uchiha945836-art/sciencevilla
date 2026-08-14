@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Solar System Explorer | Science Villa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Solar System Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&amp;family=Plus+Jakarta+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background-color: #020208;
@@ -144,44 +145,38 @@
       z-index: 100;
     }
   </style>
-</head>
-<body>
-
-  <div id="canvas-container">
-    <canvas id="simCanvas"></canvas>
-    <div id="tooltip"></div>
-  </div>
-
-  <div class="sidebar">
-    <div>
-      <a href="index.html" class="back-btn">&larr; Back to Villa</a>
-      <h1>Solar System Scale</h1>
-    </div>
-
-    <div class="info-card" id="planet-info">
-      <h3 id="p-name">Hover/Click Planet</h3>
-      <div class="info-item">Avg Distance: <strong id="p-dist">-</strong></div>
-      <div class="info-item">Distance AU: <strong id="p-au">-</strong></div>
-      <div class="info-item">Time to Orbit Sun: <strong id="p-period">-</strong></div>
-      <div class="info-item">Day Length: <strong id="p-day">-</strong></div>
-      <div class="info-item">Orbital Speed: <strong id="p-speed">-</strong></div>
-      <div class="info-item">Moons: <strong id="p-moons">-</strong></div>
-      <div class="info-item">Avg Temp: <strong id="p-temp">-</strong></div>
-      <div class="info-item">Real Diameter: <strong id="p-size">-</strong></div>
-    </div>
-
-    <div class="control-group">
-      <label>Orbit Speed: <span id="speed-val">1.0x</span></label>
-      <input type="range" id="speed-slider" min="0" max="5" step="0.1" value="1">
-    </div>
-
-    <div class="btn-grid">
-      <button id="pause-btn">Pause / Play</button>
-      <button id="reset-cam">Reset View</button>
-    </div>
-  </div>
-
-  <script>
+<meta content="Interactive Solar System explorer for learning about planetary distance, orbital period, rotation, moons, temperature, diameter, and simplified orbital visualization." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/solar%20system.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<div id="canvas-container">
+<canvas id="simCanvas"></canvas>
+<div id="tooltip"></div>
+</div>
+<div class="sidebar">
+<div>
+<a class="back-btn" href="index.html">← Back to Villa</a>
+<h1>Solar System Scale</h1>
+</div>
+<div class="info-card" id="planet-info">
+<h3 id="p-name">Hover/Click Planet</h3>
+<div class="info-item">Avg Distance: <strong id="p-dist">-</strong></div>
+<div class="info-item">Distance AU: <strong id="p-au">-</strong></div>
+<div class="info-item">Time to Orbit Sun: <strong id="p-period">-</strong></div>
+<div class="info-item">Day Length: <strong id="p-day">-</strong></div>
+<div class="info-item">Orbital Speed: <strong id="p-speed">-</strong></div>
+<div class="info-item">Moons: <strong id="p-moons">-</strong></div>
+<div class="info-item">Avg Temp: <strong id="p-temp">-</strong></div>
+<div class="info-item">Real Diameter: <strong id="p-size">-</strong></div>
+</div>
+<div class="control-group">
+<label>Orbit Speed: <span id="speed-val">1.0x</span></label>
+<input id="speed-slider" max="5" min="0" step="0.1" type="range" value="1"/>
+</div>
+<div class="btn-grid">
+<button id="pause-btn">Pause / Play</button>
+<button id="reset-cam">Reset View</button>
+</div>
+</div>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>Explore the eight planets through an interactive visualization. The display is a teaching model: sizes, distances, and orbital periods are not simultaneously shown at one physical scale.</p></div><div class="sv-grid"><article class="sv-card"><h2>Solar System</h2><p>The Solar System includes the Sun, eight planets, dwarf planets, moons, asteroids, comets, and other bodies bound by gravity.</p></article><article class="sv-card"><h2>Orbital motion</h2><p>A planet stays in orbit because the Sun’s gravity continuously changes the direction of its velocity. Kepler’s laws describe planetary motion.</p></article><article class="sv-card"><h2>How to use</h2><p>Hover over a planet to inspect distance, orbital period, day length, speed, moons, temperature, and diameter. The speed slider changes animation rate, not physical data.</p></article><article class="sv-card"><h2>Scale limitation</h2><p>A true common scale would make planets tiny and widely separated, so the graphics prioritize readability.</p></article><article class="sv-card"><h2>Questions</h2><p>Which planet has the shortest year? How does orbital period change with distance? Why do planets not simply travel in straight lines?</p></article></div></section><script>
     const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
     const tooltip = document.getElementById('tooltip');
@@ -463,5 +458,5 @@
 
     animate();
   </script>
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

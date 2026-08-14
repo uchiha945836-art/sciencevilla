@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Science Villa | Comprehensive VSEPR & Molecular Geometry Studio (JEE/NEET Master)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VSEPR &amp; Molecular Geometry Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #07090e;
       --bg-card: rgba(18, 26, 43, 0.85);
@@ -72,88 +73,75 @@
     .back-link { margin-top: 1rem; color: var(--accent-purple); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
     .back-link:hover { text-decoration: underline; }
   </style>
-</head>
-<body>
-
-  <header>
-    <h1>Advanced VSEPR & Molecular Geometry Studio</h1>
-    <p class="subtitle">JEE & NEET Chemistry Masterclass: Complete compilation of standard, ionic, and anomalous steric geometries from Steric Number 2 to 7.</p>
-  </header>
-
-  <div class="sim-container">
-    <div class="lab-layout">
-      <!-- 3D Interactive Canvas Area -->
-      <div class="canvas-wrapper">
-        <canvas id="simCanvas"></canvas>
-        <div class="canvas-overlay-tip">🖱️ Click & Drag to Rotate | Scroll / Auto-Rotate Active</div>
-      </div>
-
-      <!-- Live Calculation & JEE Telemetry Panel -->
-      <div class="math-panel">
-        <h3>
-          <span id="panelTitle">Molecule Metrics</span>
-          <span class="jee-badge">JEE / NEET High-Yield</span>
-        </h3>
-        
-        <div class="formula-box">
-          <strong>1. VSEPR Notation & Steric No:</strong>
-          <code id="vseprNotation">AX₄ (SN = 4)</code>
-        </div>
-
-        <div class="formula-box">
-          <strong>2. Electronic & Molecular Shape:</strong>
-          <code id="geomName">Tetrahedral / Tetrahedral</code>
-        </div>
-
-        <div class="formula-box">
-          <strong>3. Hybridization & Central State:</strong>
-          <code id="hybridState">sp³</code>
-        </div>
-
-        <div class="formula-box">
-          <strong>4. Bond Angle & Anomalies:</strong>
-          <code id="bondAngle">109.5°</code>
-        </div>
-
-        <div class="formula-box">
-          <strong>5. Dipole Moment & Polarity:</strong>
-          <code id="dipoleVal">μ = 0.0 D (Non-Polar)</code>
-        </div>
-      </div>
-    </div>
-
-    <!-- Control Station -->
-    <div class="controls">
-      <div class="control-row">
-        <div class="control-group">
-          <label for="categorySelect">Steric Category:</label>
-          <select id="categorySelect">
-            <option value="sn2">Steric Number 2 (Linear Family)</option>
-            <option value="sn3">Steric Number 3 (Trigonal Planar Family)</option>
-            <option value="sn4" selected>Steric Number 4 (Tetrahedral Family)</option>
-            <option value="sn5">Steric Number 5 (Trigonal Bipyramidal Family)</option>
-            <option value="sn6">Steric Number 6 (Octahedral Family)</option>
-            <option value="sn7">Steric Number 7 (Pentagonal Bipyramidal Family)</option>
-          </select>
-        </div>
-
-        <div class="control-group">
-          <label for="moleculeSelect">Select Molecule / Ion:</label>
-          <select id="moleculeSelect">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-
-        <div class="control-group">
-          <button class="btn-action" id="resetCamBtn">Reset View</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <a href="index.html" class="back-link">&larr; Back to Science Villa Models</a>
-
-  <script>
+<meta content="Interactive VSEPR molecular geometry studio for steric number, electron-domain geometry, molecular shape, hybridization, bond angles, polarity, and common exceptions." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/vsepr.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<header>
+<h1>Advanced VSEPR &amp; Molecular Geometry Studio</h1>
+<p class="subtitle">JEE &amp; NEET Chemistry Masterclass: Complete compilation of standard, ionic, and anomalous steric geometries from Steric Number 2 to 7.</p>
+</header>
+<div class="sim-container">
+<div class="lab-layout">
+<!-- 3D Interactive Canvas Area -->
+<div class="canvas-wrapper">
+<canvas id="simCanvas"></canvas>
+<div class="canvas-overlay-tip">🖱️ Click &amp; Drag to Rotate | Scroll / Auto-Rotate Active</div>
+</div>
+<!-- Live Calculation & JEE Telemetry Panel -->
+<div class="math-panel">
+<h3>
+<span id="panelTitle">Molecule Metrics</span>
+<span class="jee-badge">JEE / NEET High-Yield</span>
+</h3>
+<div class="formula-box">
+<strong>1. VSEPR Notation &amp; Steric No:</strong>
+<code id="vseprNotation">AX₄ (SN = 4)</code>
+</div>
+<div class="formula-box">
+<strong>2. Electronic &amp; Molecular Shape:</strong>
+<code id="geomName">Tetrahedral / Tetrahedral</code>
+</div>
+<div class="formula-box">
+<strong>3. Hybridization &amp; Central State:</strong>
+<code id="hybridState">sp³</code>
+</div>
+<div class="formula-box">
+<strong>4. Bond Angle &amp; Anomalies:</strong>
+<code id="bondAngle">109.5°</code>
+</div>
+<div class="formula-box">
+<strong>5. Dipole Moment &amp; Polarity:</strong>
+<code id="dipoleVal">μ = 0.0 D (Non-Polar)</code>
+</div>
+</div>
+</div>
+<!-- Control Station -->
+<div class="controls">
+<div class="control-row">
+<div class="control-group">
+<label for="categorySelect">Steric Category:</label>
+<select id="categorySelect">
+<option value="sn2">Steric Number 2 (Linear Family)</option>
+<option value="sn3">Steric Number 3 (Trigonal Planar Family)</option>
+<option selected="" value="sn4">Steric Number 4 (Tetrahedral Family)</option>
+<option value="sn5">Steric Number 5 (Trigonal Bipyramidal Family)</option>
+<option value="sn6">Steric Number 6 (Octahedral Family)</option>
+<option value="sn7">Steric Number 7 (Pentagonal Bipyramidal Family)</option>
+</select>
+</div>
+<div class="control-group">
+<label for="moleculeSelect">Select Molecule / Ion:</label>
+<select id="moleculeSelect">
+<!-- Populated dynamically -->
+</select>
+</div>
+<div class="control-group">
+<button class="btn-action" id="resetCamBtn">Reset View</button>
+</div>
+</div>
+</div>
+</div>
+<a class="back-link" href="index.html">← Back to Science Villa Models</a>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>VSEPR predicts molecular shape by considering repulsions between electron domains around a central atom. Use the controls to compare geometries while reading the assumptions behind the model.</p></div><div class="sv-grid"><article class="sv-card"><h2>VSEPR</h2><p>Valence Shell Electron Pair Repulsion describes how electron domains arrange to reduce repulsion. Lone pairs generally repel more strongly than bonding pairs.</p></article><article class="sv-card"><h2>Steric number</h2><p>Common electron-domain geometries include linear SN2, trigonal planar SN3, tetrahedral SN4, trigonal bipyramidal SN5, octahedral SN6, and pentagonal bipyramidal SN7.</p></article><article class="sv-card"><h2>Geometry vs shape</h2><p>Electron-domain geometry includes bonding and lone-pair domains; molecular shape describes atom positions. AX3E is a familiar example.</p></article><article class="sv-card"><h2>Bond angles</h2><p>Ideal angles are reference values. Lone pairs, multiple bonds, and other effects can change measured angles.</p></article><article class="sv-card"><h2>Polarity</h2><p>Molecular polarity depends on bond polarity and geometry. Symmetry can cause bond dipoles to cancel.</p></article><article class="sv-card"><h2>How to use</h2><p>Choose a steric category, inspect the geometry and angle, and compare it with your chemistry reference material.</p></article></div></section><script>
     const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -539,5 +527,5 @@
     updateTelemetry();
     animate();
   </script>
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

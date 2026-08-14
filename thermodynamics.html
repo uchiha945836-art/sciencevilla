@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Science Villa | Thermodynamics & Entropy-Enthalpy Sandbox (JEE/NEET Masterclass)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thermodynamics &amp; Entropy Sandbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #030712;
       --bg-card: rgba(15, 23, 42, 0.75);
@@ -335,127 +336,109 @@
       margin-top: auto;
     }
   </style>
-</head>
-<body>
-
-  <nav>
-    <a href="index.html" class="logo"><span></span>Science Villa</a>
-    <ul class="nav-links">
-      <li><a href="#sandbox">Sandbox Sim</a></li>
-      <li><a href="#laws">Thermodynamic Laws</a></li>
-      <li><a href="#gibbs">Gibbs Free Energy</a></li>
-      <li><a href="#entropy">Entropy & Enthalpy</a></li>
-    </ul>
-  </nav>
-
-  <header>
-    <div class="badge">
-      <span class="badge-dot"></span> JEE & NEET Advanced Masterclass
+<meta content="Interactive thermodynamics learning sandbox covering internal energy, heat, work, entropy, enthalpy, Gibbs free energy, equilibrium, and simplified processes." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/thermodynamics.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<nav>
+<a class="logo" href="index.html"><span></span>Science Villa</a>
+<ul class="nav-links">
+<li><a href="#sandbox">Sandbox Sim</a></li>
+<li><a href="#laws">Thermodynamic Laws</a></li>
+<li><a href="#gibbs">Gibbs Free Energy</a></li>
+<li><a href="#entropy">Entropy &amp; Enthalpy</a></li>
+</ul>
+</nav>
+<header>
+<div class="badge">
+<span class="badge-dot"></span> JEE &amp; NEET Advanced Masterclass
     </div>
-    <h1>Thermodynamics & Entropy-Enthalpy Sandbox</h1>
-    <p class="subtitle">Analyze spontaneity criteria, Enthalpy ($\Delta H$), Entropy ($\Delta S$), and Gibbs Free Energy ($\Delta G$) behavior across changing temperatures in real-time.</p>
-  </header>
-
-  <div class="container">
-    
-    <!-- Interactive Thermodynamics Sandbox Simulation -->
-    <section id="sandbox" class="lab-stage">
-      <div class="canvas-container">
-        <canvas id="simCanvas"></canvas>
-      </div>
-
-      <div class="controls-panel">
-        <div>
-          <h2 style="font-size: 1.15rem; margin-bottom: 0.3rem; color: #fff;">Reaction Thermodynamic Chamber</h2>
-          <p style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.4;">Particle dispersion visualizes System Entropy ($S$), while kinetic energy variations map Enthalpy ($\Delta H$).</p>
+<h1>Thermodynamics &amp; Entropy-Enthalpy Sandbox</h1>
+<p class="subtitle">Analyze spontaneity criteria, Enthalpy ($\Delta H$), Entropy ($\Delta S$), and Gibbs Free Energy ($\Delta G$) behavior across changing temperatures in real-time.</p>
+</header>
+<div class="container">
+<!-- Interactive Thermodynamics Sandbox Simulation -->
+<section class="lab-stage" id="sandbox">
+<div class="canvas-container">
+<canvas id="simCanvas"></canvas>
+</div>
+<div class="controls-panel">
+<div>
+<h2 style="font-size: 1.15rem; margin-bottom: 0.3rem; color: #fff;">Reaction Thermodynamic Chamber</h2>
+<p style="font-size: 0.82rem; color: var(--text-sub); line-height: 1.4;">Particle dispersion visualizes System Entropy ($S$), while kinetic energy variations map Enthalpy ($\Delta H$).</p>
+</div>
+<div class="control-group">
+<label>Temperature ($T$): <span id="tempVal">298 K</span></label>
+<input id="tempRange" max="1000" min="100" step="10" type="range" value="298"/>
+</div>
+<div class="control-group">
+<label>Enthalpy Change ($\Delta H$): <span id="enthalpyVal">-50 kJ/mol</span></label>
+<input id="enthalpyRange" max="150" min="-150" step="10" type="range" value="-50"/>
+</div>
+<div class="control-group">
+<label>Entropy Change ($\Delta S$): <span id="entropyVal">+120 J/K·mol</span></label>
+<input id="entropyRange" max="200" min="-200" step="10" type="range" value="120"/>
+</div>
+<div class="telemetry-box">
+<div class="telemetry-row">
+<span>Gibbs Energy ($\Delta G$):</span>
+<span id="gibbsVal">0 kJ/mol</span>
+</div>
+<div class="telemetry-row">
+<span>Spontaneity Status:</span>
+<span id="spontVal" style="color: #4ade80;">Spontaneous</span>
+</div>
+</div>
+<button class="btn" id="resetBtn">Reset Chamber</button>
+</div>
+</section>
+<!-- Detailed Theory & JEE/NEET Core Concepts -->
+<div class="theory-grid">
+<!-- Card 1: Laws of Thermodynamics -->
+<div class="theory-card" id="laws">
+<h3>1. Fundamental Laws of Thermodynamics</h3>
+<p>Essential framework for evaluating system energy transformations and state functions:</p>
+<ul>
+<li><strong>First Law ($\Delta U = q + w$):</strong> Law of conservation of energy. Internal energy is a state function; work and heat are path functions.</li>
+<li><strong>Second Law ($\Delta S_{\text{univ}} &gt; 0$):</strong> For any spontaneous process, total entropy of the universe must continuously increase.</li>
+<li><strong>Third Law:</strong> The entropy of a perfectly crystalline pure substance approaches zero at absolute zero ($0\text{ K}$).</li>
+</ul>
+<div class="formula-box">
+          $\Delta S_{\text{univ}} = \Delta S_{\text{sys}} + \Delta S_{\text{surr}} &gt; 0$
         </div>
-
-        <div class="control-group">
-          <label>Temperature ($T$): <span id="tempVal">298 K</span></label>
-          <input type="range" id="tempRange" min="100" max="1000" value="298" step="10">
-        </div>
-
-        <div class="control-group">
-          <label>Enthalpy Change ($\Delta H$): <span id="enthalpyVal">-50 kJ/mol</span></label>
-          <input type="range" id="enthalpyRange" min="-150" max="150" value="-50" step="10">
-        </div>
-
-        <div class="control-group">
-          <label>Entropy Change ($\Delta S$): <span id="entropyVal">+120 J/K·mol</span></label>
-          <input type="range" id="entropyRange" min="-200" max="200" value="120" step="10">
-        </div>
-
-        <div class="telemetry-box">
-          <div class="telemetry-row">
-            <span>Gibbs Energy ($\Delta G$):</span>
-            <span id="gibbsVal">0 kJ/mol</span>
-          </div>
-          <div class="telemetry-row">
-            <span>Spontaneity Status:</span>
-            <span id="spontVal" style="color: #4ade80;">Spontaneous</span>
-          </div>
-        </div>
-
-        <button class="btn" id="resetBtn">Reset Chamber</button>
-      </div>
-    </section>
-
-    <!-- Detailed Theory & JEE/NEET Core Concepts -->
-    <div class="theory-grid">
-      
-      <!-- Card 1: Laws of Thermodynamics -->
-      <div id="laws" class="theory-card">
-        <h3>1. Fundamental Laws of Thermodynamics</h3>
-        <p>Essential framework for evaluating system energy transformations and state functions:</p>
-        <ul>
-          <li><strong>First Law ($\Delta U = q + w$):</strong> Law of conservation of energy. Internal energy is a state function; work and heat are path functions.</li>
-          <li><strong>Second Law ($\Delta S_{\text{univ}} > 0$):</strong> For any spontaneous process, total entropy of the universe must continuously increase.</li>
-          <li><strong>Third Law:</strong> The entropy of a perfectly crystalline pure substance approaches zero at absolute zero ($0\text{ K}$).</li>
-        </ul>
-        <div class="formula-box">
-          $\Delta S_{\text{univ}} = \Delta S_{\text{sys}} + \Delta S_{\text{surr}} > 0$
-        </div>
-      </div>
-
-      <!-- Card 2: Gibbs Free Energy & Spontaneity -->
-      <div id="gibbs" class="theory-card">
-        <h3>2. Gibbs Free Energy ($\Delta G$) Criteria</h3>
-        <p>The master criterion for predicting chemical reaction spontaneity at constant temperature and pressure:</p>
-        <div class="formula-box">
+</div>
+<!-- Card 2: Gibbs Free Energy & Spontaneity -->
+<div class="theory-card" id="gibbs">
+<h3>2. Gibbs Free Energy ($\Delta G$) Criteria</h3>
+<p>The master criterion for predicting chemical reaction spontaneity at constant temperature and pressure:</p>
+<div class="formula-box">
           $\Delta G = \Delta H - T\Delta S$
         </div>
-        <p><strong>High-Yield JEE/NEET Matrix:</strong></p>
-        <ul>
-          <li><strong>$\Delta H < 0, \Delta S > 0$:</strong> Spontaneous at all temperatures.</li>
-          <li><strong>$\Delta H > 0, \Delta S < 0$:</strong> Non-spontaneous at all temperatures.</li>
-          <li><strong>$\Delta H < 0, \Delta S < 0$:</strong> Spontaneous at low temperatures ($T < \Delta H/\Delta S$).</li>
-          <li><strong>$\Delta H > 0, \Delta S > 0$:</strong> Spontaneous at high temperatures ($T > \Delta H/\Delta S$).</li>
-        </ul>
-      </div>
-
-      <!-- Card 3: Enthalpy & Entropy Relationships -->
-      <div id="entropy" class="theory-card">
-        <h3>3. Enthalpy, Entropy & Equilibrium Link</h3>
-        <p>Connects thermodynamics directly to chemical equilibrium constants and non-expansion work:</p>
-        <ul>
-          <li><strong>Standard Free Energy:</strong> $\Delta G^\circ = -RT \ln K_{eq}$</li>
-          <li><strong>Temperature Dependence:</strong> van 't Hoff equation links enthalpy change to equilibrium constants at different temperatures.</li>
-          <li><strong>Enthalpy ($\Delta H$):</strong> Heat absorbed or released at constant pressure ($\Delta H = \Delta U + P\Delta V$).</li>
-        </ul>
-        <div class="formula-box">
+<p><strong>High-Yield JEE/NEET Matrix:</strong></p>
+<ul>
+<li><strong>$\Delta H &lt; 0, \Delta S &gt; 0$:</strong> Spontaneous at all temperatures.</li>
+<li><strong>$\Delta H &gt; 0, \Delta S &lt; 0$:</strong> Non-spontaneous at all temperatures.</li>
+<li><strong>$\Delta H &lt; 0, \Delta S &lt; 0$:</strong> Spontaneous at low temperatures ($T &lt; \Delta H/\Delta S$).</li>
+<li><strong>$\Delta H &gt; 0, \Delta S &gt; 0$:</strong> Spontaneous at high temperatures ($T &gt; \Delta H/\Delta S$).</li>
+</ul>
+</div>
+<!-- Card 3: Enthalpy & Entropy Relationships -->
+<div class="theory-card" id="entropy">
+<h3>3. Enthalpy, Entropy &amp; Equilibrium Link</h3>
+<p>Connects thermodynamics directly to chemical equilibrium constants and non-expansion work:</p>
+<ul>
+<li><strong>Standard Free Energy:</strong> $\Delta G^\circ = -RT \ln K_{eq}$</li>
+<li><strong>Temperature Dependence:</strong> van 't Hoff equation links enthalpy change to equilibrium constants at different temperatures.</li>
+<li><strong>Enthalpy ($\Delta H$):</strong> Heat absorbed or released at constant pressure ($\Delta H = \Delta U + P\Delta V$).</li>
+</ul>
+<div class="formula-box">
           $\Delta G = \Delta G^\circ + RT \ln Q$
         </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <footer>
-    <p>&copy; 2026 Science Villa | Thermodynamics & Entropy-Enthalpy Masterclass for JEE & NEET</p>
-  </footer>
-
-  <script>
+</div>
+</div>
+</div>
+<footer>
+<p>© 2026 Science Villa | Thermodynamics &amp; Entropy-Enthalpy Masterclass for JEE &amp; NEET</p>
+</footer>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>Use the simulation to connect thermodynamic quantities with physical and chemical processes. The explanations define the equations and clarify the assumptions of the simplified model.</p></div><div class="sv-grid"><article class="sv-card"><h2>First law</h2><p>With the chemistry convention, ΔU = q + w. Internal-energy change equals heat transferred to the system plus work done on it.</p></article><article class="sv-card"><h2>Enthalpy</h2><p>H = U + PV. At constant pressure with only pressure-volume work, qp is related to ΔH. Enthalpy is a state function.</p></article><article class="sv-card"><h2>Entropy</h2><p>For a reversible process, dS = δqrev/T. The second law gives a direction to spontaneous processes through total entropy change.</p></article><article class="sv-card"><h2>Gibbs energy</h2><p>At constant temperature and pressure, ΔG = ΔH − TΔS. ΔG &lt; 0 indicates a thermodynamically favorable forward direction under stated conditions.</p></article><article class="sv-card"><h2>How to use</h2><p>Change one parameter at a time, observe the calculated values, and explain trends from the equations.</p></article><article class="sv-card"><h2>Limitations</h2><p>Real systems may involve non-ideal behavior, phase transitions, heat losses, changing heat capacities, and composition-dependent properties.</p></article></div></section><script>
     // Thermodynamics Particle & Entropy Simulation Engine
     const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
@@ -598,6 +581,5 @@
 
     animate();
   </script>
-
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

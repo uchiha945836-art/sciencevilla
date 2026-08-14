@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuclear Reactor Simulation | Science Villa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuclear Reactor Educational Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #07090e;
       --bg-card: rgba(18, 26, 43, 0.75);
@@ -270,103 +271,91 @@
       max-width: 1200px;
     }
   </style>
-</head>
-<body>
-
-  <nav>
-    <a href="index.html" class="logo">Science Villa</a>
-    <a href="index.html" class="back-link">&larr; Back to Models</a>
-  </nav>
-
-  <header>
-    <div class="badge">Advanced PWR Thermal Loop Simulator</div>
-    <h1>Nuclear Reactor System Overview</h1>
-    <p class="subtitle">Interactive simulation mapping the reactor core, multi-loop heat exchange, adjustable coolant pump speeds, turbine generation, and cooling water dynamics.</p>
-  </header>
-
-  <div class="container">
-    
-    <!-- Simulation Box -->
-    <div class="sim-grid">
-      <div class="canvas-container">
-        <canvas id="reactorCanvas"></canvas>
-      </div>
-
-      <div class="control-panel">
-        <div class="panel-section">
-          <h3>System Telemetry</h3>
-          <div class="metric-row">
-            <span>Core Temperature:</span>
-            <span id="tempVal" class="metric-value">315 °C</span>
-          </div>
-          <div class="metric-row">
-            <span>Control Rods:</span>
-            <span id="rodValText" class="metric-value">50%</span>
-          </div>
-          <div class="metric-row">
-            <span>Primary Pump Flow:</span>
-            <span id="pumpValText" class="metric-value">50%</span>
-          </div>
-          <div class="metric-row">
-            <span>Turbine Speed:</span>
-            <span id="turbineVal" class="metric-value">3,000 RPM</span>
-          </div>
-          <div class="metric-row">
-            <span>Power Generation:</span>
-            <span id="powerVal" class="metric-value">1,000 MW</span>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <h3>Operator Controls</h3>
-          <div class="control-group">
-            <label for="controlRods">Control Rod Insertion (<span id="rodVal">50</span>%)</label>
-            <input type="range" id="controlRods" min="0" max="100" value="50">
-          </div>
-          <div class="control-group">
-            <label for="coolantPump">Primary Coolant Pump Speed (<span id="pumpVal">50</span>%)</label>
-            <input type="range" id="coolantPump" min="10" max="100" value="50">
-          </div>
-        </div>
-
-        <button class="btn-scram" id="scramBtn">EMERGENCY SCRAM (Drop Rods & Max Pumps)</button>
-      </div>
-    </div>
-
-    <!-- Educational Breakdown matching diagram components -->
-    <section class="info-section">
-      <h2>Comprehensive Nuclear Plant Components</h2>
-      <p style="color: var(--text-sub); line-height: 1.6; margin-bottom: 1rem;">
+<meta content="Educational nuclear reactor simulation explaining fission, heat transfer, reactor components, control rods, cooling systems, and simplified reactor telemetry." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/nuclearreactor.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<nav>
+<a class="logo" href="index.html">Science Villa</a>
+<a class="back-link" href="index.html">← Back to Models</a>
+</nav>
+<header>
+<div class="badge">Advanced PWR Thermal Loop Simulator</div>
+<h1>Nuclear Reactor System Overview</h1>
+<p class="subtitle">Interactive simulation mapping the reactor core, multi-loop heat exchange, adjustable coolant pump speeds, turbine generation, and cooling water dynamics.</p>
+</header>
+<div class="container">
+<!-- Simulation Box -->
+<div class="sim-grid">
+<div class="canvas-container">
+<canvas id="reactorCanvas"></canvas>
+</div>
+<div class="control-panel">
+<div class="panel-section">
+<h3>System Telemetry</h3>
+<div class="metric-row">
+<span>Core Temperature:</span>
+<span class="metric-value" id="tempVal">315 °C</span>
+</div>
+<div class="metric-row">
+<span>Control Rods:</span>
+<span class="metric-value" id="rodValText">50%</span>
+</div>
+<div class="metric-row">
+<span>Primary Pump Flow:</span>
+<span class="metric-value" id="pumpValText">50%</span>
+</div>
+<div class="metric-row">
+<span>Turbine Speed:</span>
+<span class="metric-value" id="turbineVal">3,000 RPM</span>
+</div>
+<div class="metric-row">
+<span>Power Generation:</span>
+<span class="metric-value" id="powerVal">1,000 MW</span>
+</div>
+</div>
+<div class="panel-section">
+<h3>Operator Controls</h3>
+<div class="control-group">
+<label for="controlRods">Control Rod Insertion (<span id="rodVal">50</span>%)</label>
+<input id="controlRods" max="100" min="0" type="range" value="50"/>
+</div>
+<div class="control-group">
+<label for="coolantPump">Primary Coolant Pump Speed (<span id="pumpVal">50</span>%)</label>
+<input id="coolantPump" max="100" min="10" type="range" value="50"/>
+</div>
+</div>
+<button class="btn-scram" id="scramBtn">EMERGENCY SCRAM (Drop Rods &amp; Max Pumps)</button>
+</div>
+</div>
+<!-- Educational Breakdown matching diagram components -->
+<section class="info-section">
+<h2>Comprehensive Nuclear Plant Components</h2>
+<p style="color: var(--text-sub); line-height: 1.6; margin-bottom: 1rem;">
         Detailed structural analysis of the pressurized water reactor (PWR) loop contained within the reinforced <strong>confinement shell</strong>.
       </p>
-
-      <div class="info-grid">
-        <div class="info-card">
-          <h4>1. Reactor Core & Control Rods</h4>
-          <p>Houses enriched nuclear fuel assemblies. Neutron-absorbing control rods are lowered or raised dynamically to control fission rates and core reactivity.</p>
-        </div>
-        <div class="info-card">
-          <h4>2. Primary Loop & Circulation Pump</h4>
-          <p>High-pressure water absorbs intense thermal energy from the core and is forced through the steam generator via heavy-duty coolant pumps.</p>
-        </div>
-        <div class="info-card">
-          <h4>3. Steam Generator (Heat Exchanger)</h4>
-          <p>Isolates radioactive primary water from secondary loops while transferring thermal energy to vaporize secondary water into clean high-pressure steam.</p>
-        </div>
-        <div class="info-card">
-          <h4>4. Turbine, Generator & Condenser</h4>
-          <p>Expansion of steam drives the turbine rotor linked to the electric generator. Exhaust steam is cooled back into liquid via external water sources.</p>
-        </div>
-      </div>
-    </section>
-
-  </div>
-
-  <footer>
-    <p>&copy; Science Villa | Advanced Nuclear Plant Engineering Module</p>
-  </footer>
-
-  <script>
+<div class="info-grid">
+<div class="info-card">
+<h4>1. Reactor Core &amp; Control Rods</h4>
+<p>Houses enriched nuclear fuel assemblies. Neutron-absorbing control rods are lowered or raised dynamically to control fission rates and core reactivity.</p>
+</div>
+<div class="info-card">
+<h4>2. Primary Loop &amp; Circulation Pump</h4>
+<p>High-pressure water absorbs intense thermal energy from the core and is forced through the steam generator via heavy-duty coolant pumps.</p>
+</div>
+<div class="info-card">
+<h4>3. Steam Generator (Heat Exchanger)</h4>
+<p>Isolates radioactive primary water from secondary loops while transferring thermal energy to vaporize secondary water into clean high-pressure steam.</p>
+</div>
+<div class="info-card">
+<h4>4. Turbine, Generator &amp; Condenser</h4>
+<p>Expansion of steam drives the turbine rotor linked to the electric generator. Exhaust steam is cooled back into liquid via external water sources.</p>
+</div>
+</div>
+</section>
+</div>
+<footer>
+<p>© Science Villa | Advanced Nuclear Plant Engineering Module</p>
+</footer>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>This is a conceptual learning model of a nuclear power plant. It explains how fission heat can be transferred and converted into electrical energy; it is not an engineering or reactor-control tool.</p></div><div class="sv-grid"><article class="sv-card"><h2>Fission</h2><p>Fission of suitable heavy nuclei releases energy and additional neutrons. That energy becomes heat in a power reactor.</p></article><article class="sv-card"><h2>Main components</h2><p>A simplified plant includes a reactor core, fuel, control elements, coolant, heat-transfer equipment, turbine, generator, and shielding or containment structures.</p></article><article class="sv-card"><h2>Control rods</h2><p>Neutron-absorbing control materials can change reactivity. Real plants use multiple independent control and safety systems.</p></article><article class="sv-card"><h2>Heat to electricity</h2><p>Fission produces thermal energy; a working fluid carries heat and drives a turbine connected to a generator.</p></article><article class="sv-card"><h2>Safety and limits</h2><p>Real reactors involve detailed neutronics, thermal-hydraulics, materials science, redundancy, containment, monitoring, and regulation. This model omits engineering detail.</p></article></div></section><script>
     const canvas = document.getElementById('reactorCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -691,5 +680,5 @@
 
     loop();
   </script>
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>

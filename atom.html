@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atomic Structure Visualizer | Science Villa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atomic Structure Visualizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg-dark: #05070d;
       --bg-card: rgba(13, 18, 30, 0.8);
@@ -313,70 +314,57 @@
       color: var(--text-main);
     }
   </style>
-</head>
-<body>
-
-  <header>
-    <a href="index.html" class="back-btn">← Science Villa</a>
-    <div class="brand-title">Atomic Structure Visualizer (1 - 118)</div>
-  </header>
-
-  <div class="app-container">
-
-    <!-- Element Selector -->
-    <div class="card">
-      <div class="section-title">
-        <span>⚛️ Periodic Elements</span>
-        <span style="font-size: 0.75rem; color: var(--text-sub);" id="elementCount">118 Elements</span>
-      </div>
-      
-      <input type="text" id="searchInput" class="search-input" placeholder="Search element name, symbol, or number...">
-
-      <div class="element-grid" id="elementGrid"></div>
-
-      <button class="action-btn" id="exciteBtn">⚡ Excite Valence Electron (Quantum Jump)</button>
-    </div>
-
-    <!-- Canvas Visualization Area -->
-    <div class="card canvas-card">
-      <canvas id="atomCanvas" width="550" height="450"></canvas>
-      <div class="legend-bar">
-        <div class="legend-item"><span class="dot proton"></span> Proton (+1)</div>
-        <div class="legend-item"><span class="dot neutron"></span> Neutron (0)</div>
-        <div class="legend-item"><span class="dot electron"></span> Electron (-1)</div>
-      </div>
-    </div>
-
-    <!-- Information & Subatomic Breakdown -->
-    <div class="card">
-      <div class="section-title">📊 Element Metrics</div>
-      
-      <div class="metric-badge">
-        <span class="metric-name">Element</span>
-        <span class="metric-val" id="valName" style="color: var(--accent-purple);">Carbon</span>
-      </div>
-      <div class="metric-badge">
-        <span class="metric-name">Atomic Number (Z)</span>
-        <span class="metric-val" id="valZ">6</span>
-      </div>
-      <div class="metric-badge">
-        <span class="metric-name">Atomic Mass</span>
-        <span class="metric-val" id="valMass">12.011 u</span>
-      </div>
-      <div class="metric-badge">
-        <span class="metric-name">Protons / Neutrons</span>
-        <span class="metric-val" id="valParticles">6P / 6N</span>
-      </div>
-
-      <div class="section-title" style="margin-top: 0.8rem;">🐚 Shells (K, L, M, N, O, P, Q)</div>
-      <div class="shell-visualizer" id="shellVisualizer"></div>
-
-      <div class="info-box" id="elementFacts"></div>
-    </div>
-
-  </div>
-
-  <script>
+<meta content="Interactive atomic structure visualizer for learning about protons, neutrons, electrons, atomic number, isotopes, electron shells, and simplified atomic models." name="description"/><meta content="index, follow, max-image-preview:large" name="robots"/><link href="https://sciencevilla.fun/atom.html" rel="canonical"/><style id="sv-edu">.sv-edu{width:min(1120px,100%);margin:24px auto;color:#dbe7f3;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.sv-edu-intro,.sv-card{background:rgba(10,24,43,.84);border:1px solid rgba(120,190,255,.18);border-radius:14px;padding:18px;line-height:1.7}.sv-edu-intro{border-left:4px solid #38bdf8;margin-bottom:14px}.sv-edu h2{color:#8bd3ff;font-size:1.1rem;margin:0 0 8px}.sv-edu p{margin:0;color:#c7d6e4}.sv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.sv-footer{width:min(1120px,100%);margin:30px auto 10px;padding:20px 10px;border-top:1px solid rgba(120,190,255,.16);text-align:center;color:#91a6b9;font:14px/1.6 system-ui}.sv-footer a{color:#9bdcff;margin:0 6px;text-decoration:none}@media(max-width:700px){.sv-grid{grid-template-columns:1fr}}</style></head>
+<body><nav aria-label="Primary navigation" class="sv-nav"><a href="index.html">Science Villa</a> · <a href="index.html#models">Models</a> · <a href="index.html#about">About</a> · <a href="index.html#resources">Learning Guide</a> · <a href="index.html#contact">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></nav><style>.sv-nav{width:min(1120px,100%);margin:0 auto 16px;padding:8px 4px;font:14px system-ui;text-align:center}.sv-nav a{color:#9bdcff;text-decoration:none;margin:0 5px}.sv-nav a:hover{text-decoration:underline}</style>
+<header>
+<a class="back-btn" href="index.html">← Science Villa</a>
+<div class="brand-title">Atomic Structure Visualizer (1 - 118)</div>
+</header>
+<div class="app-container">
+<!-- Element Selector -->
+<div class="card">
+<div class="section-title">
+<span>⚛️ Periodic Elements</span>
+<span id="elementCount" style="font-size: 0.75rem; color: var(--text-sub);">118 Elements</span>
+</div>
+<input class="search-input" id="searchInput" placeholder="Search element name, symbol, or number..." type="text"/>
+<div class="element-grid" id="elementGrid"></div>
+<button class="action-btn" id="exciteBtn">⚡ Excite Valence Electron (Quantum Jump)</button>
+</div>
+<!-- Canvas Visualization Area -->
+<div class="card canvas-card">
+<canvas height="450" id="atomCanvas" width="550"></canvas>
+<div class="legend-bar">
+<div class="legend-item"><span class="dot proton"></span> Proton (+1)</div>
+<div class="legend-item"><span class="dot neutron"></span> Neutron (0)</div>
+<div class="legend-item"><span class="dot electron"></span> Electron (-1)</div>
+</div>
+</div>
+<!-- Information & Subatomic Breakdown -->
+<div class="card">
+<div class="section-title">📊 Element Metrics</div>
+<div class="metric-badge">
+<span class="metric-name">Element</span>
+<span class="metric-val" id="valName" style="color: var(--accent-purple);">Carbon</span>
+</div>
+<div class="metric-badge">
+<span class="metric-name">Atomic Number (Z)</span>
+<span class="metric-val" id="valZ">6</span>
+</div>
+<div class="metric-badge">
+<span class="metric-name">Atomic Mass</span>
+<span class="metric-val" id="valMass">12.011 u</span>
+</div>
+<div class="metric-badge">
+<span class="metric-name">Protons / Neutrons</span>
+<span class="metric-val" id="valParticles">6P / 6N</span>
+</div>
+<div class="section-title" style="margin-top: 0.8rem;">🐚 Shells (K, L, M, N, O, P, Q)</div>
+<div class="shell-visualizer" id="shellVisualizer"></div>
+<div class="info-box" id="elementFacts"></div>
+</div>
+</div>
+<section class="sv-edu"><div class="sv-edu-intro"><h2>About this simulation</h2><p>Explore a simplified model of atomic structure. The nucleus contains protons and neutrons, while electrons are represented outside it. The drawing is schematic, not to physical scale.</p></div><div class="sv-grid"><article class="sv-card"><h2>Atomic number</h2><p>The atomic number Z equals the number of protons and identifies an element. A neutral atom has the same number of electrons as protons.</p></article><article class="sv-card"><h2>Isotopes and ions</h2><p>Isotopes have the same number of protons but different numbers of neutrons. Ions form when atoms gain or lose electrons.</p></article><article class="sv-card"><h2>How to use</h2><p>Select an element and compare its atomic number, particles, and shell information. Use the visualizer to connect numerical data with the structure.</p></article><article class="sv-card"><h2>Model limitation</h2><p>Modern quantum mechanics describes electrons with orbitals and probability distributions; the shell-like picture is an introductory visualization.</p></article><article class="sv-card"><h2>Check your understanding</h2><p>What determines an element’s identity? What changes when an atom becomes an ion? What is different between isotopes?</p></article></div></section><script>
     // Complete 118 Elements Comprehensive Database
     const elementsData = [
       { z: 1, s: 'H', n: 'Hydrogen', m: '1.008 u', p: 1, neutrons: 0, sh: [1] },
@@ -746,5 +734,5 @@
     updateMetrics();
     draw();
   </script>
-</body>
+<footer class="sv-footer"><strong>Science Villa</strong> — Interactive science learning resources.<br/><a href="index.html">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="index.html#contact">Contact</a><br/>Simulations are simplified educational models and should not be treated as laboratory measurements or engineering design tools.<br/>© 2026 Science Villa.</footer></body>
 </html>
