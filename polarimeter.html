@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polarimeter Experiment - sciencevilla.fun</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0b0f19;
+            font-family: sans-serif;
+            user-select: none;
+        }
+        #header {
+            position: absolute;
+            top: 15px;
+            width: 100%;
+            text-align: center;
+            color: #ffffff;
+            pointer-events: none;
+            z-index: 10;
+        }
+        h1 { margin: 0; font-size: 18px; color: #38bdf8; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        p { margin: 4px 0 0; font-size: 12px; color: #94a3b8; }
+        
+        /* Control Panel UI */
+        #controls-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.9);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        label {
+            font-size: 11px;
+            color: #cbd5e1;
+            font-weight: bold;
+        }
+        select, button {
+            background: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+        }
+        select:hover, button:hover {
+            border-color: #38bdf8;
+        }
+
+        /* HUD Data Overlay */
+        #hud {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            font-size: 12px;
+            pointer-events: none;
+            line-height: 1.5;
+        }
+        .highlight { color: #38bdf8; font-weight: bold; }
+
+        /* 2D HTML Labels for 3D Parts */
+        .label {
+            position: absolute;
+            color: #ffffff;
+            background: rgba(15, 23, 42, 0.85);
+            padding: 3px 6px;
+            font-size: 10px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+        #brand {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: #64748b;
+            pointer-events: none;
+            font-size: 11px;
+        }
+    
+
+        /* Detailed light-behavior panel */
+        #light-panel {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            width: 285px;
+            background: rgba(15, 23, 42, 0.90);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 11px;
+            color: #f8fafc;
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+            backdrop-filter: blur(5px);
+        }
+        .panel-title {
+            color: #38bdf8;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            margin-bottom: 8px;
+        }
+        .light-step {
+            display: grid;
+            grid-template-columns: 25px 1fr auto;
+            gap: 7px;
+            align-items: center;
+            padding: 7px 6px;
+            margin: 4px 0;
+            border-radius: 5px;
+            border-left: 2px solid #334155;
+            opacity: 0.65;
+        }
+        .light-step.active {
+            opacity: 1;
+            border-left-color: #38bdf8;
+            background: rgba(56,189,248,0.08);
+        }
+        .step-no {
+            width: 20px;
+            height: 20px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .light-step.active .step-no {
+            color: #0b0f19;
+            background: #38bdf8;
+        }
+        .light-step b {
+            display: block;
+            font-size: 10px;
+        }
+        .light-step small {
+            display: block;
+            margin-top: 2px;
+            color: #94a3b8;
+            font-size: 9px;
+            line-height: 1.25;
+        }
+        .light-step strong {
+            color: #fef08a;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        .angle-meter {
+            margin-top: 9px;
+            padding-top: 8px;
+            border-top: 1px solid #334155;
+        }
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            color: #cbd5e1;
+            font-size: 9px;
+            margin-bottom: 5px;
+        }
+        .meter-track {
+            height: 5px;
+            background: #1e293b;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        #rotation-progress {
+            height: 100%;
+            width: 0%;
+            background: #38bdf8;
+            border-radius: 99px;
+            transition: width 0.08s linear;
+        }
+
+        /* Polarization-direction markers */
+        .polarization-line {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: #fef08a;
+            transform-origin: center;
+            pointer-events: none;
+            z-index: 8;
+            box-shadow: 0 0 8px rgba(254,240,138,0.8);
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            #light-panel {
+                top: 55px;
+                right: 8px;
+                width: 245px;
+                transform: scale(0.9);
+                transform-origin: top right;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>Optical Isomerism & Polarimeter Simulation</h1>
+        <p>Observe how plane-polarized light (PPL) rotates through chiral compounds</p>
+    </div>
+
+    <div id="hud">
+        <div>Compound: <span id="hud-compound" class="highlight">Water (Optically Inactive)</span></div>
+        <div>Rotation Type: <span id="hud-type" class="highlight">None</span></div>
+        <div>Angle ($\alpha$): <span id="hud-angle" class="highlight">0.0°</span></div>
+    </div>
+
+    <div id="light-panel">
+        <div class="panel-title">LIGHT JOURNEY</div>
+        <div class="light-step active" id="step1">
+            <span class="step-no">1</span>
+            <div><b>Lamp → Polarizer</b><small>Unpolarized light • random planes</small></div>
+            <strong>0°</strong>
+        </div>
+        <div class="light-step" id="step2">
+            <span class="step-no">2</span>
+            <div><b>After Polarizer</b><small>Plane-polarized light (PPL)</small></div>
+            <strong>0°</strong>
+        </div>
+        <div class="light-step" id="step3">
+            <span class="step-no">3</span>
+            <div><b>Inside Chiral Sample</b><small>Plane rotates by optical rotation α</small></div>
+            <strong id="step3-angle">0°</strong>
+        </div>
+        <div class="light-step" id="step4">
+            <span class="step-no">4</span>
+            <div><b>At Analyzer</b><small>Analyzer is set to match α</small></div>
+            <strong id="step4-angle">0°</strong>
+        </div>
+        <div class="angle-meter">
+            <div class="meter-label"><span>Rotation progress</span><span id="rotation-progress-text">0° / 0°</span></div>
+            <div class="meter-track"><div id="rotation-progress"></div></div>
+        </div>
+    </div>
+
+    <!-- Interactive Panel -->
+    <div id="controls-panel">
+        <div class="control-group">
+            <label for="compoundSelect">Select Organic Solution:</label>
+            <select id="compoundSelect">
+                <option value="none">Water / Distilled (Inactive - 0°)</option>
+                <option value="d-sucrose">(+) Sucrose / Dextrorotatory (+66.5°)</option>
+                <option value="l-sucrose">(-) Sucrose / Levorotatory (-66.5°)</option>
+                <option value="d-camphor">(+) Camphor / Dextrorotatory (+44.0°)</option>
+                <option value="l-tartaric">(-) Tartaric Acid / Levorotatory (-12.0°)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Action:</label>
+            <button id="resetCameraBtn">Reset View</button>
+        </div>
+    </div>
+
+    <!-- HTML Labels mapped to 3D coordinates -->
+    <div id="label-lamp" class="label">Sodium Lamp (Unpolarized)</div>
+    <div id="label-polarizer" class="label">Polarizer (PPL Formed)</div>
+    <div id="label-tube" class="label">Sample Tube</div>
+    <div id="label-analyzer" class="label">Rotatable Analyzer</div>
+    <div id="label-eye" class="label">Eyepiece</div>
+
+    <div id="pol-marker-polarizer" class="polarization-line"></div>
+    <div id="pol-marker-sample" class="polarization-line"></div>
+    <div id="pol-marker-analyzer" class="polarization-line"></div>
+
+    <div id="brand">sciencevilla.fun</div>
+
+    <!-- Import Map for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // 1. Scene & Setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0b0f19);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 3, 7);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "low-power" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.target.set(0, -0.2, 0);
+
+        // 2. Lighting
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
+
+        // 3. Materials
+        const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.6, roughness: 0.3 });
+        const brassMaterial = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.1 });
+        const glassMaterial = new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, transmission: 0.8, opacity: 0.6, transparent: true, roughness: 0.1 });
+        
+        // Light Beam Materials
+        const unpolarizedMaterial = new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.5 }); // Yellow scatter
+        const pplMaterial = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.8 }); // Blue flat plane wave look
+
+        // 4. Build Polarimeter Apparatus
+        const polarimeter = new THREE.Group();
+
+        // Base
+        const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.2, 1.6), bodyMaterial);
+        baseMesh.position.y = -0.9;
+        polarimeter.add(baseMesh);
+
+        // Lamp
+        const lampMesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), bodyMaterial);
+        lampMesh.position.set(-2.7, -0.3, 0);
+        polarimeter.add(lampMesh);
+
+        // Polarizer
+        const polarizerMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.15, 32), brassMaterial);
+        polarizerMesh.rotation.z = Math.PI / 2;
+        polarizerMesh.position.set(-1.8, -0.3, 0);
+        polarimeter.add(polarizerMesh);
+
+        // Sample Tube
+        const tubeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.4, 32), glassMaterial);
+        tubeMesh.rotation.z = Math.PI / 2;
+        tubeMesh.position.set(0, -0.3, 0);
+        polarimeter.add(tubeMesh);
+
+        // Analyzer Ring (Rotatable element)
+        const analyzerMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.15, 32), brassMaterial);
+        analyzerMesh.rotation.z = Math.PI / 2;
+        analyzerMesh.position.set(1.8, -0.3, 0);
+        polarimeter.add(analyzerMesh);
+
+        // Eyepiece
+        const eyeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 0.7, 32), bodyMaterial);
+        eyeMesh.rotation.z = Math.PI / 2;
+        eyeMesh.position.set(2.5, -0.3, 0);
+        polarimeter.add(eyeMesh);
+
+        // Light Segments to show divisions of light behavior
+        // Beam 1: Lamp to Polarizer (Unpolarized)
+        const beam1 = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.7, 16), unpolarizedMaterial);
+        beam1.rotation.z = Math.PI / 2;
+        beam1.position.set(-2.25, -0.3, 0);
+        polarimeter.add(beam1);
+
+        // Beam 2: Polarizer to Sample Tube (Plane Polarized Light - PPL)
+        const beam2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.5, 16), pplMaterial);
+        beam2.rotation.z = Math.PI / 2;
+        beam2.position.set(-0.9, -0.3, 0);
+        polarimeter.add(beam2);
+
+        // Beam 3: Inside Sample Tube (Rotating PPL simulation)
+        const beam3 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.4, 16), pplMaterial);
+        beam3.rotation.z = Math.PI / 2;
+        beam3.position.set(0, -0.3, 0);
+        polarimeter.add(beam3);
+
+        // Beam 4: Tube to Analyzer & Eyepiece
+        const beam4 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.4, 16), pplMaterial);
+        beam4.rotation.z = Math.PI / 2;
+        beam4.position.set(2.15, -0.3, 0);
+        polarimeter.add(beam4);
+
+        scene.add(polarimeter);
+
+        // 5. Simulation State & Compound Properties
+        const compounds = {
+            "none": { name: "Water / Distilled", type: "Optically Inactive (No Rotation)", angle: 0.0 },
+            "d-sucrose": { name: "(+) Sucrose", type: "Dextrorotatory (Clockwise)", angle: 66.5 },
+            "l-sucrose": { name: "(-) Sucrose", type: "Levorotatory (Anticlockwise)", angle: -66.5 },
+            "d-camphor": { name: "(+) Camphor", type: "Dextrorotatory (Clockwise)", angle: 44.0 },
+            "l-tartaric": { name: "(-) Tartaric Acid", type: "Levorotatory (Anticlockwise)", angle: -12.0 }
+        };
+
+        let currentCompoundKey = "none";
+        let targetRotationRad = 0;
+        let currentAnalyzerAngle = 0;
+
+        const selectEl = document.getElementById("compoundSelect");
+        const hudCompound = document.getElementById("hud-compound");
+        const hudType = document.getElementById("hud-type");
+        const hudAngle = document.getElementById("hud-angle");
+
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const step3 = document.getElementById("step3");
+        const step4 = document.getElementById("step4");
+        const step3Angle = document.getElementById("step3-angle");
+        const step4Angle = document.getElementById("step4-angle");
+        const rotationProgress = document.getElementById("rotation-progress");
+        const rotationProgressText = document.getElementById("rotation-progress-text");
+
+        const polMarkerPolarizer = document.getElementById("pol-marker-polarizer");
+        const polMarkerSample = document.getElementById("pol-marker-sample");
+        const polMarkerAnalyzer = document.getElementById("pol-marker-analyzer");
+
+        function formatAngle(deg) {
+            const rounded = Math.round(deg * 10) / 10;
+            return (rounded > 0 ? "+" : "") + rounded.toFixed(1) + "°";
+        }
+
+        function updateLightExplanation() {
+            const targetDeg = THREE.MathUtils.radToDeg(targetRotationRad);
+            const currentDeg = THREE.MathUtils.radToDeg(currentAnalyzerAngle);
+            const progress = Math.abs(targetDeg) < 0.001
+                ? 0
+                : Math.min(100, Math.abs(currentDeg / targetDeg) * 100);
+
+            step3Angle.textContent = formatAngle(currentDeg);
+            step4Angle.textContent = formatAngle(currentDeg);
+            rotationProgress.style.width = progress + "%";
+            rotationProgressText.textContent = formatAngle(currentDeg) + " / " + formatAngle(targetDeg);
+
+            [step1, step2, step3, step4].forEach(el => el.classList.remove("active"));
+            step1.classList.add("active");
+            step2.classList.add("active");
+            step3.classList.add("active");
+            if (Math.abs(currentDeg - targetDeg) < 0.2) step4.classList.add("active");
+
+            // These are visual direction indicators. The actual beam travels left → right.
+            // 0° means the polarization direction is the reference direction.
+            const reference = 0;
+            polMarkerPolarizer.style.display = "block";
+            polMarkerSample.style.display = "block";
+            polMarkerAnalyzer.style.display = "block";
+
+            positionMarker(polMarkerPolarizer, labels.polarizer.pos, reference);
+            positionMarker(polMarkerSample, labels.tube.pos, currentDeg);
+            positionMarker(polMarkerAnalyzer, labels.analyzer.pos, currentDeg);
+        }
+
+        function positionMarker(el, worldPos, angleDeg) {
+            const v = worldPos.clone();
+            v.project(camera);
+            const x = (v.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (v.y * -0.5 + 0.5) * window.innerHeight;
+            el.style.left = x + "px";
+            el.style.top = y + "px";
+            el.style.transform = `translate(-50%, -50%) rotate(${angleDeg}deg)`;
+        }
+
+        selectEl.addEventListener("change", (e) => {
+            currentCompoundKey = e.target.value;
+            const data = compounds[currentCompoundKey];
+            
+            hudCompound.innerText = data.name;
+            hudType.innerText = data.type;
+            hudAngle.innerText = data.angle + "°";
+
+            // Map target angle in degrees to radians for analyzer rotation
+            targetRotationRad = THREE.MathUtils.degToRad(data.angle);
+        });
+
+        // 6. Label Tracking Matrix
+        const vector = new THREE.Vector3();
+        const labels = {
+            lamp: { pos: new THREE.Vector3(-2.7, 0.4, 0), el: document.getElementById('label-lamp') },
+            polarizer: { pos: new THREE.Vector3(-1.8, 0.5, 0), el: document.getElementById('label-polarizer') },
+            tube: { pos: new THREE.Vector3(0, 0.5, 0), el: document.getElementById('label-tube') },
+            analyzer: { pos: new THREE.Vector3(1.8, 0.5, 0), el: document.getElementById('label-analyzer') },
+            eye: { pos: new THREE.Vector3(2.5, 0.4, 0), el: document.getElementById('label-eye') }
+        };
+
+        function updateLabels() {
+            for (let key in labels) {
+                vector.copy(labels[key].pos);
+                vector.project(camera);
+                const x = (vector.x *  .5 + .5) * window.innerWidth;
+                const y = (vector.y * -.5 + .5) * window.innerHeight;
+                labels[key].el.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+            }
+        }
+
+        // 7. Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smoothly rotate the analyzer ring and internal light beam segment to match chemical rotation angle
+            currentAnalyzerAngle += (targetRotationRad - currentAnalyzerAngle) * 0.08;
+            analyzerMesh.rotation.x = currentAnalyzerAngle;
+
+            // The sample rotates the plane of polarization by α.
+            // Keep the internal beam visually aligned with that changing plane.
+            beam3.rotation.y = currentAnalyzerAngle;
+            beam3.rotation.z = Math.PI / 2;
+
+            updateLightExplanation();
+
+            controls.update();
+            renderer.render(scene, camera);
+            updateLabels();
+        }
+
+        animate();
+
+        document.getElementById("resetCameraBtn").addEventListener("click", () => {
+            camera.position.set(0, 3, 7);
+            controls.target.set(0, -0.2, 0);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            updateLightExplanation();
+        });
+    </script>
+</body>
+</html>
